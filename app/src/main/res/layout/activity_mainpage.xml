@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.njdp.njdp_farmer.mainpages">
+    <com.njdp.njdp_farmer.viewpage.ContentViewPager
+        android:id="@+id/content_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_weight="1" />
+
+    <RadioGroup
+        android:id="@+id/content_radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@mipmap/content_radiogroup_backgroup"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
+
+        <RadioButton
+            android:id="@+id/rb_release"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:button="@null"
+            android:drawableTop="@drawable/content_xinwen_selector"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:paddingTop="0dp"
+            android:singleLine="true"
+            android:text="我的发布"
+            android:textColor="@drawable/content_textcolor" />
+
+        <RadioButton
+            android:id="@+id/rb_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:button="@null"
+            android:drawableTop="@drawable/content_redian_selector"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:paddingTop="0dp"
+            android:singleLine="true"
+            android:text="农机查询"
+            android:textColor="@drawable/content_textcolor" />
+
+        <RadioButton
+            android:id="@+id/rb_userInfo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:button="@null"
+            android:drawableTop="@drawable/content_shezhi_selector"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:paddingTop="0dp"
+            android:singleLine="true"
+            android:text="个人信息"
+            android:textColor="@drawable/content_textcolor" />
+    </RadioGroup>
+
+</RelativeLayout>

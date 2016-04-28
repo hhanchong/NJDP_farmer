@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:circleImageView="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".conent_frament.PersonalInfoFrame">
+
+    <LinearLayout
+        android:id="@+id/personalinfo_div"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <com.njdp.njdp_farmer.changeDefault.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_launcher"
+            android:id="@+id/user_image"
+            circleImageView:civ_border_width="2dp"
+            circleImageView:civ_border_color="#ffffff"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="55dp">
+
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="姓名"
+                android:textSize="20sp" />
+            <TextView
+                style="@style/Register_style"
+                android:id="@+id/tv_user_name"
+                android:layout_toRightOf="@+id/tv1"
+                android:layout_alignBaseline="@+id/tv1"
+                android:textSize="20sp"/>
+
+        </RelativeLayout>
+
+        <View
+            style="@style/Register_HorizontalLine_style"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+
+        <RelativeLayout
+            android:id="@+id/rl_setPhonenum"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="手机号"
+                android:textSize="20sp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+            <TextView
+                android:id="@+id/tv_phonenum"
+                style="@style/Register_style"
+                android:paddingLeft="10dp"
+                android:text="18932659760"
+                android:textSize="20sp"
+                android:layout_toRightOf="@+id/tv2"
+                android:layout_alignBaseline="@+id/tv2" />
+
+        </RelativeLayout>
+
+        <View
+            style="@style/Register_HorizontalLine_style"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="55dp">
+
+            <TextView
+                android:id="@+id/tv3"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="QQ"
+                android:textSize="20sp" />
+            <TextView
+                style="@style/Register_style"
+                android:id="@+id/tv_qq"
+                android:inputType="numberDecimal"
+                android:textSize="20sp"
+                android:layout_toRightOf="@+id/tv3"
+                android:layout_alignBaseline="@+id/tv3"
+                android:maxLength="10" />
+        </RelativeLayout>
+
+        <View
+            style="@style/Register_HorizontalLine_style"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="55dp">
+
+            <TextView
+                android:id="@+id/tv4"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:text="微信"
+                android:textSize="20sp" />
+            <TextView
+                style="@style/Register_style"
+                android:id="@+id/tv_weixin"
+                android:inputType=""
+                android:textSize="20sp"
+                android:layout_toRightOf="@+id/tv4"
+                android:layout_alignBaseline="@+id/tv4"
+                android:maxLength="30" />
+        </RelativeLayout>
+
+        <View
+            style="@style/Register_HorizontalLine_style"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="55dp"
+            android:id="@+id/rl_Address">
+
+            <TextView
+                android:id="@+id/tv5"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:text="地址"
+                android:textSize="20sp"
+                />
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="10dp"
+                android:text="河北省保定市清苑县***乡***村"
+                android:textSize="20sp"
+                android:layout_gravity="center_vertical|left"
+                android:gravity="center_vertical|left"
+                android:layout_toRightOf="@+id/tv5"
+                android:layout_toEndOf="@+id/tv5"
+                android:layout_marginRight="5dp"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <View
+            style="@style/Register_HorizontalLine_style"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:gravity="center_vertical"
+            android:layout_height="55dp"
+            android:id="@+id/rl_release">
+
+            <TextView
+                android:id="@+id/tv6"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:text="我的发布"
+                android:textSize="20sp"
+                />
+            <TextView
+                android:id="@+id/tv_my_release"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="10dp"
+                android:text="当前共发布了1条信息"
+                android:textSize="20sp"
+                android:layout_gravity="center_vertical|left"
+                android:gravity="center_vertical|left"
+                android:layout_toRightOf="@+id/tv6"
+                android:layout_toEndOf="@+id/tv6"
+                android:layout_marginRight="5dp"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <View
+            style="@style/Register_HorizontalLine_style"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <LinearLayout
+            style="@style/Register_Div"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_Address"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+            <Button
+                style="@style/Register_Button_Finish"
+                android:id="@+id/btn_edit"
+                android:background="@drawable/rounded_green_button"
+                android:text="编辑个人信息"
+                android:layout_height="30dp"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

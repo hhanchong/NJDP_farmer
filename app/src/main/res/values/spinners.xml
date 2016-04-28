@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="area">
+        <item>30公里</item>
+        <item>10公里</item>
+        <item>50公里</item>
+        <item>80公里</item>
+        <item>全部</item>
+    </array>
+    <array name="TOS">
+        <item>小麦</item>
+        <item>玉米</item>
+        <item>全部</item>
+    </array>
+</resources>

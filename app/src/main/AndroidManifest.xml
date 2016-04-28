@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.njdp.njdp_farmer">
+
+    <!-- 联网 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 相机 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- 读写外部存储设备权限 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!--获取位置信息-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <application
+        android:name=".db.AppController"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name1"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".login"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".register"
+            android:label="@string/title_activity_register"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".register_TermsofService"
+            android:label="@string/title_activity_register__termsof_service"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".getpassword"
+            android:label="@string/title_activity_getpassword"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".getpassword2"
+            android:label="getpassword2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".mainpages"
+            android:label="@string/title_activity_mainpages"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".register_image"
+            android:label="@string/title_activity_register_image"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <!-- 照片选择 -->
+        <activity
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
+            android:configChanges="orientation|screenSize" />
+        <!-- 设置相关的界面 -->
+        <activity
+            android:name=".PersonalSet"
+            android:label="@string/title_activity_personal_set"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SetPhoneNum"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".address.AddressSelect"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Edit_Password"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainLink"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!-- 三个主界面 -->
+        <activity
+            android:name=".conent_frament.FarmerRelease"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".conent_frament.PersonalInfoFrame"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+    </application>
+
+</manifest>
