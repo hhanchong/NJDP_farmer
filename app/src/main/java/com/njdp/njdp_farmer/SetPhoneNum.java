@@ -253,7 +253,7 @@ public class SetPhoneNum extends AppCompatActivity {
                 if (!error) {
                     // user successfully logged in
                     // Create signin session
-                    session.setLogin(true,false);
+                    //session.setLogin(true,false);
 
                     // Now store the user in SQLite
                     JSONObject isSuccess = jObj.getJSONObject("isSuccess");

@@ -26,6 +26,8 @@ public class SessionManager {
 
     private static final String KEY_IS_DRIVER = "isDriver";
 
+    private static final  String KEY_TOKEN="Token";
+
     public SessionManager(Context context) {
         this._context = context;
         pref = _context.getSharedPreferences(PREF_NAME, PRIVATE_MODE);
@@ -34,11 +36,11 @@ public class SessionManager {
 
 
     //缓存登录状态信息
-    public void setLogin(boolean isLoggedIn,boolean isDriver) {
+    public void setLogin(boolean isLoggedIn,boolean isDriver, String token) {
 
         editor.putBoolean(KEY_IS_LOGGEDIN, isLoggedIn);
         editor.putBoolean(KEY_IS_DRIVER, isDriver);
-
+        editor.putString(KEY_TOKEN, token);
         // commit changes
         editor.commit();
 
@@ -51,5 +53,9 @@ public class SessionManager {
 
     public boolean isDriver(){
         return pref.getBoolean(KEY_IS_DRIVER, false);
+    }
+
+    public String getToken(){
+        return pref.getString(KEY_TOKEN, "");
     }
 }

@@ -9,9 +9,9 @@ import java.util.Date;
  * Created by Administrator on 2016/4/26.
  */
 public class FarmlandInfo implements Serializable {
-    public final DateFormat yyyymmdd_DateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final DateFormat yyyymmdd_DateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private int id;
-    private int fm_id;
+    private String fm_token;
     private float area;
     private String crops_kind;
     private float unit_price;
@@ -28,11 +28,13 @@ public class FarmlandInfo implements Serializable {
     private Date end_time;
     private String status;
     private String remark;
+    private String createtime;
+    private String updatetime;
 
     public FarmlandInfo()
     {
         id = 0;
-        fm_id = 0;
+        fm_token = "";
         area = 0;
         unit_price = 0;
         crops_kind = "";
@@ -56,6 +58,8 @@ public class FarmlandInfo implements Serializable {
         }
         status = "";
         remark = "";
+        createtime = "";
+        updatetime = "";
     }
 
 
@@ -67,12 +71,12 @@ public class FarmlandInfo implements Serializable {
         this.id = id;
     }
 
-    public int getFm_id() {
-        return fm_id;
+    public String getFm_token() {
+        return fm_token;
     }
 
-    public void setFm_id(int fm_id) {
-        this.fm_id = fm_id;
+    public void setFm_token(String fm_token) {
+        this.fm_token = fm_token;
     }
 
     public float getArea() {
@@ -171,16 +175,16 @@ public class FarmlandInfo implements Serializable {
         this.street_view = street_view;
     }
 
-    public Date getStart_time() {
-        return start_time;
+    public String getStart_time() {
+        return DateFormatString(start_time);
     }
 
     public void setStart_time(Date start_time) {
         this.start_time = start_time;
     }
 
-    public Date getEnd_time() {
-        return end_time;
+    public String getEnd_time() {
+        return DateFormatString(end_time);
     }
 
     public void setEnd_time(Date end_time) {
@@ -201,6 +205,40 @@ public class FarmlandInfo implements Serializable {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(String createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getUpdatetime() {
+        return updatetime;
+    }
+
+    public void setUpdatetime(String updatetime) {
+        this.updatetime = updatetime;
+    }
+
+    public String DateFormatString(Date date){
+        try{
+            return yyyymmdd_DateFormat.format(date);
+        }
+        catch (Exception e){
+            return "";
+        }
+    }
+
+    public Date StringFormatDate(String date){
+        try{
+            return yyyymmdd_DateFormat.parse(date);
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
 }

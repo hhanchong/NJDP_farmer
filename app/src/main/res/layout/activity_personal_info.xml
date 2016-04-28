@@ -192,7 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:paddingLeft="10dp"
-                android:text="当前共发布了1条信息"
+                android:text="共发布了1条信息，点击查看"
                 android:textSize="20sp"
                 android:layout_gravity="center_vertical|left"
                 android:gravity="center_vertical|left"

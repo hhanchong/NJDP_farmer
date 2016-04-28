@@ -1,7 +1,5 @@
 package com.njdp.njdp_farmer.adpter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.njdp.njdp_farmer.R;
+import com.njdp.njdp_farmer.bean.FarmlandInfo;
+
+import java.util.List;
 
 /**
  * expandableListView适配器

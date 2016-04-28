@@ -270,28 +270,18 @@ public class register extends AppCompatActivity {
 
                 // Check for error node in json
                 if (!error) {
-                    // user successfully logged in
-                    // Create signin session
-                    session.setLogin(true,false);
-
                     // Now store the user in SQLite
-                    JSONObject farmers = jObj.getJSONObject("Farmers");
-                    farmer.setId(farmers.getInt("Id"));
-                    farmer.setName(farmers.getString("Name"));
-                    farmer.setPassword(farmers.getString("Password"));
-                    farmer.setTelephone(farmers.getString("Telephone"));
-                    farmer.setImageUrl(farmers.getString("ImageUrl"));
+                    String token = jObj.getString("result");
 
                     // Inserting row in users table
-                    db.addUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
+                    //db.addUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
 
+                    // user successfully logged in
+                    // Create signin session
+                    session.setLogin(true,false, token);
                     //Launch main activity
                     Intent intent = new Intent(register.this, MainLink.class);
-                    Bundle farmer_bundle = new Bundle();
-                    farmer_bundle.putString("name", farmer.getName());
-                    farmer_bundle.putString("telephone", farmer.getTelephone());
-                    farmer_bundle.putInt("id", farmer.getId());
-                    intent.putExtra("farmer_register", farmer_bundle);
+                    intent.putExtra("farmer_token", token);
                     startActivity(intent);
                     finish();
                 } else {

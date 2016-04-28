@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.njdp.njdp_farmer.FarmerLandList;
 import com.njdp.njdp_farmer.PersonalSet;
 import com.njdp.njdp_farmer.R;
 
@@ -23,7 +24,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
     //所有监听的控件
     static ImageView userImage;
-    TextView userName, telephone, qq, weixin, address;
+    TextView userName, telephone, qq, weixin, address, myrelease;
     Button personalEdit;
     View view;
 
@@ -55,6 +56,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         qq = (TextView) view.findViewById(R.id.tv_qq);
         weixin = (TextView) view.findViewById(R.id.tv_weixin);
         address = (TextView) view.findViewById(R.id.tv_address);
+        myrelease = (TextView) view.findViewById(R.id.tv_my_release);
         personalEdit = (Button) view.findViewById(R.id.btn_edit);
 
         initOnClick();
@@ -62,6 +64,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
     private void initOnClick() {
         personalEdit.setOnClickListener(this);
+        myrelease.setOnClickListener(this);
         //Thread.setOnClickListener(this);
         //myMessage.setOnClickListener(this);
     }
@@ -75,9 +78,12 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 Log.e("------------->", "点击修改用户信息");
                 Intent intent1 = new Intent(getActivity(), PersonalSet.class);
                 startActivity(intent1);
-
                 break;
-
+            case R.id.tv_my_release:
+                Log.e("------------->", "查看我的发布信息");
+                Intent intent2 = new Intent(getActivity(), FarmerLandList.class);
+                startActivity(intent2);
+                break;
         }
     }
     public static Handler handle=new Handler(){

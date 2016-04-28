@@ -13,10 +13,10 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.MOUNT_FORMAT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <!--获取位置信息-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- 获取位置信息 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".db.AppController"
@@ -29,7 +29,11 @@
             android:name=".login"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".register"
@@ -50,14 +54,9 @@
         <activity
             android:name=".mainpages"
             android:label="@string/title_activity_mainpages"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/AppTheme.NoActionBar">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-
         <activity
             android:name=".register_image"
             android:label="@string/title_activity_register_image"
@@ -91,7 +90,8 @@
         <activity
             android:name=".conent_frament.PersonalInfoFrame"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".FarmerLandList"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

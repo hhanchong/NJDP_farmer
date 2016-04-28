@@ -337,7 +337,7 @@ public class register_image extends AppCompatActivity {
                 JSONObject jObj = new JSONObject(response);
                 boolean error = jObj.getBoolean("error");
                 if(!error) {
-                    session.setLogin(true, false);
+                    //session.setLogin(true, false);
                     // Now store the user in sqlite
                     // Inserting row in users table
                     JSONObject farmers = jObj.getJSONObject("Farmers");

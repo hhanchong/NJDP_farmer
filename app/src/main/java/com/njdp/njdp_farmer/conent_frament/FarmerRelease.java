@@ -282,8 +282,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     params.put("Farmlands_longitude", farmlandInfo.getLongitude());
                     params.put("Farmlands_Latitude", farmlandInfo.getLatitude());
                     params.put("Farmlands_street_view", farmlandInfo.getStreet_view());
-                    params.put("Farmlands_start_time", farmlandInfo.yyyymmdd_DateFormat.format(farmlandInfo.getStart_time()));
-                    params.put("Farmlands_end_time", farmlandInfo.yyyymmdd_DateFormat.format(farmlandInfo.getEnd_time()));
+                    params.put("Farmlands_start_time", farmlandInfo.getStart_time());
+                    params.put("Farmlands_end_time", farmlandInfo.getEnd_time());
                     //params.put("status", farmlandInfo.getStatus());
                     params.put("Farmlands_remark", farmlandInfo.getRemark());
                     return params;
@@ -593,11 +593,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     releaseEditFinish.setEnabled(false);
                     releaseEditFinish.setClickable(false);
                 }
-                try {
-                    farmlandInfo.setStart_time(farmlandInfo.yyyymmdd_DateFormat.parse(s.toString()));
-                }catch (Exception ex){
-
-                }
+                farmlandInfo.setStart_time(farmlandInfo.StringFormatDate(s.toString()));
             }
         });
 
@@ -622,11 +618,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     releaseEditFinish.setEnabled(false);
                     releaseEditFinish.setClickable(false);
                 }
-                try {
-                    farmlandInfo.setEnd_time(farmlandInfo.yyyymmdd_DateFormat.parse(s.toString()));
-                }catch (Exception ex){
+                farmlandInfo.setEnd_time(farmlandInfo.StringFormatDate(s.toString()));
 
-                }
             }
         });
     }

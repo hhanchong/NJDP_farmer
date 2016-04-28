@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,7 +25,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class mainpages extends AppCompatActivity {
-
+    private String token;
     private Farmer farmer;
     private CustomProgressDialog progressDialog;
     private ContentViewPager contentViewPager;
@@ -37,14 +38,22 @@ public class mainpages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage);
 
-        farmer = (Farmer)getIntent().getSerializableExtra("farmer");
-
         //progressDialog = new CustomProgressDialog(this,"数据正在请求中...", R.anim.donghua_frame);
         //progressDialog.show();
         //progressDialog.dismiss();
         //checkNetState();//检查网络状态
         initdata();//填充数据
-        initview();//填充布局
+        //获取参数
+        token = getIntent().getStringExtra("TOKEN");
+        int openModule = getIntent().getIntExtra("openModule", 0);
+        if(openModule == 1 || openModule == 2 || openModule == 3){
+            initview(openModule);//填充布局
+        }
+        else{
+            error_hint("参数传输错误！");
+            finish();
+        }
+
     }
 
     private List<Fragment> content_list = null;
@@ -58,7 +67,7 @@ public class mainpages extends AppCompatActivity {
         //content_list.add(new SheZhiFrament());
     }
 
-    private void initview() {
+    private void initview(int page) {
         if (content_list == null) {
             return;
         }
@@ -95,7 +104,13 @@ public class mainpages extends AppCompatActivity {
                 }
             }
         });
-        contentradiogroup.check(R.id.rb_release);
+        if(page == 1) {
+            contentradiogroup.check(R.id.rb_release);
+        }else if(page == 2){
+            contentradiogroup.check(R.id.rb_search);
+        }else {
+            contentradiogroup.check(R.id.rb_userInfo);
+        }
 
     }
 
@@ -177,5 +192,11 @@ public class mainpages extends AppCompatActivity {
         }
     };
 
+    //错误信息提示
+    private void error_hint(String str) {
+        Toast toast = Toast.makeText(mainpages.this, str, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, -50);
+        toast.show();
+    }
 
 }

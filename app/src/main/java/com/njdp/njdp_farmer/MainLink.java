@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.njdp.njdp_farmer.bean.Farmer;
 
 public class MainLink extends AppCompatActivity {
-    private Farmer farmer;
+    private String token;
     Intent intent;
 
     @Override
@@ -18,33 +18,33 @@ public class MainLink extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_link);
 
-        farmer = (Farmer)getIntent().getSerializableExtra("farmer");
-        if(farmer == null){
+        token = getIntent().getStringExtra("TOKEN");
+        if(token == null){
             error_hint("参数传输错误！");
             finish();
         }
 
         intent = new Intent(MainLink.this, mainpages.class);
-        intent.putExtra("farmer", farmer);
+        intent.putExtra("TOKEN", token);
     }
 
     //发布信息
     public void releaseDemandClick(View v){
-        intent.putExtra("openModule", "1");
+        intent.putExtra("openModule", 1);
         startActivity(intent);
         finish();
     }
 
     //查询农机
     public void machineSearchClick(View v){
-        intent.putExtra("openModule", "2");
+        intent.putExtra("openModule", 2);
         startActivity(intent);
         finish();
     }
 
     //个人信息
     public void peopleInfoClick(View v){
-        intent.putExtra("openModule", "3");
+        intent.putExtra("openModule", 3);
         startActivity(intent);
         finish();
     }

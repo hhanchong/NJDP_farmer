@@ -58,9 +58,10 @@ public class login extends AppCompatActivity {
         if (session!=null)
         {
             //检测是否缓存了登录信息
-            if (session.isLoggedIn()) {
+            if (session.isLoggedIn() && session.getToken() != "") {
                 // User is already logged in. Take him to main activity
                 Intent intent = new Intent(login.this, mainpages.class);
+                intent.putExtra("TOKEN", session.getToken());
                 startActivity(intent);
                 finish();
             }
@@ -89,8 +90,9 @@ public class login extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
 
         // Check if user is already logged in or not
-        if (session.isLoggedIn()) {
+        if (session.isLoggedIn() && session.getToken() != "") {
             Intent intent = new Intent(login.this, mainpages.class);
+            intent.putExtra("TOKEN", session.getToken());
             startActivity(intent);
             finish();
         }
@@ -152,9 +154,9 @@ public class login extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("telephone", farmer.getTelephone());
-                    params.put("password", farmer.getPassword());
-
+                    params.put("fm_username", farmer.getTelephone());
+                    params.put("fm_password", farmer.getPassword());
+                    params.put("fm_tag", "F");
                     return params;
                 }
             };
@@ -185,31 +187,29 @@ public class login extends AppCompatActivity {
 
             try {
                 JSONObject jObj = new JSONObject(response);
-                boolean error = jObj.getBoolean("error");
+                int status = jObj.getInt("status");
 
                 // Check for error node in json
-                if (!error) {
+                if (status == 0) {
+                    // Now store the user in SQLite
+                    String token = jObj.getString("result");
                     // user successfully logged in
                     // Create signin session
-                    session.setLogin(true,false);
-
-                    // Now store the user in SQLite
-                    JSONObject farmers = jObj.getJSONObject("Farmers");
-                    farmer.setId(farmers.getInt("ID"));
-                    farmer.setName(farmers.getString("Name"));
-                    farmer.setPassword(farmers.getString("Password"));
-                    farmer.setTelephone(farmers.getString("Telephone"));
-                    farmer.setImageUrl(farmers.getString("ImageUrl"));
-
-                    // Inserting row in users table
-                    db.addUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone() ,farmer.getImageUrl());
-
+                    session.setLogin(true,false,token);
                     //Launch main activity
                     Intent intent = new Intent(login.this, MainLink.class);
-                    intent.putExtra("farmer", farmer);
+                    intent.putExtra("TOKEN", token);
                     startActivity(intent);
                     finish();
-                } else {
+
+                    // Inserting row in users table
+                    //db.addUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone() ,farmer.getImageUrl());
+
+                } else if(status == 1) {
+                    error_hint("无此用户！");
+                }else if(status == 2){
+                    error_hint("密码错误！");
+                }else{
                     empty_hint(R.string.login_error);
                     // Error in signin Get the error message
                     String errorMsg = jObj.getString("error_msg");
