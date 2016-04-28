@@ -60,7 +60,7 @@ public class login extends AppCompatActivity {
             //检测是否缓存了登录信息
             if (session.isLoggedIn() && session.getToken() != "") {
                 // User is already logged in. Take him to main activity
-                Intent intent = new Intent(login.this, mainpages.class);
+                Intent intent = new Intent(login.this, MainLink.class);
                 intent.putExtra("TOKEN", session.getToken());
                 startActivity(intent);
                 finish();
@@ -91,7 +91,7 @@ public class login extends AppCompatActivity {
 
         // Check if user is already logged in or not
         if (session.isLoggedIn() && session.getToken() != "") {
-            Intent intent = new Intent(login.this, mainpages.class);
+            Intent intent = new Intent(login.this, MainLink.class);
             intent.putExtra("TOKEN", session.getToken());
             startActivity(intent);
             finish();
