@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -29,6 +31,8 @@ public class mainpages extends AppCompatActivity {
     private Farmer farmer;
     private CustomProgressDialog progressDialog;
     private ContentViewPager contentViewPager;
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
     private RadioGroup contentradiogroup;
     private EditText startTime, endTime; //发布界面的时间选择
     private int mYear, mMonth, mDay, mYear1, mMonth1, mDay1;
@@ -38,14 +42,15 @@ public class mainpages extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainpage);
 
-        //progressDialog = new CustomProgressDialog(this,"数据正在请求中...", R.anim.donghua_frame);
-        //progressDialog.show();
-        //progressDialog.dismiss();
+        progressDialog = new CustomProgressDialog(this,"数据正在请求中...", R.anim.donghua_frame);
+        progressDialog.show();
+
         //checkNetState();//检查网络状态
-        initdata();//填充数据
         //获取参数
         token = getIntent().getStringExtra("TOKEN");
         int openModule = getIntent().getIntExtra("openModule", 0);
+        //填充数据
+        initdata();
         if(openModule == 1 || openModule == 2 || openModule == 3){
             initview(openModule);//填充布局
         }
@@ -53,18 +58,33 @@ public class mainpages extends AppCompatActivity {
             error_hint("参数传输错误！");
             finish();
         }
-
+        progressDialog.dismiss();
     }
 
     private List<Fragment> content_list = null;
 
     private void initdata() {
+        manager = getFragmentManager();
+        transaction = manager.beginTransaction();
+        //要传递的参数
+        Bundle bundle1 = new Bundle();
+        bundle1.putString("token", token);
         content_list = new ArrayList<>();
-        content_list.add(new FarmerRelease());
-        content_list.add(new PersonalInfoFrame());
-        content_list.add(new PersonalInfoFrame());
+        //农户发布界面
+        FarmerRelease farmerRelease = new FarmerRelease();
+        farmerRelease.setArguments(bundle1);
+        content_list.add(farmerRelease);
+        //农机查询界面，暂时用个人界面填充
+        PersonalInfoFrame personalInfoFrame1 = new PersonalInfoFrame();
+        personalInfoFrame1.setArguments(bundle1);
+        content_list.add(personalInfoFrame1);
+        //个人信息界面
+        PersonalInfoFrame personalInfoFrame = new PersonalInfoFrame();
+        personalInfoFrame.setArguments(bundle1);
+        content_list.add(personalInfoFrame);
         //content_list.add(new YueDuFrament());
         //content_list.add(new SheZhiFrament());
+        transaction.commit();
     }
 
     private void initview(int page) {

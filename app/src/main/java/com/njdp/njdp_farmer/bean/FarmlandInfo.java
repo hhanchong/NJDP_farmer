@@ -175,16 +175,24 @@ public class FarmlandInfo implements Serializable {
         this.street_view = street_view;
     }
 
-    public String getStart_time() {
+    public String getStart_time_String() {
         return DateFormatString(start_time);
+    }
+
+    public Date getStart_time() {
+        return start_time;
     }
 
     public void setStart_time(Date start_time) {
         this.start_time = start_time;
     }
 
-    public String getEnd_time() {
+    public String getEnd_time_String() {
         return DateFormatString(end_time);
+    }
+
+    public Date getEnd_time() {
+        return end_time;
     }
 
     public void setEnd_time(Date end_time) {
