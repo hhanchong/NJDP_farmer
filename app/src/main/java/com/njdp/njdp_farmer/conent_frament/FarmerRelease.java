@@ -679,6 +679,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                 } else {
                     releaseEditFinish.setEnabled(false);
                     releaseEditFinish.setClickable(false);
+                    //releaseEditFinish.setBackground("#");
                 }
                 if(s.toString().length() == 0){
                     return;
