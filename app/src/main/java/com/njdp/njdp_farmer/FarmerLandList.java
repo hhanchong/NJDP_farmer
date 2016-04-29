@@ -2,9 +2,11 @@ package com.njdp.njdp_farmer;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.njdp.njdp_farmer.adpter.MyAdapter;
 import com.njdp.njdp_farmer.bean.FarmlandInfo;
@@ -16,6 +18,7 @@ public class FarmerLandList extends AppCompatActivity {
     private ExpandableListView listView;
     private List<String> group;
     private List<List<FarmlandInfo>> child;
+    private List<FarmlandInfo> farmlandInfoList;
     private MyAdapter adapter;
     private ImageButton getback=null;
     private FarmlandInfo farmlandInfo, farmlandInfo1;
@@ -25,6 +28,12 @@ public class FarmerLandList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_farmer_land_list);
 
+        farmlandInfoList = (List<FarmlandInfo>)getIntent().getSerializableExtra("farmlandInfoList");
+        if(farmlandInfoList == null)
+        {
+            error_hint("没有发布信息！");
+            this.finish();
+        }
         farmlandInfo = new FarmlandInfo();
         farmlandInfo.setCrops_kind("小麦");
         farmlandInfo.setStatus("未收割");
@@ -74,9 +83,12 @@ public class FarmerLandList extends AppCompatActivity {
     private void initData() {
         group = new ArrayList<String>();
         child = new ArrayList<List<FarmlandInfo>>();
-        addInfo("北京",new FarmlandInfo[]{farmlandInfo});
-        addInfo("河北", new FarmlandInfo[]{farmlandInfo1});
+        //addInfo("成功村-小麦-20亩-未收割",new FarmlandInfo[]{farmlandInfo});
+        //addInfo("河北", new FarmlandInfo[]{farmlandInfo1});
         //addInfo("广东", new FarmlandInfo[]{farmlandInfo});
+        for(FarmlandInfo f :farmlandInfoList){
+            addInfo(f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "-" + (f.getStatus().equals("0")?"未收割":"已收割"), new FarmlandInfo[]{f});
+        }
     }
 
     /**
@@ -84,12 +96,19 @@ public class FarmerLandList extends AppCompatActivity {
      * @param g
      * @param c
      */
-    private void addInfo(String g,FarmlandInfo[] c) {
+    private void addInfo(String g, FarmlandInfo[] c) {
         group.add(g);
         List<FarmlandInfo> list = new ArrayList<FarmlandInfo>();
         for (int i = 0; i < c.length; i++) {
             list.add(c[i]);
         }
         child.add(list);
+    }
+
+    //错误信息提示
+    private void error_hint(String str) {
+        Toast toast = Toast.makeText(FarmerLandList.this, str, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, -50);
+        toast.show();
     }
 }

@@ -84,6 +84,7 @@ public class MyAdapter extends BaseExpandableListAdapter {
 		holder.textView.setText(group.get(groupPosition));
 		holder.textView.setTextSize(25);
 		holder.textView.setPadding(36, 20, 0, 20);
+		holder.textView.getPaint().setFakeBoldText(true); //加粗
 		return convertView;
 	}
 	
@@ -119,8 +120,8 @@ public class MyAdapter extends BaseExpandableListAdapter {
 		viewHolder.address.setText(child.get(groupPosition).get(childPosition).getProvince() + child.get(groupPosition).get(childPosition).getCity() +
 				child.get(groupPosition).get(childPosition).getCounty() + child.get(groupPosition).get(childPosition).getTown() +
 				child.get(groupPosition).get(childPosition).getVillage());
-		viewHolder.starttime.setText("开始时间："+child.get(groupPosition).get(childPosition).getStart_time());
-		viewHolder.endtime.setText("结束时间："+child.get(groupPosition).get(childPosition).getEnd_time());
+		viewHolder.starttime.setText("开始时间："+child.get(groupPosition).get(childPosition).getStart_time_String());
+		viewHolder.endtime.setText("结束时间："+child.get(groupPosition).get(childPosition).getEnd_time_String());
 		viewHolder.remark.setText("补充说明："+child.get(groupPosition).get(childPosition).getRemark());
 		return convertView;
 	}

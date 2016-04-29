@@ -401,7 +401,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         address.setText("");
         starttime.setText("");
         endtime.setText("");
-        remark.setText("");
+        //remark.setText(""); //街景暂未考虑
         remark.setText("");
     }
 
@@ -570,25 +570,27 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     releaseEditFinish.setClickable(false);
                 }
                 String temp[] = s.toString().split("-");
-                farmlandInfo.setProvince(temp[0]);
-                farmlandInfo.setCity(temp[1]);
-                farmlandInfo.setCounty(temp[2]);
-                farmlandInfo.setTown(temp[3]);
-                farmlandInfo.setVillage(temp[4]);
-                Location location = null;
-                //location = getLocalGPSByNet(s.toString());
-                if(location == null) {
-                    location = getLocalGPS();
-                    if (location != null) {
+                if(temp.length > 4) {
+                    farmlandInfo.setProvince(temp[0]);
+                    farmlandInfo.setCity(temp[1]);
+                    farmlandInfo.setCounty(temp[2]);
+                    farmlandInfo.setTown(temp[3]);
+                    farmlandInfo.setVillage(temp[4]);
+                    Location location = null;
+                    //location = getLocalGPSByNet(s.toString());
+                    if(location == null) {
+                        location = getLocalGPS();
+                        if (location != null) {
+                            farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
+                            farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
+                        }
+                        else {
+                            error_hint("获取GPS位置失败！");
+                        }
+                    }else{
                         farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
                         farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
                     }
-                    else {
-                        error_hint("获取GPS位置失败！");
-                    }
-                }else{
-                    farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
-                    farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
                 }
             }
         });
@@ -601,18 +603,30 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if(s.toString().length() == 0) {
+                    return;
+                }
+                if(!TextUtils.isEmpty(endtime.getText())) {
+                    if (farmlandInfo.StringFormatDate(s.toString()).getTime() > farmlandInfo.getEnd_time().getTime()) {
+                        error_hint("开始时间不能晚于结束时间！");
+                        if (farmlandInfo.getEnd_time().getTime() < farmlandInfo.getStart_time().getTime()) {
+                            starttime.setText(farmlandInfo.getEnd_time_String());
+                            farmlandInfo.setStart_time(farmlandInfo.getEnd_time());
+                        } else {
+                            if(farmlandInfo.getStart_time().getTime() == farmlandInfo.StringFormatDate("1900-01-01").getTime()){
+                                starttime.setText(farmlandInfo.getEnd_time_String());
+                                farmlandInfo.setStart_time(farmlandInfo.getEnd_time());
+                            }else {
+                                starttime.setText(farmlandInfo.getStart_time_String());
+                            }
+                        }
+                        return;
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(!TextUtils.isEmpty(endtime.getText())){
-                    if(farmlandInfo.StringFormatDate(s.toString()).getTime() > farmlandInfo.getEnd_time().getTime()){
-                        error_hint("开始时间不能晚于结束时间！");
-                        starttime.setText(farmlandInfo.getStart_time_String());
-                        return;
-                    }
-                }
 
                 if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(blocktype.getText())
                         && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(endtime.getText())) {
@@ -622,7 +636,11 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     releaseEditFinish.setEnabled(false);
                     releaseEditFinish.setClickable(false);
                 }
-                farmlandInfo.setStart_time(farmlandInfo.StringFormatDate(s.toString()));
+                if(s.toString().length() == 0) {
+                    return;
+                }else {
+                    farmlandInfo.setStart_time(farmlandInfo.StringFormatDate(s.toString()));
+                }
             }
         });
 
@@ -634,19 +652,26 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if(s.toString().length() == 0) {
+                    return;
+                }
+                if(!TextUtils.isEmpty(starttime.getText())){
+                    if(farmlandInfo.StringFormatDate(s.toString()).getTime() < farmlandInfo.getStart_time().getTime()){
+                        error_hint("结束时间不能早于开始时间！");
+                        if(farmlandInfo.getEnd_time().getTime() < farmlandInfo.getStart_time().getTime()) {
+                            endtime.setText(farmlandInfo.getStart_time_String());
+                            farmlandInfo.setEnd_time(farmlandInfo.getStart_time());
+                        } else {
+                            endtime.setText(farmlandInfo.getEnd_time_String());
+                        }
+                        return;
+                    }
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
-                if(!TextUtils.isEmpty(starttime.getText())){
-                    if(farmlandInfo.StringFormatDate(s.toString()).getTime() < farmlandInfo.getStart_time().getTime()){
-                        error_hint("结束时间不能早于开始时间！");
-                        endtime.setText(farmlandInfo.getEnd_time_String());
-                        return;
-                    }
-                }
                 if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(blocktype.getText())
                         && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(croptype.getText())) {
                     releaseEditFinish.setClickable(true);
@@ -655,8 +680,11 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     releaseEditFinish.setEnabled(false);
                     releaseEditFinish.setClickable(false);
                 }
-                farmlandInfo.setEnd_time(farmlandInfo.StringFormatDate(s.toString()));
-
+                if(s.toString().length() == 0){
+                    return;
+                }else {
+                    farmlandInfo.setEnd_time(farmlandInfo.StringFormatDate(s.toString()));
+                }
             }
         });
     }
