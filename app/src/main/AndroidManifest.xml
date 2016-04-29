@@ -54,9 +54,7 @@
         <activity
             android:name=".mainpages"
             android:label="@string/title_activity_mainpages"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".register_image"
             android:label="@string/title_activity_register_image"
@@ -90,8 +88,12 @@
         <activity
             android:name=".conent_frament.PersonalInfoFrame"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".FarmerLandList"
+        <activity android:name=".conent_frament.FarmMachineSearch"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".FarmerLandList"
+            android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

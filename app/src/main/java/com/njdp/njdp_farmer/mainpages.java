@@ -2,7 +2,6 @@ package com.njdp.njdp_farmer;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
@@ -74,10 +73,10 @@ public class mainpages extends AppCompatActivity {
         FarmerRelease farmerRelease = new FarmerRelease();
         farmerRelease.setArguments(bundle1);
         content_list.add(farmerRelease);
-        //农机查询界面，暂时用个人界面填充
-        PersonalInfoFrame personalInfoFrame1 = new PersonalInfoFrame();
-        personalInfoFrame1.setArguments(bundle1);
-        content_list.add(personalInfoFrame1);
+        //农机查询界面
+        FarmMachineSearch farmMachineSearch = new FarmMachineSearch();
+        farmMachineSearch.setArguments(bundle1);
+        content_list.add(farmMachineSearch);
         //个人信息界面
         PersonalInfoFrame personalInfoFrame = new PersonalInfoFrame();
         personalInfoFrame.setArguments(bundle1);
