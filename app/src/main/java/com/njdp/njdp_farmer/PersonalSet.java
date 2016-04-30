@@ -62,7 +62,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
-        farmer = (Farmer)getIntent().getSerializableExtra("farmer");
+        farmer = (Farmer)getIntent().getSerializableExtra("user");
         if(farmer == null){
             error_hint("参数传输错误！");
             finish();

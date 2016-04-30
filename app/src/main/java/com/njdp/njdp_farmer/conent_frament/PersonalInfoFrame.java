@@ -27,21 +27,25 @@ import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.FarmerLandList;
 import com.njdp.njdp_farmer.PersonalSet;
 import com.njdp.njdp_farmer.R;
+import com.njdp.njdp_farmer.bean.Farmer;
 import com.njdp.njdp_farmer.bean.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.login;
 import com.njdp.njdp_farmer.util.NetUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Objects;
 
 public class PersonalInfoFrame extends Fragment implements View.OnClickListener {
     private final String TAG = "PersonalInfoFrame";
@@ -53,7 +57,8 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     private ProgressDialog pDialog;
     private NetUtil netutil = new NetUtil();
     private String token;
-    List<FarmlandInfo> farmlandInfos;
+    private Farmer farmer;
+    ArrayList<FarmlandInfo> farmlandInfos;
 
     @Nullable
     @Override
@@ -61,131 +66,20 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         try {
             Bundle bundle = getArguments();
             token = bundle.getString("token");
-            if (token == null) {
+            farmer = (Farmer)bundle.getSerializable("farmer");
+            //自测用户
+            farmer = new Farmer();
+            farmer.setName("李占伟");
+            farmer.setImageUrl("@drawable/ic_launcher");
+            farmer.setTelephone("18932659760");
+            farmer.setQQ("842558891");
+            farmer.setWeixin("ZhiHuiNongJi");
+            farmer.setAddress("河北省保定市清苑县***乡***村");
+            //判断参数传递是否正确
+            if (token == null || farmer == null) {
                 error_hint("参数传递错误！");
                 return null;
             }
-            farmlandInfos = new List<FarmlandInfo>() {
-                @Override
-                public void add(int location, FarmlandInfo object) {
-
-                }
-
-                @Override
-                public boolean add(FarmlandInfo object) {
-                    return false;
-                }
-
-                @Override
-                public boolean addAll(int location, Collection<? extends FarmlandInfo> collection) {
-                    return false;
-                }
-
-                @Override
-                public boolean addAll(Collection<? extends FarmlandInfo> collection) {
-                    return false;
-                }
-
-                @Override
-                public void clear() {
-
-                }
-
-                @Override
-                public boolean contains(Object object) {
-                    return false;
-                }
-
-                @Override
-                public boolean containsAll(Collection<?> collection) {
-                    return false;
-                }
-
-                @Override
-                public FarmlandInfo get(int location) {
-                    return null;
-                }
-
-                @Override
-                public int indexOf(Object object) {
-                    return 0;
-                }
-
-                @Override
-                public boolean isEmpty() {
-                    return false;
-                }
-
-                @NonNull
-                @Override
-                public Iterator<FarmlandInfo> iterator() {
-                    return null;
-                }
-
-                @Override
-                public int lastIndexOf(Object object) {
-                    return 0;
-                }
-
-                @Override
-                public ListIterator<FarmlandInfo> listIterator() {
-                    return null;
-                }
-
-                @NonNull
-                @Override
-                public ListIterator<FarmlandInfo> listIterator(int location) {
-                    return null;
-                }
-
-                @Override
-                public FarmlandInfo remove(int location) {
-                    return null;
-                }
-
-                @Override
-                public boolean remove(Object object) {
-                    return false;
-                }
-
-                @Override
-                public boolean removeAll(Collection<?> collection) {
-                    return false;
-                }
-
-                @Override
-                public boolean retainAll(Collection<?> collection) {
-                    return false;
-                }
-
-                @Override
-                public FarmlandInfo set(int location, FarmlandInfo object) {
-                    return null;
-                }
-
-                @Override
-                public int size() {
-                    return 0;
-                }
-
-                @NonNull
-                @Override
-                public List<FarmlandInfo> subList(int start, int end) {
-                    return null;
-                }
-
-                @NonNull
-                @Override
-                public Object[] toArray() {
-                    return new Object[0];
-                }
-
-                @NonNull
-                @Override
-                public <T> T[] toArray(T[] array) {
-                    return null;
-                }
-            };
             if (view == null) {
                 view = inFlater(inflater);
             }
@@ -199,17 +93,24 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     public View inFlater(LayoutInflater inflater) {
         view = inflater.inflate(R.layout.activity_personal_info, null, false);
         initView(view);
+        farmlandInfos = new ArrayList<FarmlandInfo>();
         getFarmlandInfos();
         return view;
     }
 
     private void initView(View view) {
         userImage = (ImageView) view.findViewById(R.id.user_image);
+        //userImage.setImageURI();
         userName = (TextView) view.findViewById(R.id.tv_user_name);
+        userName.setText(farmer.getName());
         telephone = (TextView) view.findViewById(R.id.tv_phonenum);
+        telephone.setText(farmer.getTelephone());
         qq = (TextView) view.findViewById(R.id.tv_qq);
+        qq.setText(farmer.getQQ());
         weixin = (TextView) view.findViewById(R.id.tv_weixin);
+        weixin.setText(farmer.getWeixin());
         address = (TextView) view.findViewById(R.id.tv_address);
+        address.setText(farmer.getAddress());
         myrelease = (TextView) view.findViewById(R.id.tv_my_release);
         personalEdit = (Button) view.findViewById(R.id.btn_edit);
         pDialog = new ProgressDialog(getActivity());
@@ -233,11 +134,13 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             case R.id.btn_edit:
                 Log.e("------------->", "点击修改用户信息");
                 Intent intent1 = new Intent(getActivity(), PersonalSet.class);
+                intent1.putExtra("user", farmer);
                 startActivity(intent1);
                 break;
             case R.id.tv_my_release:
                 Log.e("------------->", "查看我的发布信息");
                 Intent intent2 = new Intent(getActivity(), FarmerLandList.class);
+                intent2.putExtra("farmlandInfos", farmlandInfos);
                 startActivity(intent2);
                 break;
         }
@@ -310,8 +213,33 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
                 // Check for error node in json
                 if (status == 0) {
-                    // user successfully logged in
-                    error_hint("发布成功！");
+                    //此处引入JSON jar包
+                    JSONArray jObjs = jObj.getJSONArray("result");
+                    for(int i = 0; i < jObjs.length(); i++){
+                        FarmlandInfo temp = new FarmlandInfo();
+                        JSONObject object = (JSONObject)jObjs.opt(i);
+                        temp.setId(object.getInt("id"));
+                        temp.setCrops_kind(object.getString("Farmlands_crops_kind"));
+                        temp.setArea(Float.parseFloat(object.getString("Farmlands_area")));
+                        temp.setUnit_price(Float.parseFloat(object.getString("Farmlands_unit_price")));
+                        temp.setBlock_type(object.getString("Farmlands_block_type"));
+                        temp.setProvince(object.getString("Farmlands_province"));
+                        temp.setCity(object.getString("Farmlands_city"));
+                        temp.setCounty(object.getString("Farmlands_county"));
+                        temp.setTown(object.getString("Farmlands_town"));
+                        temp.setVillage(object.getString("Farmlands_village"));
+                        temp.setLongitude(object.getString("Farmlands_longitude"));
+                        temp.setLatitude(object.getString("Farmlands_Latitude"));
+                        temp.setStreet_view(object.getString("Farmlands_street_view"));
+                        temp.setStart_time(object.getString("Farmlands_start_time"));
+                        temp.setEnd_time(object.getString("Farmlands_end_time"));
+                        temp.setStatus(object.getString("Farmlands_status"));
+                        temp.setRemark(object.getString("Farmlands_remark"));
+                        temp.setCreatetime(object.getString("created_at"));
+                        temp.setUpdatetime(object.getString("updated_at"));
+                        farmlandInfos.add(temp);
+                    }
+                    myrelease.setText("共发布了" + jObjs.length() + "条信息，点击查看");
 
                 } else if(status == 1){
                     //密匙失效

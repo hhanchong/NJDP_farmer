@@ -18,50 +18,22 @@ public class FarmerLandList extends AppCompatActivity {
     private ExpandableListView listView;
     private List<String> group;
     private List<List<FarmlandInfo>> child;
-    private List<FarmlandInfo> farmlandInfoList;
+    private ArrayList<FarmlandInfo> farmlandInfoList;
     private MyAdapter adapter;
     private ImageButton getback=null;
-    private FarmlandInfo farmlandInfo, farmlandInfo1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_farmer_land_list);
 
-        farmlandInfoList = (List<FarmlandInfo>)getIntent().getSerializableExtra("farmlandInfoList");
+        farmlandInfoList = (ArrayList<FarmlandInfo>)getIntent().getSerializableExtra("farmlandInfos");
         if(farmlandInfoList == null)
         {
             error_hint("没有发布信息！");
             this.finish();
         }
-        farmlandInfo = new FarmlandInfo();
-        farmlandInfo.setCrops_kind("小麦");
-        farmlandInfo.setStatus("未收割");
-        farmlandInfo.setArea(28);
-        farmlandInfo.setUnit_price(86);
-        farmlandInfo.setBlock_type("规则");
-        farmlandInfo.setProvince("河北");
-        farmlandInfo.setCity("邯郸");
-        farmlandInfo.setCounty("武义县");
-        farmlandInfo.setTown("某某乡");
-        farmlandInfo.setVillage("某某村");
-        farmlandInfo.setStart_time(farmlandInfo.StringFormatDate("2016-04-07"));
-        farmlandInfo.setEnd_time(farmlandInfo.StringFormatDate("2016-04-30"));
-        farmlandInfo.setRemark("无");
-        farmlandInfo1 = new FarmlandInfo();
-        farmlandInfo1.setCrops_kind("小麦");
-        farmlandInfo1.setStatus("0");
-        farmlandInfo1.setArea(28);
-        farmlandInfo1.setUnit_price(86);
-        farmlandInfo1.setBlock_type("规则");
-        farmlandInfo1.setProvince("河北");
-        farmlandInfo1.setCity("邯郸");
-        farmlandInfo1.setCounty("武义县");
-        farmlandInfo1.setTown("某某乡");
-        farmlandInfo1.setVillage("某某村");
-        farmlandInfo1.setStart_time(farmlandInfo.StringFormatDate("2016-04-07"));
-        farmlandInfo1.setEnd_time(farmlandInfo.StringFormatDate("2016-04-30"));
-        farmlandInfo1.setRemark("无");
+
         listView = (ExpandableListView) findViewById(R.id.expandableListView);
         /**
          * 初始化数据
@@ -87,7 +59,7 @@ public class FarmerLandList extends AppCompatActivity {
         //addInfo("河北", new FarmlandInfo[]{farmlandInfo1});
         //addInfo("广东", new FarmlandInfo[]{farmlandInfo});
         for(FarmlandInfo f :farmlandInfoList){
-            addInfo(f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "-" + (f.getStatus().equals("0")?"未收割":"已收割"), new FarmlandInfo[]{f});
+            addInfo(f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0")?"未收割":"已收割"), new FarmlandInfo[]{f});
         }
     }
 

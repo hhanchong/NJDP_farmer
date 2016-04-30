@@ -40,8 +40,10 @@
             <TextView
                 style="@style/Register_style"
                 android:id="@+id/tv_user_name"
+                android:text="李占伟"
                 android:layout_toRightOf="@+id/tv1"
                 android:layout_alignBaseline="@+id/tv1"
+                android:paddingLeft="10dp"
                 android:textSize="20sp"/>
 
         </RelativeLayout>
@@ -97,10 +99,11 @@
             <TextView
                 style="@style/Register_style"
                 android:id="@+id/tv_qq"
-                android:inputType="numberDecimal"
+                android:text="842558891"
                 android:textSize="20sp"
                 android:layout_toRightOf="@+id/tv3"
                 android:layout_alignBaseline="@+id/tv3"
+                android:paddingLeft="10dp"
                 android:maxLength="10" />
         </RelativeLayout>
 
@@ -124,10 +127,11 @@
             <TextView
                 style="@style/Register_style"
                 android:id="@+id/tv_weixin"
-                android:inputType=""
+                android:text="zhihuinongji"
                 android:textSize="20sp"
                 android:layout_toRightOf="@+id/tv4"
                 android:layout_alignBaseline="@+id/tv4"
+                android:paddingLeft="10dp"
                 android:maxLength="30" />
         </RelativeLayout>
 
@@ -157,7 +161,7 @@
                 android:layout_height="50dp"
                 android:paddingLeft="10dp"
                 android:text="河北省保定市清苑县***乡***村"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_vertical|left"
                 android:gravity="center_vertical|left"
                 android:layout_toRightOf="@+id/tv5"
@@ -193,7 +197,7 @@
                 android:layout_height="50dp"
                 android:paddingLeft="10dp"
                 android:text="共发布了1条信息，点击查看"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_gravity="center_vertical|left"
                 android:gravity="center_vertical|left"
                 android:layout_toRightOf="@+id/tv6"

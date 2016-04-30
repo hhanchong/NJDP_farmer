@@ -82,7 +82,7 @@ public class MyAdapter extends BaseExpandableListAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.textView.setText(group.get(groupPosition));
-		holder.textView.setTextSize(25);
+		holder.textView.setTextSize(22);
 		holder.textView.setPadding(36, 20, 0, 20);
 		holder.textView.getPaint().setFakeBoldText(true); //加粗
 		return convertView;

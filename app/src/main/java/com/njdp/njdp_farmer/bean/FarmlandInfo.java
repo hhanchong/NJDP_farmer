@@ -187,6 +187,14 @@ public class FarmlandInfo implements Serializable {
         this.start_time = start_time;
     }
 
+    public void setStart_time(String start_time) {
+        try {
+            this.start_time = yyyymmdd_DateFormat.parse(start_time);
+        }catch (Exception ex){
+
+        }
+    }
+
     public String getEnd_time_String() {
         return DateFormatString(end_time);
     }
@@ -197,6 +205,14 @@ public class FarmlandInfo implements Serializable {
 
     public void setEnd_time(Date end_time) {
         this.end_time = end_time;
+    }
+
+    public void setEnd_time(String end_time) {
+        try {
+            this.end_time = yyyymmdd_DateFormat.parse(end_time);
+        }catch (Exception ex){
+
+        }
     }
 
     public String getStatus() {
