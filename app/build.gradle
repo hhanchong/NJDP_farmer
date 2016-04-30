@@ -31,7 +31,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     //    compile 'com.android.support:appcompat-v7:23.1.1'
     compile files('libs/volley-library-1.0.19.jar')
@@ -45,4 +45,6 @@ dependencies {
     compile 'com.basgeekball:awesome-validation:1.1'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     compile 'com.android.support:support-v4:23.3.0'
+    compile files('libs/lbsCoreSDK.jar')
+    compile files('libs/locSDK_6.23.jar')
 }

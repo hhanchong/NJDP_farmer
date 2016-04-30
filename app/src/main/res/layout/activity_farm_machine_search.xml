@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".conent_frament.FarmMachineSearch">
     <LinearLayout
+        android:id="@+id/farmer_machine_top"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:orientation="horizontal">
@@ -62,12 +63,12 @@
 
     </LinearLayout>
 
-    <!--com.baidu.mapapi.map.MapView
+    <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/intelligent_arrange_div"
-        android:clickable="true" /-->
+        android:layout_below="@+id/farmer_machine_top"
+        android:clickable="true" />
     <!--ImageButton
         android:id="@+id/my_location"
         android:layout_width="wrap_content"

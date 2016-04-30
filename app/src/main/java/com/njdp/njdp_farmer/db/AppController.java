@@ -1,12 +1,17 @@
 package com.njdp.njdp_farmer.db;
 
 import android.app.Application;
+import android.app.Service;
+import android.os.Vibrator;
 import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.baidu.mapapi.SDKInitializer;
+import com.njdp.njdp_farmer.conent_frament.LocationService;
+
 /**
  * Created by USER-PC on 2016/4/13.
  */
@@ -18,10 +23,19 @@ public class AppController extends Application {
 
     private static AppController mInstance;
 
+    //地图
+    public LocationService locationService;
+    public Vibrator mVibrator;
+
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+
+        //地图
+        locationService = new LocationService(getApplicationContext());
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+        SDKInitializer.initialize(getApplicationContext());
     }
 
     public static synchronized AppController getInstance() {

@@ -43,6 +43,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.njdp.njdp_farmer.MainLink;
 import com.njdp.njdp_farmer.PersonalSet;
 import com.njdp.njdp_farmer.R;
@@ -84,6 +91,11 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
     Button releaseEditFinish;
     View view;
 
+
+    ////////////////根据地址的经纬度变量///////////////
+    GeoCoder mSearch;
+    MyOnGetGeoCoderResultListener myOnGetGeoCoderResultListener;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,6 +112,15 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                 error_hint("参数传递错误！");
                 return null;
             }
+
+            // 初始化搜索模块，注册事件监听
+            mSearch = GeoCoder.newInstance();
+            myOnGetGeoCoderResultListener = new MyOnGetGeoCoderResultListener();
+            mSearch.setOnGetGeoCodeResultListener(new MyOnGetGeoCoderResultListener());
+
+
+
+
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -576,9 +597,13 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     farmlandInfo.setCounty(temp[2]);
                     farmlandInfo.setTown(temp[3]);
                     farmlandInfo.setVillage(temp[4]);
+
                     Location location = null;
                     //location = getLocalGPSByNet(s.toString());
-                    if(location == null) {
+
+                    mSearch.geocode(new GeoCodeOption().city(farmlandInfo.getCity()).address(farmlandInfo.getVillage()));
+                    if(farmlandInfo.getLatitude() !=null&&farmlandInfo.getLongitude()!=null) {
+                    }else{
                         location = getLocalGPS();
                         if (location != null) {
                             farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
@@ -587,9 +612,6 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                         else {
                             error_hint("获取GPS位置失败！");
                         }
-                    }else{
-                        farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
-                        farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
                     }
                 }
             }
@@ -689,5 +711,28 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             }
         });
     }
+
+
+    ////////////////////////根据地址获取经纬度代码////////////////////////////
+    class MyOnGetGeoCoderResultListener implements OnGetGeoCoderResultListener{
+        @Override
+        public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+            if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                Toast.makeText(getActivity(), "抱歉，未能找到结果", Toast.LENGTH_LONG)
+                        .show();
+                return;
+            }
+            farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().latitude));
+            farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().longitude));
+            Log.i("ccccccccccc",String.valueOf(geoCodeResult.getLocation().latitude+"维度"+geoCodeResult.getLocation().longitude));
+        }
+
+        @Override
+        public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+
+        }
+    }
+
+
 
 }
