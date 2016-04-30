@@ -349,7 +349,7 @@
                     android:background="@drawable/rounded_green_button"
                     android:layout_below="@+id/regiser_div"
                     android:text="确认发布"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginLeft="30dp"
                     android:layout_marginRight="30dp"

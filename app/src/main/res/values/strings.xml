@@ -13,6 +13,7 @@
     <string name="err_password2">密码不能为空</string>
     <string name="err_edit">修改失败，请重试！</string>
     <string name="register_success">注册成功！</string>
+    <string name="edit_success">修改成功！</string>
     <string name="err_id_card">请输入15-18位的身份证号！</string>
     <string name="err_id_card2">身份证号不能为空</string>
     <string name="vertify_hint">请确保手机号正确，未欠费，能正常接收短信</string>

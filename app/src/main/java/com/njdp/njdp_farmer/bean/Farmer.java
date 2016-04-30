@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class Farmer implements Serializable {
     private int id;
+    private String fm_token;
     private String name;
     private String telephone;
     private String password;
@@ -31,6 +32,14 @@ public class Farmer implements Serializable {
     public int getId(){return id;}
 
     public void setId(int id){this.id = id;}
+
+    public String getFm_token() {
+        return fm_token;
+    }
+
+    public void setFm_token(String fm_token) {
+        this.fm_token = fm_token;
+    }
 
     public  String getName()
     {

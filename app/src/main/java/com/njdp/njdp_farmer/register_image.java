@@ -76,7 +76,7 @@ public class register_image extends AppCompatActivity {
     private NormalUtil nutil=new NormalUtil();
     private static final String TAG = register_image.class.getSimpleName();
     private NetUtil netutil=new NetUtil();
-    private Farmer farmer = new Farmer();
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +102,8 @@ public class register_image extends AppCompatActivity {
         this.finish=(Button) super.findViewById(R.id.btn_registerFinish);
         this.userImage = (ImageView) super.findViewById(R.id.user_image);
 
-        Bundle farmer_bundle=this.getIntent().getBundleExtra("farmer_register");
-        if(farmer_bundle!=null)
-        {
-            name = farmer_bundle.getString("name");
-            password = farmer_bundle.getString("password");
-            telephone = farmer_bundle.getString("telephone");
-        }else
+        token = getIntent().getStringExtra("token");
+        if(token==null)
         {
             error_hint("程序错误！请联系管理员！");
         }
@@ -246,7 +241,7 @@ public class register_image extends AppCompatActivity {
         File file=new File(path);
         String tag_string_req = "req_register_image";
 
-        pDialog.setMessage("即将完成注册 ...");
+        pDialog.setMessage("正在上传图片 ...");
         showDialog();
 
         if (!file.exists()) {
@@ -284,9 +279,7 @@ public class register_image extends AppCompatActivity {
                 protected Map<String, String> getParams() {
 
                     Map<String, String> params = new HashMap<String, String>();
-                        params.put("name", name);
-                        params.put("password", password);
-                        params.put("telephone", telephone);
+                        params.put("token", token);
                         params.put("setImage", "NO");
                         params.put("tag", "F");
                     return params;
@@ -341,18 +334,16 @@ public class register_image extends AppCompatActivity {
                     // Now store the user in sqlite
                     // Inserting row in users table
                     JSONObject farmers = jObj.getJSONObject("Farmers");
-                    farmer.setId(farmers.getInt("Id"));
-                    farmer.setName(farmers.getString("Name"));
-                    farmer.setPassword(farmers.getString("Password"));
-                    farmer.setTelephone(farmers.getString("Telephone"));
-                    farmer.setImageUrl(farmers.getString("ImageUrl"));
-                    db.addUser(farmer.getId(), farmer.getName(), farmer.getPassword(),farmer.getTelephone(),farmer.getImageUrl());
-                    empty_hint(R.string.register_success);
+                    //完成后的其他操作
+                    //Intent intent = new Intent(register_image.this, PersonalSet.class);
+                    //intent.putExtra("phonenum", phonenum);
+                    //setResult(RESULT_OK, intent);
+                    empty_hint(R.string.edit_success);
+                    finish();
 
                     // 跳转到主页面
-                    Intent intent = new Intent(register_image.this, mainpages.class);
-                    startActivity(intent);
-                    finish();
+                    //Intent intent = new Intent(register_image.this, mainpages.class);
+                    //startActivity(intent);
                 } else {
                     // Error occurred in registration. Get the error
                     // message

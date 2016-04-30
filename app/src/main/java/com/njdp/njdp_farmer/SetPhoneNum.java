@@ -51,7 +51,7 @@ public class SetPhoneNum extends AppCompatActivity {
     private SQLiteHandler db;
     private NetUtil netutil;
     private String verify_code = "";
-    private int id;
+    private String token;
     private String phonenum;
 
     @Override
@@ -61,7 +61,7 @@ public class SetPhoneNum extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        id = bundle.getInt("Id");
+        token = bundle.getString("token");
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -99,7 +99,7 @@ public class SetPhoneNum extends AppCompatActivity {
                 if (mValidation.validate() == true) {
                     String t_verify_code = text_verification_code.getText().toString().trim();
                     if (verify_code.equals(t_verify_code)) {
-                        checkEdit(id);
+                        checkEdit(token);
                         ;
                     } else {
                         error_hint("验证码错误！");
@@ -204,7 +204,7 @@ public class SetPhoneNum extends AppCompatActivity {
     };
 
     //checkLogin 验证帐号密码
-    public void checkEdit(final int id) {
+    public void checkEdit(final String token) {
 
         String tag_string_req = "req_phone_edit";
 
@@ -225,7 +225,7 @@ public class SetPhoneNum extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("id", String.valueOf(id));
+                    params.put("token", String.valueOf(token));
                     params.put("telephone", text_user_telephone.getText().toString());
                     params.put("isDriver", "false");
                     return params;

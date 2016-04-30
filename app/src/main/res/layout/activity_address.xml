@@ -91,11 +91,11 @@
             android:background="@drawable/rounded_green_button"
             android:layout_below="@+id/regiser_div"
             android:text="完  成"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="30dp"/>
     </LinearLayout>
 
 </RelativeLayout>

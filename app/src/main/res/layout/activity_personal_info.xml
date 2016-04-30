@@ -213,22 +213,24 @@
             android:layout_alignParentEnd="true" />
 
         <LinearLayout
-            style="@style/Register_Div"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rl_Address"
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true">
             <Button
                 style="@style/Register_Button_Finish"
                 android:id="@+id/btn_edit"
                 android:background="@drawable/rounded_green_button"
                 android:text="编辑个人信息"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_centerHorizontal="true" />
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp" />
         </LinearLayout>
 
     </LinearLayout>

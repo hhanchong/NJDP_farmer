@@ -69,6 +69,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             farmer = (Farmer)bundle.getSerializable("farmer");
             //自测用户
             farmer = new Farmer();
+            farmer.setFm_token(token);
             farmer.setName("李占伟");
             farmer.setImageUrl("@drawable/ic_launcher");
             farmer.setTelephone("18932659760");

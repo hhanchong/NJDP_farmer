@@ -62,6 +62,9 @@
         android:id="@+id/btn_registerFinish"
         android:background="@drawable/rounded_green_button"
         android:layout_below="@+id/register_image_div"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:text="完成上传"/>
 
     <RelativeLayout

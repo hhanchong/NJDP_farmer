@@ -73,10 +73,15 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         getback = (ImageButton)super.findViewById(R.id.getback);
         editFinish = (Button)super.findViewById(R.id.btn_editFinish);
         tv_phone = (TextView)super.findViewById(R.id.phonenum);
+        tv_phone.setText(farmer.getTelephone());
         tv_address = (TextView)super.findViewById(R.id.address);
+        tv_address.setText(farmer.getAddress());
         et_name = (EditText)super.findViewById(R.id.user_name);
+        et_name.setText(farmer.getName());
         et_QQ = (EditText)super.findViewById(R.id.qq);
+        et_QQ.setText(farmer.getQQ());
         et_weixin = (EditText)super.findViewById(R.id.weixin);
+        et_weixin.setText(farmer.getWeixin());
 
         listenerEvent();
     }
@@ -86,6 +91,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     {
         setPhoneNum.setOnClickListener(this);
         setUserPic.setOnClickListener(this);
+        setAddress.setOnClickListener(this);
         getback.setOnClickListener(this);
         editFinish.setOnClickListener(this);
     }
@@ -94,16 +100,19 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.rl_setPhonenum:
                 Intent intent = new Intent(this, SetPhoneNum.class);
+                intent.putExtra("token", farmer.getFm_token());
                 startActivityForResult(intent, PHONEEDIT);
                 break;
             case R.id.rl_set_user_image:
                 Intent intent2 = new Intent(this, register_image.class);
+                intent2.putExtra("token", farmer.getFm_token());
                 startActivity(intent2);
 
                 break;
             case R.id.rl_setAddress:
                 Intent intent3 = new Intent(this, AddressSelect.class);
                 intent3.putExtra("address", tv_address.getText().toString());
+                intent3.putExtra("token", farmer.getFm_token());
                 startActivityForResult(intent3, ADDRESSEDIT);
                 break;
             case R.id.getback:
@@ -173,10 +182,12 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("id", String.valueOf(farmer.getId()));
+                    params.put("token", farmer.getFm_token());
                     params.put("telephone", farmer.getTelephone());
-                    params.put("password", farmer.getPassword());
                     params.put("name", farmer.getName());
+                    params.put("qq", farmer.getQQ());
+                    params.put("weixin", farmer.getWeixin());
+                    params.put("address", farmer.getAddress());
                     params.put("isDriver", "false");
                     return params;
                 }
