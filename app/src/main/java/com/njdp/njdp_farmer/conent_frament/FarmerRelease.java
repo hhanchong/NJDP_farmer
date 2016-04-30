@@ -282,12 +282,13 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
         pDialog.setMessage("正在发布 ...");
         showDialog();
-
+        Log.i("GGGG", farmlandInfo.getLongitude());
         if (netutil.checkNet(getActivity()) == false) {
             hideDialog();
             error_hint("网络连接错误");
             return;
         } else {
+
             if (farmlandInfo.getLongitude().length() == 0 || farmlandInfo.getLatitude().length() == 0) {
                 hideDialog();
                 error_hint("发布失败，没有获取到有效的GPS位置信息！");
@@ -723,8 +724,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                 return;
             }
             farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().latitude));
-            farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().longitude));
-            Log.i("ccccccccccc",String.valueOf(geoCodeResult.getLocation().latitude+"维度"+geoCodeResult.getLocation().longitude));
+            farmlandInfo.setLongitude(String.valueOf(geoCodeResult.getLocation().longitude));
+            Log.i("ccccccccccc",String.valueOf(farmlandInfo.getLatitude()+"维度"+farmlandInfo.getLongitude()));
         }
 
         @Override
