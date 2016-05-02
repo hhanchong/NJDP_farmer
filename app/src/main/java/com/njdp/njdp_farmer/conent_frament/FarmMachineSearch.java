@@ -103,7 +103,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 return null;
             }
             //获取农机信息
-            //machineInfos =
+            machineInfos = new ArrayList<MachineInfo>();
 
             //////////////////////////地图代码////////////////////////////
             //获取地图控件引用
@@ -138,9 +138,9 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             //定义Maker坐标点
             //西廉良村，河北大学，东站,保定站,植物园
-            String[] names = new String[]{"西廉良村", "河北大学", "东站", "保定站", "植物园"};
-            Double[][] numthree = new Double[][]{{38.885335516312644, 115.44805233879083}, {38.86858730724386, 115.51474000000007}, {38.86430366154974, 115.60169999999994},
-                    {38.86317366367406, 115.47990000000006}, {38.914613417728475, 115.4850954388619}};
+            String[] names = new String[]{"保定站", "河北大学", "西廉良村", "植物园", "东站"};
+            Double[][] numthree = new Double[][]{{38.86317366367406, 115.47990000000006}, {38.86858730724386, 115.51474000000007},{38.885335516312644, 115.44805233879083},
+                    {38.914613417728475, 115.4850954388619}, {38.86430366154974, 115.60169999999994}};
             this.markMachine(numthree, names);
 
             // 开启图层定位
@@ -156,7 +156,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             mBaiduMap.setMyLocationEnabled(true);
             locationService.start();// 定位SDK
-
+            //添加覆盖物鼠标点击事件
+            mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
             /////////////////地图代码结束////////////////////////
 
 
@@ -213,7 +214,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 mBaiduMap.clear();
                 index = IndexOfRange(5);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index);
+                    machinesToShow = machineInfos.subList(0, index + 1);
                     ShowInMap(machinesToShow);
                 }
                 break;
@@ -222,7 +223,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 mBaiduMap.clear();
                 index = IndexOfRange(10);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index);
+                    machinesToShow = machineInfos.subList(0, index + 1);
                     ShowInMap(machinesToShow);
                 }
                 break;
@@ -231,7 +232,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 mBaiduMap.clear();
                 index = IndexOfRange(20);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index);
+                    machinesToShow = machineInfos.subList(0, index + 1);
                     ShowInMap(machinesToShow);
                 }
                 break;
@@ -240,7 +241,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 mBaiduMap.clear();
                 index = IndexOfRange(30);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index);
+                    machinesToShow = machineInfos.subList(0, index + 1);
                     ShowInMap(machinesToShow);
                 }
                 break;
@@ -249,7 +250,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 mBaiduMap.clear();
                 index = IndexOfRange(50);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index);
+                    machinesToShow = machineInfos.subList(0, index + 1);
                     ShowInMap(machinesToShow);
                 }
                 break;
@@ -332,11 +333,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             BitmapDescriptor bitmap = BitmapDescriptorFactory
                     .fromResource(icon);
             //构建MarkerOption，用于在地图上添加Marker
-            OverlayOptions option = new MarkerOptions()
-                    .position(point)
-                    .icon(bitmap);
+            //OverlayOptions option = new MarkerOptions()
+            //        .position(point)
+            //        .icon(bitmap);
             //在地图上添加Marker，并显示
-            Marker marker = (Marker) mBaiduMap.addOverlay(option);
+            //Marker marker = (Marker) mBaiduMap.addOverlay(option);
 
             MachineInfo machineInfo = new MachineInfo();
             machineInfo.setLatitude(numthree[i][0]);
@@ -345,20 +346,21 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             machineInfo.setName(names[i]);
             machineInfo.setTelephone("13483208987");
             machineInfo.setMachine_type("小麦收割机");
-            machineInfo.setRange("" + i * 10 + 10);
+            machineInfo.setRange("" + (i * 10 + 3));
             machineInfo.setState("正在工作");
             machineInfo.setWork_time("" + 16);
             machineInfo.setRemark("无");
+            machineInfos.add(machineInfo);
 
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("machineInfo", machineInfo);
-            marker.setExtraInfo(bundle);
+            //Bundle bundle = new Bundle();
+            //bundle.putSerializable("machineInfo", machineInfo);
+            //marker.setExtraInfo(bundle);
 
             //添加覆盖物鼠标点击事件
-            mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
+            //mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
         }
-
-        mMapView.refreshDrawableState();
+        rb5.setChecked(true);
+        //mMapView.refreshDrawableState();
     }
 
     private void ShowInMap(List<MachineInfo> machineInfos){
@@ -392,8 +394,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             bundle.putSerializable("machineInfo", machineInfos.get(i));
             marker.setExtraInfo(bundle);
 
-            //添加覆盖物鼠标点击事件
-            mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
         }
 
         mMapView.refreshDrawableState();
@@ -414,6 +414,16 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             // 显示自定义 popupWindow
             PopupWindow popupWindow = makePopupWindow(view.getContext(), machineInfo);
+            if(phoneBtn != null) {
+                phoneBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + telephone));
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+            }
             int[] xy = new int[2];
             test_pop_layout.getLocationOnScreen(xy);
             popupWindow.showAtLocation(test_pop_layout, Gravity.CENTER| Gravity.BOTTOM, 0, -height);
@@ -471,6 +481,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     // 显示机主信息
     private TextView driver_name, driver_phone, range, state, machine_type, work_time, remark;
     private Button phoneBtn;
+    private String telephone;
     // 创建一个包含自定义view的PopupWindow
     private PopupWindow makePopupWindow(Context cx, final MachineInfo machineInfo)
     {
@@ -481,38 +492,14 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         window.setContentView(contentView);
 
         //加载控件
-        if(driver_name == null){
-            driver_name = (TextView)contentView.findViewById(R.id.driver_name);
-        }
-        if(driver_phone == null){
-            driver_phone = (TextView)contentView.findViewById(R.id.driver_phone);
-        }
-        if(range == null){
-            range = (TextView)contentView.findViewById(R.id.range);
-        }
-        if(state == null){
-            state = (TextView)contentView.findViewById(R.id.state);
-        }
-        if(machine_type == null){
-            machine_type = (TextView)contentView.findViewById(R.id.machine_type);
-        }
-        if(work_time == null){
-            work_time = (TextView)contentView.findViewById(R.id.work_time);
-        }
-        if(remark == null){
-            remark = (TextView)contentView.findViewById(R.id.remark);
-        }
-        if(phoneBtn == null){
-            phoneBtn = (Button)contentView.findViewById(R.id.phoneBtn);
-            phoneBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + machineInfo.getTelephone()));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            });
-        }
+        driver_name = (TextView)contentView.findViewById(R.id.driver_name);
+        driver_phone = (TextView)contentView.findViewById(R.id.driver_phone);
+        range = (TextView)contentView.findViewById(R.id.range);
+        state = (TextView)contentView.findViewById(R.id.state);
+        machine_type = (TextView)contentView.findViewById(R.id.machine_type);
+        work_time = (TextView)contentView.findViewById(R.id.work_time);
+        remark = (TextView)contentView.findViewById(R.id.remark);
+        phoneBtn = (Button)contentView.findViewById(R.id.phoneBtn);
 
         driver_name.setText("机主姓名：" + machineInfo.getName());
         driver_phone.setText("机主电话：" + machineInfo.getTelephone());
@@ -521,6 +508,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         machine_type.setText("设备类型：" + machineInfo.getMachine_type());
         work_time.setText("工作时间：" + machineInfo.getWork_time() + " 小时/天");
         remark.setText("补充说明：" + machineInfo.getRemark());
+        telephone = machineInfo.getTelephone();
 
         window.setWidth(width);
         window.setHeight(height/2);
