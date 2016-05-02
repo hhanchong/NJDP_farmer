@@ -19,15 +19,17 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:gravity="center_vertical">
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical">
                 <TextView
                     android:id="@+id/tv1"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="作物类型"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
                 <EditText
@@ -35,10 +37,9 @@
                     android:id="@+id/crops_kind"
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:paddingLeft="5dp"
                     android:layout_toRightOf="@+id/tv1"
-                    android:layout_alignBaseline="@+id/tv1"
                     android:editable="false"
                     android:hint="请选择农作物类型"
                     android:focusableInTouchMode="false"/>
@@ -53,24 +54,24 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
-                android:layout_height="55dp">
+                android:layout_height="50dp">
 
                 <TextView
                     android:id="@+id/tv2"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="面积"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
                 <EditText
                     style="@style/Register_style"
                     android:id="@+id/area"
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
                     android:layout_toRightOf="@+id/tv2"
-                    android:layout_alignBaseline="@+id/tv2"
                     android:layout_marginRight="80dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:paddingLeft="5dp"
                     android:numeric="decimal"
                     android:maxLength="10"
@@ -78,9 +79,10 @@
                 <TextView
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="（亩）"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
             </RelativeLayout>
@@ -93,25 +95,25 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
-                android:layout_height="55dp">
+                android:layout_height="50dp">
 
                 <TextView
                     android:id="@+id/tv3"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="单价"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
                 <EditText
                     style="@style/Register_style"
                     android:id="@+id/price"
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
                     android:inputType="numberDecimal"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:paddingLeft="5dp"
                     android:layout_toRightOf="@+id/tv3"
-                    android:layout_alignBaseline="@+id/tv3"
                     android:layout_marginRight="80dp"
                     android:maxLength="10"
                     android:numeric="decimal"
@@ -120,9 +122,10 @@
                 <TextView
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="（元）"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
@@ -136,15 +139,16 @@
             <RelativeLayout
                 android:id="@+id/rl_block"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="50dp"
                 android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/tv4"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="地块类型"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
                 <EditText
@@ -152,10 +156,9 @@
                     android:id="@+id/block_type"
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:paddingLeft="5dp"
                     android:layout_toRightOf="@+id/tv4"
-                    android:layout_alignBaseline="@+id/tv4"
                     android:editable="false"
                     android:hint="地块是否规则"
                     android:focusableInTouchMode="false"/>
@@ -170,7 +173,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
-                android:layout_height="55dp"
+                android:layout_height="50dp"
                 android:id="@+id/rl_setAddress">
 
                 <TextView
@@ -180,14 +183,14 @@
                     android:paddingLeft="10dp"
                     android:layout_marginTop="15dp"
                     android:text="地址"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     />
                 <TextView
                     android:id="@+id/address"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:paddingLeft="5dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_gravity="center_vertical|left"
                     android:gravity="center_vertical|left"
                     android:layout_toRightOf="@+id/tv5"
@@ -214,25 +217,25 @@
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
-                android:layout_height="55dp">
+                android:layout_height="50dp">
 
                 <TextView
                     android:id="@+id/tv7"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="开始时间"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
                 <EditText
                     style="@style/Register_style"
                     android:id="@+id/start_time"
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
                     android:paddingLeft="5dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:hint="点击选择日期"
                     android:layout_toRightOf="@+id/tv7"
-                    android:layout_alignBaseline="@+id/tv7"
                     android:editable="false"
                     android:focusableInTouchMode="false"/>
             </RelativeLayout>
@@ -245,25 +248,25 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
-                android:layout_height="55dp">
+                android:layout_height="50dp">
 
                 <TextView
                     android:id="@+id/tv8"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="结束时间"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
                 <EditText
                     style="@style/Register_style"
                     android:id="@+id/end_time"
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
                     android:paddingLeft="5dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:hint="点击选择日期"
                     android:layout_toRightOf="@+id/tv8"
-                    android:layout_alignBaseline="@+id/tv8"
                     android:editable="false"
                     android:focusableInTouchMode="false"/>
             </RelativeLayout>
@@ -276,16 +279,16 @@
             <RelativeLayout
                 android:id="@+id/rl_set_user_image"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="50dp"
                 android:gravity="center_vertical">
                 <TextView
                     android:id="@+id/tv6"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
                     android:paddingLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:text="街景"
-                    android:textSize="20sp"
-                    android:layout_alignTop="@+id/imageView"
+                    android:textSize="18sp"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
 
@@ -294,7 +297,7 @@
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="5dp"
                     android:src="@drawable/into"
                     android:id="@+id/imageView" />
 
@@ -308,24 +311,24 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:gravity="center_vertical"
-                android:layout_height="55dp">
+                android:layout_height="50dp">
 
                 <TextView
                     android:id="@+id/tv9"
                     android:layout_width="95dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
                     android:text="补充说明 "
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
                 <EditText
                     style="@style/Register_style"
                     android:id="@+id/remark"
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
                     android:paddingLeft="5dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_toRightOf="@+id/tv9"
-                    android:layout_alignBaseline="@+id/tv9"
                     android:maxLength="100"
                     android:hint="其他备注信息" />
             </RelativeLayout>
@@ -336,11 +339,11 @@
                 android:layout_alignParentEnd="true" />
 
             <LinearLayout
-                style="@style/Register_Div"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/user_name"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true">
                 <Button

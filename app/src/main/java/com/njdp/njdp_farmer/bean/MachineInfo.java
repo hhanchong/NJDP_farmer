@@ -1,6 +1,7 @@
 package com.njdp.njdp_farmer.bean;
 
 import java.io.Serializable;
+import java.util.PriorityQueue;
 
 /**
  * Created by Administrator on 2016/4/30.
@@ -9,7 +10,13 @@ public class MachineInfo implements Serializable {
     private int id;
     private double longitude;//经度
     private double latitude;//纬度
+    private String name;
     private String telephone;
+    private String range;
+    private String state;
+    private String machine_type;
+    private String work_time;
+    private String remark;
 
     public int getId() {
         return id;
@@ -27,6 +34,22 @@ public class MachineInfo implements Serializable {
         this.longitude = longitude;
     }
 
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getTelephone() {
         return telephone;
     }
@@ -35,11 +58,44 @@ public class MachineInfo implements Serializable {
         this.telephone = telephone;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public String getRange() {
+        return range;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setRange(String range) {
+        this.range = range;
     }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getMachine_type() {
+        return machine_type;
+    }
+
+    public void setMachine_type(String machine_type) {
+        this.machine_type = machine_type;
+    }
+
+    public String getWork_time() {
+        return work_time;
+    }
+
+    public void setWork_time(String work_time) {
+        this.work_time = work_time;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
 }

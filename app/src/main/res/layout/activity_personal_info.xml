@@ -28,23 +28,22 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="55dp">
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/tv1"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="8dp"
                 android:text="姓名"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
             <TextView
                 style="@style/Register_style"
                 android:id="@+id/tv_user_name"
                 android:text="李占伟"
                 android:layout_toRightOf="@+id/tv1"
-                android:layout_alignBaseline="@+id/tv1"
-                android:paddingLeft="10dp"
-                android:textSize="20sp"/>
+                android:textSize="16sp"/>
 
         </RelativeLayout>
 
@@ -56,26 +55,22 @@
         <RelativeLayout
             android:id="@+id/rl_setPhonenum"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:gravity="center_vertical">
             <TextView
                 android:id="@+id/tv2"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="8dp"
                 android:text="手机号"
-                android:textSize="20sp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
+                android:textSize="18sp" />
             <TextView
                 android:id="@+id/tv_phonenum"
                 style="@style/Register_style"
-                android:paddingLeft="10dp"
                 android:text="18932659760"
-                android:textSize="20sp"
-                android:layout_toRightOf="@+id/tv2"
-                android:layout_alignBaseline="@+id/tv2" />
+                android:textSize="16sp"
+                android:layout_toRightOf="@+id/tv2" />
 
         </RelativeLayout>
 
@@ -87,23 +82,22 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="55dp">
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/tv3"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="8dp"
                 android:text="QQ"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
             <TextView
                 style="@style/Register_style"
                 android:id="@+id/tv_qq"
                 android:text="842558891"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_toRightOf="@+id/tv3"
-                android:layout_alignBaseline="@+id/tv3"
-                android:paddingLeft="10dp"
                 android:maxLength="10" />
         </RelativeLayout>
 
@@ -115,23 +109,22 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="55dp">
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/tv4"
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="8dp"
                 android:text="微信"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
             <TextView
                 style="@style/Register_style"
                 android:id="@+id/tv_weixin"
                 android:text="zhihuinongji"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_toRightOf="@+id/tv4"
-                android:layout_alignBaseline="@+id/tv4"
-                android:paddingLeft="10dp"
                 android:maxLength="30" />
         </RelativeLayout>
 
@@ -143,7 +136,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:id="@+id/rl_Address">
 
             <TextView
@@ -153,15 +146,14 @@
                 android:paddingLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:text="地址"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 />
             <TextView
                 android:id="@+id/tv_address"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:paddingLeft="10dp"
                 android:text="河北省保定市清苑县***乡***村"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_gravity="center_vertical|left"
                 android:gravity="center_vertical|left"
                 android:layout_toRightOf="@+id/tv5"
@@ -179,7 +171,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:id="@+id/rl_release">
 
             <TextView
@@ -187,21 +179,17 @@
                 android:layout_width="90dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="8dp"
                 android:text="我的发布"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 />
             <TextView
                 android:id="@+id/tv_my_release"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="10dp"
+                android:layout_height="30dp"
                 android:text="共发布了1条信息，点击查看"
-                android:textSize="18sp"
-                android:layout_gravity="center_vertical|left"
-                android:gravity="center_vertical|left"
+                android:textSize="16sp"
                 android:layout_toRightOf="@+id/tv6"
-                android:layout_toEndOf="@+id/tv6"
                 android:layout_marginRight="5dp"
                 android:layout_centerVertical="true" />
 
@@ -217,7 +205,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true">
@@ -226,8 +214,6 @@
                 android:id="@+id/btn_edit"
                 android:background="@drawable/rounded_green_button"
                 android:text="编辑个人信息"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:layout_marginTop="0dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp" />

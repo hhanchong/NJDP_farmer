@@ -719,8 +719,10 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         @Override
         public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
             if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                Toast.makeText(getActivity(), "抱歉，未能找到结果", Toast.LENGTH_LONG)
+                Toast.makeText(getActivity(), "抱歉，未能找到村庄位置，将要获取本地位置！", Toast.LENGTH_LONG)
                         .show();
+                farmlandInfo.setLatitude(null);
+                farmlandInfo.setLongitude(null);
                 return;
             }
             farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().latitude));

@@ -42,7 +42,7 @@ public class AddressSelect extends Activity {
     private AwesomeValidation mValidation=new AwesomeValidation(ValidationStyle.BASIC);
 	private Button button_ok, button_edit_ok;
     private ImageButton getback=null;
-    private TextView select_tv;
+    private EditText select_et;
     private EditText xiang , cun;
 	RelativeLayout test_pop_layout;
 	int width,height;
@@ -67,8 +67,8 @@ public class AddressSelect extends Activity {
 
         xiang = (EditText)this.findViewById(R.id.xiang);
         cun = (EditText)this.findViewById(R.id.cun);
-		select_tv = (TextView) findViewById(R.id.tpop_tv);
-		select_tv.setOnClickListener(new OnClickListener()
+		select_et = (EditText) findViewById(R.id.tpop_tv);
+		select_et.setOnClickListener(new OnClickListener()
 		{
 			@Override
 			public void onClick(View v)
@@ -88,7 +88,7 @@ public class AddressSelect extends Activity {
             str_county = address[2];
             xiang.setText(address[3].substring(0, address[3].length() - 1));
             cun.setText(address[4].substring(0, address[4].length() - 1));
-            select_tv.setText(address[0] + "-" + address[1] + "-" + address[2]);
+            select_et.setText(address[0] + "-" + address[1] + "-" + address[2]);
         }
         getback=(ImageButton) super.findViewById(R.id.getback);
         //返回上一界面
@@ -107,7 +107,7 @@ public class AddressSelect extends Activity {
                 if(mValidation.validate() == true) {
                     //返回选择的地市
                     Intent intent = new Intent(AddressSelect.this, PersonalSet.class);
-                    intent.putExtra("address", select_tv.getText() + "-" + xiang.getText() + "乡-" + cun.getText() + "村");
+                    intent.putExtra("address", select_et.getText() + "-" + xiang.getText() + "乡-" + cun.getText() + "村");
                     setResult(RESULT_OK, intent);
                     finish();
                 }
@@ -216,7 +216,7 @@ public class AddressSelect extends Activity {
         button_ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                select_tv.setText(AddressData.PROVINCES[country.getCurrentItem()] + "-" +
+                select_et.setText(AddressData.PROVINCES[country.getCurrentItem()] + "-" +
                         AddressData.CITIES[country.getCurrentItem()][city.getCurrentItem()] + "-" +
                         AddressData.COUNTIES[country.getCurrentItem()][city.getCurrentItem()][ccity.getCurrentItem()]);
                 str_province = AddressData.PROVINCES[country.getCurrentItem()];
