@@ -88,30 +88,30 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="guava-18.0" level="project" />
-    <orderEntry type="library" exported="" name="baidumapapi_search_v3_7_1" level="project" />
-    <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
-    <orderEntry type="library" exported="" name="baidumapapi_radar_v3_7_1" level="project" />
-    <orderEntry type="library" exported="" name="picasso-2.4.0" level="project" />
-    <orderEntry type="library" exported="" name="lbsCoreSDK" level="project" />
-    <orderEntry type="library" exported="" name="volley-library-1.0.19" level="project" />
-    <orderEntry type="library" exported="" name="baidumapapi_cloud_v3_7_1" level="project" />
     <orderEntry type="library" exported="" name="design-23.3.0" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-23.3.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-23.3.0" level="project" />
-    <orderEntry type="library" exported="" name="awesome-validation-1.1" level="project" />
-    <orderEntry type="library" exported="" name="httpclient-android-4.3.5.1" level="project" />
-    <orderEntry type="library" exported="" name="baidumapapi_base_v3_7_1" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-23.3.0" level="project" />
-    <orderEntry type="library" exported="" name="baidumapapi_map_v3_7_1" level="project" />
-    <orderEntry type="library" exported="" name="locSDK_6.23" level="project" />
     <orderEntry type="library" exported="" name="support-vector-drawable-23.3.0" level="project" />
-    <orderEntry type="library" exported="" name="animated-vector-drawable-23.3.0" level="project" />
-    <orderEntry type="library" exported="" name="httpmime-4.3.6" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_util_v3_7_1" level="project" />
+    <orderEntry type="library" exported="" name="lbsCoreSDK" level="project" />
+    <orderEntry type="library" exported="" name="httpclient-android-4.3.5.1" level="project" />
+    <orderEntry type="library" exported="" name="volley-library-1.0.19" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_radar_v3_7_1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_search_v3_7_1" level="project" />
+    <orderEntry type="library" exported="" name="locSDK_6.23" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-23.3.0" level="project" />
-    <orderEntry type="module" module-name="MultiImageSelector" exported="" />
+    <orderEntry type="library" exported="" name="support-annotations-23.3.0" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.3.6" level="project" />
+    <orderEntry type="library" exported="" name="guava-18.0" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.6.2" level="project" />
+    <orderEntry type="library" exported="" name="animated-vector-drawable-23.3.0" level="project" />
+    <orderEntry type="library" exported="" name="awesome-validation-1.1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_cloud_v3_7_1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_map_v3_7_1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_base_v3_7_1" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-23.3.0" level="project" />
+    <orderEntry type="library" exported="" name="picasso-2.4.0" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-23.3.0" level="project" />
     <orderEntry type="module" module-name="AndroidBootstrap" exported="" />
+    <orderEntry type="module" module-name="MultiImageSelector" exported="" />
     <orderEntry type="library" exported="" name="org.apache.http.legacy-android-23" level="project" />
   </component>
 </module>

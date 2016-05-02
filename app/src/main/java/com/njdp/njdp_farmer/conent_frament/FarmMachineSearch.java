@@ -419,7 +419,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             popupWindow.showAtLocation(test_pop_layout, Gravity.CENTER| Gravity.BOTTOM, 0, -height);
 
             //构造弹出layout
-            LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
+            /*LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
             View markerpopwindow = inflater.inflate(R.layout.markerpopwindow, null);
 
             TextView tv = (TextView) markerpopwindow.findViewById(R.id.markinfo);
@@ -448,7 +448,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             mBaiduMap.showInfoWindow(infoWindow);//显示此infoWindow
             //让地图以备点击的覆盖物为中心
             MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(ll);
-            mBaiduMap.setMapStatus(status);
+            mBaiduMap.setMapStatus(status);*/
             return true;
         }
     }
