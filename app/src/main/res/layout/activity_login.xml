@@ -15,7 +15,7 @@
         android:id="@+id/login_top">
         <TextView
             style="@style/Top_Title"
-            android:text="智慧农机"
+            android:text="智慧农户"
             android:id="@+id/login_top_title"/>
         <Button
             style="@style/Login_BtnRegister"

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,14 +41,20 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.TextureMapView;
 import com.baidu.mapapi.model.LatLng;
 import com.njdp.njdp_farmer.R;
-import com.njdp.njdp_farmer.bean.FarmlandInfo;
 import com.njdp.njdp_farmer.bean.MachineInfo;
 import com.njdp.njdp_farmer.db.AppController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FarmMachineSearch extends Fragment implements View.OnClickListener {
     private String token;
     View view;
-
+    int width,height;
+    RelativeLayout test_pop_layout;
+    RadioButton rb5, rb10, rb20, rb30, rb50;
+    ArrayList<MachineInfo> machineInfos;
+    List<MachineInfo> machinesToShow;
 
     ////////////////////////地图变量//////////////////////////
     private MapView mMapView = null;
@@ -90,7 +100,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 error_hint("参数传递错误！");
                 return null;
             }
-
+            //获取农机信息
+            //machineInfos =
 
             //////////////////////////地图代码////////////////////////////
             //获取地图控件引用
@@ -114,9 +125,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             //定义Maker坐标点
             //西廉良村，河北大学，东站,保定站,植物园
+            String[] names = new String[]{"西廉良村", "河北大学", "东站", "保定站", "植物园"};
             Double[][] numthree = new Double[][]{{38.885335516312644, 115.44805233879083}, {38.86858730724386, 115.51474000000007}, {38.86430366154974, 115.60169999999994},
                     {38.86317366367406, 115.47990000000006}, {38.914613417728475, 115.4850954388619}};
-            this.markMachine(numthree);
+            this.markMachine(numthree, names);
 
             // 开启图层定位
             // -----------location config ------------
@@ -147,18 +159,29 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     public View inFlater(LayoutInflater inflater) {
         view = inflater.inflate(R.layout.activity_farm_machine_search, null, false);
         initView(view);
-
+        // 获取屏幕的高度和宽度
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        width = display.getWidth();
+        height = display.getHeight();
         return view;
     }
 
     private void initView(View view) {
-
-
+        test_pop_layout = (RelativeLayout)view.findViewById(R.id.test_top_layout);
+        rb5 = (RadioButton)view.findViewById(R.id.rb5);
+        rb10 = (RadioButton)view.findViewById(R.id.rb10);
+        rb20 = (RadioButton)view.findViewById(R.id.rb20);
+        rb30 = (RadioButton)view.findViewById(R.id.rb30);
+        rb50 = (RadioButton)view.findViewById(R.id.rb50);
         initOnClick();
     }
 
     private void initOnClick() {
-
+        rb5.setOnClickListener(this);
+        rb10.setOnClickListener(this);
+        rb20.setOnClickListener(this);
+        rb30.setOnClickListener(this);
+        rb50.setOnClickListener(this);
         //Thread.setOnClickListener(this);
         //myMessage.setOnClickListener(this);
     }
@@ -170,21 +193,54 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         //2.调用toggleSoftInput方法，实现切换显示软键盘的功能。
         //imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        Log.e("农机查询------------->", "点击选择查询范围");
+        int index;
         switch (v.getId()) {
-            // TODO: 2015/11/18 头像
-            case R.id.btn_editFinish:
-                Log.e("------------->", "点击发布农田信息");
-
+            case R.id.rb5:
+                mBaiduMap.clear();
+                index = IndexOfRange(5);
+                if(index != -1){
+                    machinesToShow = machineInfos.subList(0, index);
+                    ShowInMap(machinesToShow);
+                }
                 break;
-            case R.id.address:
 
+            case R.id.rb10:
+                mBaiduMap.clear();
+                index = IndexOfRange(10);
+                if(index != -1){
+                    machinesToShow = machineInfos.subList(0, index);
+                    ShowInMap(machinesToShow);
+                }
                 break;
-            case R.id.start_time:
 
+            case R.id.rb20:
+                mBaiduMap.clear();
+                index = IndexOfRange(20);
+                if(index != -1){
+                    machinesToShow = machineInfos.subList(0, index);
+                    ShowInMap(machinesToShow);
+                }
                 break;
-            case R.id.end_time:
 
+            case R.id.rb30:
+                mBaiduMap.clear();
+                index = IndexOfRange(30);
+                if(index != -1){
+                    machinesToShow = machineInfos.subList(0, index);
+                    ShowInMap(machinesToShow);
+                }
                 break;
+
+            case R.id.rb50:
+                mBaiduMap.clear();
+                index = IndexOfRange(50);
+                if(index != -1){
+                    machinesToShow = machineInfos.subList(0, index);
+                    ShowInMap(machinesToShow);
+                }
+                break;
+
         }
     }
 
@@ -241,7 +297,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     }
 
     //标记农田,参数经纬度
-    private void markMachine(Double[][] numthree) {
+    private void markMachine(Double[][] numthree, String[] names) {
         //清楚覆盖物Marker,重新加载
 
         Integer[] marks = new Integer[]{R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4, R.drawable.s5,
@@ -272,10 +328,55 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             MachineInfo machineInfo = new MachineInfo();
             machineInfo.setLatitude(numthree[i][0]);
             machineInfo.setLongitude(numthree[i][1]);
+            machineInfo.setId(i);
+            machineInfo.setName(names[i]);
             machineInfo.setTelephone("13483208987");
+            machineInfo.setMachine_type("小麦收割机");
+            machineInfo.setRange("" + i * 10 + 10);
+            machineInfo.setState("正在工作");
+            machineInfo.setWork_time("" + 16);
+            machineInfo.setRemark("无");
 
             Bundle bundle = new Bundle();
             bundle.putSerializable("machineInfo", machineInfo);
+            marker.setExtraInfo(bundle);
+
+            //添加覆盖物鼠标点击事件
+            mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
+        }
+
+        mMapView.refreshDrawableState();
+    }
+
+    private void ShowInMap(List<MachineInfo> machineInfos){
+        //清楚覆盖物Marker,重新加载
+
+        Integer[] marks = new Integer[]{R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4, R.drawable.s5,
+                R.drawable.s6, R.drawable.s7, R.drawable.s8, R.drawable.s9, R.drawable.s10,R.drawable.s11, R.drawable.s12,
+                R.drawable.s13, R.drawable.s14, R.drawable.s15, R.drawable.s16, R.drawable.s17, R.drawable.s18, R.drawable.s19,
+                R.drawable.s20, R.drawable.s21, R.drawable.s22, R.drawable.s23, R.drawable.s24, R.drawable.s25, R.drawable.s26,
+                R.drawable.s27, R.drawable.s28, R.drawable.s29, R.drawable.s30};
+        for (int i = 0; i < machineInfos.size(); i++) {
+            LatLng point = new LatLng(machineInfos.get(i).getLatitude(), machineInfos.get(i).getLongitude());
+
+            int icon ;
+            if(i<30){
+                icon=marks[i];
+            }else{
+                icon=R.drawable.icon_gcoding;
+            }
+
+            //构建Marker图标
+            BitmapDescriptor bitmap = BitmapDescriptorFactory
+                    .fromResource(icon);
+            //构建MarkerOption，用于在地图上添加Marker
+            OverlayOptions option = new MarkerOptions()
+                    .position(point)
+                    .icon(bitmap);
+            //在地图上添加Marker，并显示
+            Marker marker = (Marker) mBaiduMap.addOverlay(option);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("machineInfo", machineInfos.get(i));
             marker.setExtraInfo(bundle);
 
             //添加覆盖物鼠标点击事件
@@ -297,6 +398,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         public boolean onMarkerClick(Marker marker) {
             final MachineInfo machineInfo = (MachineInfo) marker.getExtraInfo().get("machineInfo");
             InfoWindow infoWindow;
+
+            // 显示自定义 popupWindow
+            PopupWindow popupWindow = makePopupWindow(view.getContext(), machineInfo);
+            int[] xy = new int[2];
+            test_pop_layout.getLocationOnScreen(xy);
+            popupWindow.showAtLocation(test_pop_layout, Gravity.CENTER| Gravity.BOTTOM, 0, -height);
 
             //构造弹出layout
             LayoutInflater inflater = LayoutInflater.from(getActivity().getApplicationContext());
@@ -347,4 +454,83 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     }
 
     ////////////////////////////地图代码结束/////////////////////////////////
+
+    // 显示机主信息
+    private TextView driver_name, driver_phone, range, state, machine_type, work_time, remark;
+    private Button phoneBtn;
+    // 创建一个包含自定义view的PopupWindow
+    private PopupWindow makePopupWindow(Context cx, final MachineInfo machineInfo)
+    {
+        final PopupWindow window;
+        window = new PopupWindow(cx);
+
+        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.machine_layout, null);
+        window.setContentView(contentView);
+
+        //加载控件
+        if(driver_name == null){
+            driver_name = (TextView)contentView.findViewById(R.id.driver_name);
+        }
+        if(driver_phone == null){
+            driver_phone = (TextView)contentView.findViewById(R.id.driver_phone);
+        }
+        if(range == null){
+            range = (TextView)contentView.findViewById(R.id.range);
+        }
+        if(state == null){
+            state = (TextView)contentView.findViewById(R.id.state);
+        }
+        if(machine_type == null){
+            machine_type = (TextView)contentView.findViewById(R.id.machine_type);
+        }
+        if(work_time == null){
+            work_time = (TextView)contentView.findViewById(R.id.work_time);
+        }
+        if(remark == null){
+            remark = (TextView)contentView.findViewById(R.id.remark);
+        }
+        if(phoneBtn == null){
+            phoneBtn = (Button)contentView.findViewById(R.id.phoneBtn);
+            phoneBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + machineInfo.getTelephone()));
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        driver_name.setText("机主姓名：" + machineInfo.getName());
+        driver_phone.setText("机主电话：" + machineInfo.getTelephone());
+        range.setText("距离：" + machineInfo.getRange() + "km");
+        state.setText("状态：" + machineInfo.getState());
+        machine_type.setText("设备类型：" + machineInfo.getMachine_type());
+        work_time.setText("工作时间：" + machineInfo.getWork_time() + " 小时/天");
+        remark.setText("补充说明：" + machineInfo.getRemark());
+
+        window.setWidth(width);
+        window.setHeight(height/2);
+
+        // 设置PopupWindow外部区域是否可触摸
+        window.setFocusable(true); //设置PopupWindow可获得焦点
+        window.setTouchable(true); //设置PopupWindow可触摸
+        window.setOutsideTouchable(true); //设置非PopupWindow区域可触摸
+        return window;
+    }
+
+    //查找数据中满足条件的值
+    private int IndexOfRange(int range){
+        int i = -1;
+        if(null == machineInfos || machineInfos.isEmpty()) return i;
+
+        for (MachineInfo m:machineInfos) {
+            if (Float.parseFloat(m.getRange()) > range)
+                return i;
+            else
+                i++;
+        }
+
+        return i;
+    }
 }
