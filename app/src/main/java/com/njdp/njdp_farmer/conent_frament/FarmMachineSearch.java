@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -26,6 +27,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -103,6 +105,17 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             // 改变地图状态
             MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(14.0f);
             mBaiduMap.setMapStatus(msu);
+            mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    mBaiduMap.hideInfoWindow();
+                }
+
+                @Override
+                public boolean onMapPoiClick(MapPoi mapPoi) {
+                    return false;
+                }
+            });
 
             //注册回到当前位置按钮监听事件
             //ImageButton locationBtn = (ImageButton)view.findViewById(R.id.my_location);
@@ -308,7 +321,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             tv.setText(markinfo);
 
 
-            Button tellBtn = (Button) markerpopwindow.findViewById(R.id.markerphone);
+            ImageButton tellBtn = (ImageButton) markerpopwindow.findViewById(R.id.markerphone);
             tellBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -324,7 +337,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             p.y -= 90;
             LatLng llInfo = mBaiduMap.getProjection().fromScreenLocation(p);
             //初始化infoWindow，最后那个参数表示显示的位置相对于覆盖物的竖直偏移量，这里也可以传入一个监听器
-            infoWindow = new InfoWindow(markerpopwindow, llInfo, 0);
+            infoWindow = new InfoWindow(markerpopwindow, llInfo, 1);
             mBaiduMap.showInfoWindow(infoWindow);//显示此infoWindow
             //让地图以备点击的覆盖物为中心
             MapStatusUpdate status = MapStatusUpdateFactory.newLatLng(ll);

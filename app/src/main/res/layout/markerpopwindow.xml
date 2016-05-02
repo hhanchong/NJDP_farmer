@@ -3,19 +3,49 @@
     android:orientation="vertical"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding5">
+    android:padding="@dimen/padding5"
+    android:background="#ffffff"
+    >
     <TextView
         android:id="@+id/markinfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="40px"
         android:textColor="#000000"
-        android:background="#CCCCCC"
+        android:background="#FFFFFF"
         />
-    <Button
-        android:id="@+id/markerphone"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="打电话"
-        />
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal">
+        <ImageButton
+            android:id="@+id/markerphone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/zhndp_phone"
+            android:layout_marginRight="60sp"
+            android:layout_marginTop="20sp"
+            />
+        <ImageButton
+            android:id="@+id/machinedetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/zhndp_detail"
+            android:layout_marginTop="20sp"
+            />
+        <!--<Button
+            android:id="@+id/markerphone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="打电话"
+            />
+        <Button
+            android:id="@+id/machinedetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="详情"
+            />-->
+    </LinearLayout>
+
 </LinearLayout>
