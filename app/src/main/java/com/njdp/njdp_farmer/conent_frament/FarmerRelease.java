@@ -1,10 +1,6 @@
 package com.njdp.njdp_farmer.conent_frament;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,12 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,31 +35,23 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.njdp.njdp_farmer.MainLink;
-import com.njdp.njdp_farmer.PersonalSet;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.address.AddressSelect;
-import com.njdp.njdp_farmer.bean.Farmer;
-import com.njdp.njdp_farmer.bean.FarmlandInfo;
+import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.login;
-import com.njdp.njdp_farmer.mainpages;
-import com.njdp.njdp_farmer.myDialog;
 import com.njdp.njdp_farmer.util.NetUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +71,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
     private final String TAG = "FarmerRelease";
     //所有监听的控件
     EditText croptype, area, price, blocktype, starttime, endtime, remark;
-    TextView address;
+    EditText address, addresspic;
     Button releaseEditFinish;
     View view;
 
@@ -118,9 +102,6 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             myOnGetGeoCoderResultListener = new MyOnGetGeoCoderResultListener();
             mSearch.setOnGetGeoCodeResultListener(new MyOnGetGeoCoderResultListener());
 
-
-
-
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,7 +124,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         area = (EditText) view.findViewById(R.id.area);
         price = (EditText) view.findViewById(R.id.price);
         blocktype = (EditText) view.findViewById(R.id.block_type);
-        address = (TextView) view.findViewById(R.id.address);
+        address = (EditText) view.findViewById(R.id.address);
+        addresspic = (EditText) view.findViewById(R.id.addresspic);
         starttime = (EditText) view.findViewById(R.id.start_time);
         endtime = (EditText) view.findViewById(R.id.end_time);
         remark = (EditText) view.findViewById(R.id.remark);
@@ -157,6 +139,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
     private void initOnClick() {
         address.setOnClickListener(this);
+        addresspic.setOnClickListener(this);
         starttime.setOnClickListener(this);
         endtime.setOnClickListener(this);
         releaseEditFinish.setOnClickListener(this);
@@ -188,6 +171,9 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                 Intent intent1 = new Intent(getActivity(), AddressSelect.class);
                 intent1.putExtra("address", address.getText().toString());
                 startActivityForResult(intent1, ADDRESSEDIT);
+                break;
+            case R.id.addresspic:
+
                 break;
             case R.id.start_time:
                 getActivity().showDialog(0);
@@ -727,7 +713,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             }
             farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().latitude));
             farmlandInfo.setLongitude(String.valueOf(geoCodeResult.getLocation().longitude));
-            Log.i("ccccccccccc",String.valueOf(farmlandInfo.getLatitude()+"维度"+farmlandInfo.getLongitude()));
+            Log.i("ccccccccccc","纬度"+String.valueOf(farmlandInfo.getLatitude()+"经度"+farmlandInfo.getLongitude()));
         }
 
         @Override

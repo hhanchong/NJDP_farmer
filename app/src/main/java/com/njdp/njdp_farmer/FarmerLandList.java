@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.njdp.njdp_farmer.adpter.MyAdapter;
-import com.njdp.njdp_farmer.bean.FarmlandInfo;
+import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 
 import java.util.ArrayList;
 import java.util.List;

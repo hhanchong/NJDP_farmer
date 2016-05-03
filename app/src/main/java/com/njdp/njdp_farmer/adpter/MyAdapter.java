@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.njdp.njdp_farmer.R;
-import com.njdp.njdp_farmer.bean.FarmlandInfo;
+import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 
 import java.util.List;
 

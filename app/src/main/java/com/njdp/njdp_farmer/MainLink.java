@@ -7,8 +7,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.njdp.njdp_farmer.bean.Farmer;
-
 public class MainLink extends AppCompatActivity {
     private String token;
     Intent intent;

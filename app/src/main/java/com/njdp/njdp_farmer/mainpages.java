@@ -16,7 +16,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.njdp.njdp_farmer.CostomProgressDialog.CustomProgressDialog;
-import com.njdp.njdp_farmer.bean.Farmer;
+import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.conent_frament.*;
 import com.njdp.njdp_farmer.conent_frament.FarmerRelease;
 import com.njdp.njdp_farmer.viewpage.ContentViewPager;
@@ -156,7 +156,7 @@ public class mainpages extends AppCompatActivity {
 
     @Override
     protected Dialog onCreateDialog(int id) {
-        final Calendar c = Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
 
         switch (id) {
             case 0:
@@ -200,6 +200,7 @@ public class mainpages extends AppCompatActivity {
                 if (null != startTime){
                     startTime.setText(yyyy + "-" + mm + "-" + dd);
                 }
+                removeDialog(0);
             }else{
                 if(null == endTime) {
                     endTime = (EditText) findViewById(R.id.end_time);
@@ -207,6 +208,7 @@ public class mainpages extends AppCompatActivity {
                 if(null != endTime){
                     endTime.setText(yyyy + "-" + mm + "-" + dd);
                 }
+                removeDialog(1);
             }
         }
     };

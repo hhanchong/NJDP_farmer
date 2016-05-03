@@ -1,7 +1,6 @@
-package com.njdp.njdp_farmer.bean;
+package com.njdp.njdp_farmer.MyClass;
 
 import java.io.Serializable;
-import java.util.PriorityQueue;
 
 /**
  * Created by Administrator on 2016/4/30.
@@ -12,6 +11,8 @@ public class MachineInfo implements Serializable {
     private double latitude;//纬度
     private String name;
     private String telephone;
+    private String qq;
+    private String weixin;
     private String range;
     private String state;
     private String machine_type;
@@ -56,6 +57,22 @@ public class MachineInfo implements Serializable {
 
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getWeixin() {
+        return weixin;
+    }
+
+    public void setWeixin(String weixin) {
+        this.weixin = weixin;
     }
 
     public String getRange() {

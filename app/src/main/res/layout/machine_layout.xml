@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="32dp"
+        android:layout_height="30dp"
         android:gravity="center_vertical"
         android:layout_marginTop="5dp">
         <TextView
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:text="机主姓名：李一航"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_weight="1"/>
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:text="机主电话：18932659760"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_weight="1"/>
@@ -60,7 +60,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:gravity="center_vertical"
-        android:layout_height="32dp">
+        android:layout_height="30dp">
 
         <TextView
             android:id="@+id/range"
@@ -68,19 +68,19 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:text="距离：25.5km"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_weight="1"/>
+            android:layout_weight="7"/>
 
         <TextView
-            android:id="@+id/state"
+            android:id="@+id/work_time"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="状态：正在工作"
-            android:textSize="18sp"
-            android:layout_weight="1" />
+            android:text="工作时间：16 小时/天"
+            android:textSize="16sp"
+            android:layout_weight="6" />
     </LinearLayout>
 
     <View
@@ -91,15 +91,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:gravity="center_vertical"
-        android:layout_height="32dp">
+        android:layout_height="30dp">
 
         <TextView
-            android:id="@+id/machine_type"
+            android:id="@+id/qq"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="设备类型：小麦收割机"
-            android:textSize="18sp"
+            android:text=" QQ ：123456789"
+            android:textSize="16sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_weight="1"/>
@@ -114,15 +114,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:gravity="center_vertical"
-        android:layout_height="32dp">
+        android:layout_height="30dp">
 
         <TextView
-            android:id="@+id/work_time"
+            android:id="@+id/weixin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
-            android:text="工作时间：16 小时/天"
-            android:textSize="18sp"
+            android:text="微信：zhihuinongji"
+            android:textSize="16sp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_weight="1"/>
@@ -138,7 +138,7 @@
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
-        android:layout_height="32dp">
+        android:layout_height="35dp">
 
         <TextView
             android:id="@+id/remark"
@@ -146,10 +146,12 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:text="补充说明："
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:lines="2"/>
     </LinearLayout>
 
     <View

@@ -1,4 +1,4 @@
-package com.njdp.njdp_farmer.bean;
+package com.njdp.njdp_farmer.MyClass;
 
 import java.io.Serializable;
 

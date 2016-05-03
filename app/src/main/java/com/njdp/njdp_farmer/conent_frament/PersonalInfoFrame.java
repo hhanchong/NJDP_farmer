@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,8 +25,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.FarmerLandList;
 import com.njdp.njdp_farmer.PersonalSet;
 import com.njdp.njdp_farmer.R;
-import com.njdp.njdp_farmer.bean.Farmer;
-import com.njdp.njdp_farmer.bean.FarmlandInfo;
+import com.njdp.njdp_farmer.MyClass.Farmer;
+import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.login;
@@ -39,13 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.Objects;
 
 public class PersonalInfoFrame extends Fragment implements View.OnClickListener {
     private final String TAG = "PersonalInfoFrame";

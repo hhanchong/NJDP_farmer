@@ -1,4 +1,4 @@
-package com.njdp.njdp_farmer.bean;
+package com.njdp.njdp_farmer.MyClass;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -14,6 +14,7 @@ public class FarmlandInfo implements Serializable {
     private String fm_token;
     private float area;
     private String crops_kind;
+    private String operation_kind;
     private float unit_price;
     private String block_type;
     private String province;
@@ -38,6 +39,7 @@ public class FarmlandInfo implements Serializable {
         area = 0;
         unit_price = 0;
         crops_kind = "";
+        operation_kind = "";
         block_type = "";
         province = "";
         city= "";
@@ -93,6 +95,14 @@ public class FarmlandInfo implements Serializable {
 
     public void setCrops_kind(String crops_kind) {
         this.crops_kind = crops_kind;
+    }
+
+    public String getOperation_kind() {
+        return operation_kind;
+    }
+
+    public void setOperation_kind(String operation_kind) {
+        this.operation_kind = operation_kind;
     }
 
     public float getUnit_price() {

@@ -22,7 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
-import com.njdp.njdp_farmer.bean.Farmer;
+import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.changeDefault.TimeCount;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;

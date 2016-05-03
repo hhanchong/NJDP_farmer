@@ -39,17 +39,13 @@
                     android:background="@drawable/login_edit_changecolor"
                     android:textSize="16sp"
                     android:paddingLeft="5dp"
+                    android:layout_marginRight="20dp"
                     android:layout_toRightOf="@+id/tv1"
                     android:editable="false"
                     android:hint="请选择农作物类型"
                     android:focusableInTouchMode="false"/>
 
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -70,7 +66,7 @@
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
                     android:layout_toRightOf="@+id/tv2"
-                    android:layout_marginRight="80dp"
+                    android:layout_marginRight="20dp"
                     android:textSize="16sp"
                     android:paddingLeft="5dp"
                     android:numeric="decimal"
@@ -81,16 +77,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="（亩）"
                     android:textSize="18sp"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -114,7 +106,7 @@
                     android:textSize="16sp"
                     android:paddingLeft="5dp"
                     android:layout_toRightOf="@+id/tv3"
-                    android:layout_marginRight="80dp"
+                    android:layout_marginRight="20dp"
                     android:maxLength="10"
                     android:numeric="decimal"
                     android:hint="请输入作业单价" />
@@ -124,17 +116,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:paddingLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="（元）"
                     android:textSize="18sp"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true" />
 
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <RelativeLayout
                 android:id="@+id/rl_block"
@@ -158,17 +146,13 @@
                     android:background="@drawable/login_edit_changecolor"
                     android:textSize="16sp"
                     android:paddingLeft="5dp"
+                    android:layout_marginRight="20dp"
                     android:layout_toRightOf="@+id/tv4"
                     android:editable="false"
                     android:hint="地块是否规则"
                     android:focusableInTouchMode="false"/>
 
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -185,33 +169,31 @@
                     android:text="地址"
                     android:textSize="18sp"
                     />
-                <TextView
+                <EditText
+                    style="@style/Register_style"
                     android:id="@+id/address"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:textCursorDrawable="@drawable/login_cursor"
+                    android:background="@drawable/login_edit_changecolor"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:textSize="16sp"
-                    android:layout_gravity="center_vertical|left"
-                    android:gravity="center_vertical|left"
                     android:layout_toRightOf="@+id/tv5"
                     android:layout_toEndOf="@+id/tv5"
-                    android:layout_marginRight="45dp"
+                    android:layout_marginRight="20dp"
                     android:layout_centerVertical="true"
-                    android:hint="点击选择要发布的位置" />
+                    android:hint="点击选择要发布的位置"
+                    android:minLines="2"
+                    android:editable="false"
+                    android:focusableInTouchMode="false" />
 
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="5dp"
                     android:src="@drawable/into" />
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -236,14 +218,10 @@
                     android:textSize="16sp"
                     android:hint="点击选择日期"
                     android:layout_toRightOf="@+id/tv7"
+                    android:layout_marginRight="20dp"
                     android:editable="false"
                     android:focusableInTouchMode="false"/>
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -267,14 +245,10 @@
                     android:textSize="16sp"
                     android:hint="点击选择日期"
                     android:layout_toRightOf="@+id/tv8"
+                    android:layout_marginRight="20dp"
                     android:editable="false"
                     android:focusableInTouchMode="false"/>
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <RelativeLayout
                 android:id="@+id/rl_set_user_image"
@@ -288,9 +262,23 @@
                     android:paddingLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:text="街景"
-                    android:textSize="18sp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:textSize="18sp" />
+
+                <EditText
+                    style="@style/Register_style"
+                    android:id="@+id/addresspic"
+                    android:textCursorDrawable="@drawable/login_cursor"
+                    android:background="@drawable/login_edit_changecolor"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="5dp"
+                    android:textSize="16sp"
+                    android:layout_toRightOf="@+id/tv6"
+                    android:layout_toEndOf="@+id/tv6"
+                    android:layout_marginRight="20dp"
+                    android:layout_centerVertical="true"
+                    android:hint=""
+                    android:editable="false"
+                    android:focusableInTouchMode="false"/>
 
                 <ImageView
                     android:layout_width="30dp"
@@ -302,11 +290,6 @@
                     android:id="@+id/imageView" />
 
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -327,16 +310,12 @@
                     android:textCursorDrawable="@drawable/login_cursor"
                     android:background="@drawable/login_edit_changecolor"
                     android:paddingLeft="5dp"
+                    android:layout_marginRight="20dp"
                     android:textSize="16sp"
                     android:layout_toRightOf="@+id/tv9"
                     android:maxLength="100"
                     android:hint="其他备注信息" />
             </RelativeLayout>
-
-            <View
-                style="@style/Register_HorizontalLine_style"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
 
             <LinearLayout
                 android:orientation="vertical"
