@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.njdp.njdp_farmer.CostomProgressDialog.CustomProgressDialog;
 import com.njdp.njdp_farmer.MyClass.Farmer;
+import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.conent_frament.*;
 import com.njdp.njdp_farmer.conent_frament.FarmerRelease;
 import com.njdp.njdp_farmer.viewpage.ContentViewPager;
@@ -28,6 +29,7 @@ import java.util.List;
 public class mainpages extends AppCompatActivity {
     private String token;
     private Farmer farmer;
+    private FarmlandInfo lastUndoFarmland;
     private CustomProgressDialog progressDialog;
     private ContentViewPager contentViewPager;
     private FragmentManager manager;
@@ -73,14 +75,16 @@ public class mainpages extends AppCompatActivity {
         FarmerRelease farmerRelease = new FarmerRelease();
         farmerRelease.setArguments(bundle1);
         content_list.add(farmerRelease);
-        //农机查询界面
-        FarmMachineSearch farmMachineSearch = new FarmMachineSearch();
-        farmMachineSearch.setArguments(bundle1);
-        content_list.add(farmMachineSearch);
-        //个人信息界面
+        //个人信息界面，需要用到农田发布的数据，先加载
+        progressDialog.setContent("正在准备农田信息！");
         PersonalInfoFrame personalInfoFrame = new PersonalInfoFrame();
         personalInfoFrame.setArguments(bundle1);
         content_list.add(personalInfoFrame);
+        //农机查询界面
+        progressDialog.setContent("正在准备农机信息！");
+        FarmMachineSearch farmMachineSearch = new FarmMachineSearch();
+        farmMachineSearch.setArguments(bundle1);
+        content_list.add(farmMachineSearch);
         //content_list.add(new YueDuFrament());
         //content_list.add(new SheZhiFrament());
         transaction.commit();
@@ -93,7 +97,7 @@ public class mainpages extends AppCompatActivity {
         contentViewPager = (ContentViewPager) findViewById(R.id.content_viewpager);
         contentradiogroup = (RadioGroup) findViewById(R.id.content_radiogroup);
         //预加载一页
-        contentViewPager.setOffscreenPageLimit(5);
+        contentViewPager.setOffscreenPageLimit(3);
         contentViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
@@ -114,10 +118,10 @@ public class mainpages extends AppCompatActivity {
                         contentViewPager.setCurrentItem(0);
                         break;
                     case R.id.rb_search:
-                        contentViewPager.setCurrentItem(1);
+                        contentViewPager.setCurrentItem(2);
                         break;
                     case R.id.rb_userInfo:
-                        contentViewPager.setCurrentItem(2);
+                        contentViewPager.setCurrentItem(1);
                         break;
 
                 }
@@ -212,6 +216,14 @@ public class mainpages extends AppCompatActivity {
             }
         }
     };
+
+    //获取和设置最后没有完成的发布任务，与个人信息Frame交互
+    public FarmlandInfo getLastUndoFarmland() {
+        return lastUndoFarmland;
+    }
+    public void setLastUndoFarmland(FarmlandInfo farmland) {
+        this.lastUndoFarmland = farmland;
+    }
 
     //错误信息提示
     private void error_hint(String str) {

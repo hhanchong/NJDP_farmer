@@ -48,6 +48,7 @@ import com.njdp.njdp_farmer.MyClass.MachineInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.login;
+import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
 
 import org.json.JSONArray;
@@ -71,6 +72,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private static FarmlandInfo farmlandInfo;         //农户最后发布的农田
     private ArrayList<MachineInfo> machineInfos;     //查询回来的农机
     private List<MachineInfo> machinesToShow;       //需要显示的农机
+    private Thread thread;  //延时获取农田数据的线程
 
     ////////////////////////地图变量//////////////////////////
     private MapView mMapView = null;
@@ -106,7 +108,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         //获取传递的参数
         Bundle bundle = getArguments();
         token = bundle.getString("token");
-        farmlandInfo = (FarmlandInfo)bundle.getSerializable("farmlandinfo");
         if (token == null) {
             error_hint("参数传递错误！");
             return null;
@@ -114,6 +115,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         try {
             if (view == null) {
+                machineInfos = new ArrayList<MachineInfo>();
                 view = inFlater(inflater);
             }
 
@@ -172,6 +174,25 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
             /////////////////地图代码结束////////////////////////
 
+            //延时获取农田信息
+            thread=new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try {
+                        Thread.sleep(2000);
+                        //在这里添加调用接口获取数据的代码
+                        farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
+                        //获取农机数据
+                        if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
+                            getMachineInfos();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,10 +209,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         width = display.getWidth();
         height = display.getHeight();
-        //获取农机数据
-        machineInfos = new ArrayList<MachineInfo>();
-        if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
-            getMachineInfos();
         return view;
     }
 
@@ -571,7 +588,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         String tag_string_req = "req_machines_get";
 
         pDialog.setMessage("正在获取农机数据 ...");
-        showDialog();
+        //showDialog();
 
         if (netutil.checkNet(getActivity()) == false) {
             hideDialog();
@@ -635,7 +652,13 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         temp.setRemark(object.getString("Machine_remark"));
                         machineInfos.add(temp);
                     }
-
+                    //在地图上显示农机位置
+                    rb5.setChecked(true);
+                    int index = IndexOfRange(5);
+                    if(index != -1) {
+                        machinesToShow = machineInfos.subList(0, index + 1);
+                        ShowInMap(machinesToShow);
+                    }
                 } else if(status == 1){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");

@@ -585,21 +585,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     farmlandInfo.setTown(temp[3]);
                     farmlandInfo.setVillage(temp[4]);
 
-                    Location location = null;
-                    //location = getLocalGPSByNet(s.toString());
-
+                    //通过村名查找坐标位置
                     mSearch.geocode(new GeoCodeOption().city(farmlandInfo.getCity()).address(farmlandInfo.getVillage()));
-                    if(farmlandInfo.getLatitude() !=null&&farmlandInfo.getLongitude()!=null) {
-                    }else{
-                        location = getLocalGPS();
-                        if (location != null) {
-                            farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
-                            farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
-                        }
-                        else {
-                            error_hint("获取GPS位置失败！");
-                        }
-                    }
                 }
             }
         });
@@ -707,8 +694,15 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
                 Toast.makeText(getActivity(), "抱歉，未能找到村庄位置，将要获取本地位置！", Toast.LENGTH_LONG)
                         .show();
-                farmlandInfo.setLatitude(null);
-                farmlandInfo.setLongitude(null);
+                //获取地址经纬度失败，获取本地GPS经纬度
+                Location location = getLocalGPS();
+                if (location != null) {
+                    farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
+                    farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
+                }
+                else {
+                    error_hint("获取本地GPS位置失败！");
+                }
                 return;
             }
             farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().latitude));

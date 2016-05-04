@@ -30,6 +30,7 @@ import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.login;
+import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
 
 import org.json.JSONArray;
@@ -37,6 +38,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -167,7 +169,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         String tag_string_req = "req_farmland_get";
 
         pDialog.setMessage("正在获取个人数据 ...");
-        showDialog();
+        //showDialog();
 
         if (netutil.checkNet(getActivity()) == false) {
             hideDialog();
@@ -234,6 +236,9 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                         farmlandInfos.add(temp);
                     }
                     myrelease.setText("共发布了" + jObjs.length() + "条信息，点击查看");
+                    if(farmlandInfos.size() > 0){
+                        returnLastReleaseUndo();
+                    }
 
                 } else if(status == 1){
                     //密匙失效
@@ -264,6 +269,20 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             hideDialog();
         }
     };
+
+    //返回最后的未完成的发布信息
+    private void returnLastReleaseUndo(){
+        for(int i = farmlandInfos.size()-1; i >= 0; i--){
+            if(farmlandInfos.get(i).getStatus().equals("0")){
+                if(farmlandInfos.get(i).getEnd_time().getTime() > System.currentTimeMillis()){
+                    ((mainpages)getActivity()).setLastUndoFarmland(farmlandInfos.get(i));
+                    return;
+                }
+            }
+        }
+        ((mainpages)getActivity()).setLastUndoFarmland(null);
+        return;
+    }
 
     private void showDialog() {
         if (!pDialog.isShowing())

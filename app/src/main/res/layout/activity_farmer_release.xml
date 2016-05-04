@@ -4,9 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.njdp.njdp_farmer.FarmerRelease">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#03601F">
+        <TextView
+            style="@style/Pages_Title"
+            android:text="发布信息录入"
+            android:textSize="18dp"/>
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp">
 
         <LinearLayout
             android:layout_width="match_parent"
