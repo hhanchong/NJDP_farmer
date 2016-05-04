@@ -427,7 +427,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             //如果是Network
             locationProvider = LocationManager.NETWORK_PROVIDER;
         } else {
-            error_hint("没有可用的位置提供器");
+            error_hint("没有可用的位置提供器，请检查GPS是否打开。");
             return null;
         }
         //获取并返回Location
