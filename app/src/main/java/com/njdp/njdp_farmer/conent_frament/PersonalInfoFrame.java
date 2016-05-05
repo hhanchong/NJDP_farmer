@@ -54,6 +54,9 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     private String token;
     private Farmer farmer;
     ArrayList<FarmlandInfo> farmlandInfos;
+    private boolean isFirst = true;
+    private Handler handler;
+    private Runnable runnable;
 
     @Nullable
     @Override
@@ -79,6 +82,18 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             if (view == null) {
                 view = inFlater(inflater);
             }
+            //定时刷新任务
+            handler = new Handler();
+            runnable = new Runnable(){
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    // 在此处添加执行的代码
+                    getFarmlandInfos();
+                    handler.postDelayed(this, 50);// 50ms后执行this，即runable
+                }
+            };
+            handler.postDelayed(runnable, 50);// 打开定时器，50ms后执行runnable操作
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +104,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     public View inFlater(LayoutInflater inflater) {
         view = inflater.inflate(R.layout.activity_personal_info, null, false);
         initView(view);
-        farmlandInfos = new ArrayList<FarmlandInfo>();
+        farmlandInfos = new ArrayList<>();
         getFarmlandInfos();
         return view;
     }
@@ -122,7 +137,6 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         //myMessage.setOnClickListener(this);
     }
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -141,40 +155,21 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 break;
         }
     }
-    public static Handler handle=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int what = msg.what;
-            switch (what){
-                case 1:
-                    //userName.setText("立即登录");
-                    //goldNumber.setVisibility(View.VISIBLE);
-                    //jinbiCount.setVisibility(View.GONE);
-                    //picture.setImageResource(R.mipmap.biz_tie_user_avater_default_common);
-                    //flag=false;
-                    break;
-                case 2:
-                    Bitmap bp= (Bitmap) msg.obj;
-                    if (bp!=null){
-                        //picture.setImageBitmap(bp);
-                    }
-                    break;
-            }
-        }
-    };
 
+    //获取发布的农田信息
     public void getFarmlandInfos() {
 
         String tag_string_req = "req_farmland_get";
 
-        pDialog.setMessage("正在获取个人数据 ...");
-        //showDialog();
+        if(isFirst) {
+            pDialog.setMessage("正在获取个人数据 ...");
+            showDialog();
+            isFirst = false;
+        }
 
-        if (netutil.checkNet(getActivity()) == false) {
+        if (!netutil.checkNet(getActivity())) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
             //服务器请求
             StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -183,7 +178,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 @Override
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("token", token);
                     return params;
                 }
@@ -200,7 +195,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         @Override
         public void onResponse(String response) {
             Log.i("tagconvertstr", "[" + response + "]");
-            Log.d(TAG, "Release Response: " + response.toString());
+            Log.d(TAG, "Release Response: " + response);
             hideDialog();
 
             try {
@@ -209,6 +204,8 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
                 // Check for error node in json
                 if (status == 0) {
+                    //清空旧数据
+                    farmlandInfos.clear();
                     //此处引入JSON jar包
                     JSONArray jObjs = jObj.getJSONArray("result");
                     for(int i = 0; i < jObjs.length(); i++){
@@ -281,7 +278,6 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             }
         }
         ((mainpages)getActivity()).setLastUndoFarmland(null);
-        return;
     }
 
     private void showDialog() {
@@ -306,5 +302,10 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         Toast toast = Toast.makeText(getActivity(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
+    }
+
+    @Override
+    public void onDestroy(){
+        handler.removeCallbacks(runnable);// 关闭定时器处理
     }
 }

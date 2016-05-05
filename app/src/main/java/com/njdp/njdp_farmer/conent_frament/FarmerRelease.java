@@ -269,10 +269,9 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         pDialog.setMessage("正在发布 ...");
         showDialog();
         Log.i("GGGG", farmlandInfo.getLongitude());
-        if (netutil.checkNet(getActivity()) == false) {
+        if (!netutil.checkNet(getActivity())) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
 
             if (farmlandInfo.getLongitude().length() == 0 || farmlandInfo.getLatitude().length() == 0) {
@@ -287,7 +286,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                 @Override
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("token", token);
                     params.put("Farmlands_crops_kind", farmlandInfo.getCrops_kind());
                     params.put("Farmlands_area", String.valueOf(farmlandInfo.getArea()));
@@ -333,7 +332,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         @Override
         public void onResponse(String response) {
             Log.i("tagconvertstr", "[" + response + "]");
-            Log.d(TAG, "Release Response: " + response.toString());
+            Log.d(TAG, "Release Response: " + response);
             hideDialog();
 
             try {
@@ -419,7 +418,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
     private Location getLocalGPS() {
         //地理位置服务提供者
-        String locationProvider = "";
+        String locationProvider;
         //获取地理位置管理器
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         //获取所有可用的位置提供器
@@ -465,8 +464,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(blocktype.getText())
-                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(address.getText())
+                        && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
                     releaseEditFinish.setClickable(true);
                     releaseEditFinish.setEnabled(true);
                 } else {
@@ -490,8 +489,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(blocktype.getText())
-                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                if ((s.length() > 0) && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(address.getText())
+                         && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
                     releaseEditFinish.setClickable(true);
                     releaseEditFinish.setEnabled(true);
                 } else {
@@ -519,8 +518,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(blocktype.getText())
-                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(address.getText())
+                         && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
                     releaseEditFinish.setClickable(true);
                     releaseEditFinish.setEnabled(true);
                 } else {
@@ -548,14 +547,14 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(croptype.getText())
-                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
-                    releaseEditFinish.setClickable(true);
-                    releaseEditFinish.setEnabled(true);
-                } else {
-                    releaseEditFinish.setEnabled(false);
-                    releaseEditFinish.setClickable(false);
-                }
+                //if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(croptype.getText())
+                //        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                //    releaseEditFinish.setClickable(true);
+                //    releaseEditFinish.setEnabled(true);
+                //} else {
+                //    releaseEditFinish.setEnabled(false);
+                //    releaseEditFinish.setClickable(false);
+                //}
                 farmlandInfo.setBlock_type(s.toString());
             }
         });
@@ -573,8 +572,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(blocktype.getText())
-                        && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(croptype.getText())
+                         && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
                     releaseEditFinish.setClickable(true);
                     releaseEditFinish.setEnabled(true);
                 } else {
@@ -620,7 +619,6 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                                 starttime.setText(farmlandInfo.getStart_time_String());
                             }
                         }
-                        return;
                     }
                 }
             }
@@ -628,17 +626,15 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(blocktype.getText())
-                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(address.getText())
+                         && !TextUtils.isEmpty(croptype.getText()) && !TextUtils.isEmpty(endtime.getText())) {
                     releaseEditFinish.setClickable(true);
                     releaseEditFinish.setEnabled(true);
                 } else {
                     releaseEditFinish.setEnabled(false);
                     releaseEditFinish.setClickable(false);
                 }
-                if(s.toString().length() == 0) {
-                    return;
-                }else {
+                if(s.toString().length() > 0) {
                     farmlandInfo.setStart_time(farmlandInfo.StringFormatDate(s.toString()));
                 }
             }
@@ -664,7 +660,6 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                         } else {
                             endtime.setText(farmlandInfo.getEnd_time_String());
                         }
-                        return;
                     }
                 }
             }
@@ -672,8 +667,8 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(blocktype.getText())
-                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(croptype.getText())) {
+                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText())  && !TextUtils.isEmpty(address.getText())
+                        && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(croptype.getText())) {
                     releaseEditFinish.setClickable(true);
                     releaseEditFinish.setEnabled(true);
                 } else {
@@ -681,9 +676,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     releaseEditFinish.setClickable(false);
                     //releaseEditFinish.setBackground("#");
                 }
-                if(s.toString().length() == 0){
-                    return;
-                }else {
+                if(s.toString().length() > 0){
                     farmlandInfo.setEnd_time(farmlandInfo.StringFormatDate(s.toString()));
                 }
             }

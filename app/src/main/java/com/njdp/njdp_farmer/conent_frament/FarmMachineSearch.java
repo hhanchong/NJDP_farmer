@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -73,6 +74,9 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private ArrayList<MachineInfo> machineInfos;     //查询回来的农机
     private List<MachineInfo> machinesToShow;       //需要显示的农机
     private Thread thread;  //延时获取农田数据的线程
+    private boolean isFirst = true;
+    private Handler handler;
+    private Runnable runnable;
 
     ////////////////////////地图变量//////////////////////////
     private MapView mMapView = null;
@@ -115,7 +119,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         // Inflate the layout for this fragment
         try {
             if (view == null) {
-                machineInfos = new ArrayList<MachineInfo>();
+                machineInfos = new ArrayList<>();
                 view = inFlater(inflater);
             }
 
@@ -193,6 +197,19 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 }
             });
             thread.start();
+
+            //定时刷新任务
+            handler = new Handler();
+            runnable = new Runnable(){
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    // 在此处添加执行的代码
+                    getMachineInfos();
+                    handler.postDelayed(this, 50);// 50ms后执行this，即runable
+                }
+            };
+            handler.postDelayed(runnable, 50);// 打开定时器，50ms后执行runnable操作
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -587,13 +604,20 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
         String tag_string_req = "req_machines_get";
 
-        pDialog.setMessage("正在获取农机数据 ...");
-        //showDialog();
+        if(isFirst) {
+            pDialog.setMessage("正在获取农机数据 ...");
+            showDialog();
+            rb5.setChecked(true);
+            isFirst = false;
+        }else{
+            if(null != ((mainpages)getActivity()).getLastUndoFarmland()){
+                farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
+            }
+        }
 
-        if (netutil.checkNet(getActivity()) == false) {
+        if (!netutil.checkNet(getActivity())) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
             //服务器请求
             StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -602,7 +626,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 @Override
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("token", token);
                     params.put("Farmlands_longitude", farmlandInfo.getLongitude());
                     params.put("Farmlands_Latitude", farmlandInfo.getLatitude());
@@ -624,7 +648,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         @Override
         public void onResponse(String response) {
             Log.i("tagconvertstr", "[" + response + "]");
-            Log.d(TAG, "Release Response: " + response.toString());
+            Log.d(TAG, "Release Response: " + response);
             hideDialog();
 
             try {
@@ -633,6 +657,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
                 // Check for error node in json
                 if (status == 0) {
+                    //清空旧数据，因为暂时没有农机数据，所以使用模拟数据，不清空
+                    //machineInfos.clear();
                     //此处引入JSON jar包
                     JSONArray jObjs = jObj.getJSONArray("result");
                     for(int i = 0; i < jObjs.length(); i++){
@@ -653,8 +679,19 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         machineInfos.add(temp);
                     }
                     //在地图上显示农机位置
-                    rb5.setChecked(true);
-                    int index = IndexOfRange(5);
+                    int index;
+                    if(rb5.isChecked()) {
+                        index = IndexOfRange(5);
+                    }else if(rb10.isChecked()){
+                        index = IndexOfRange(10);
+                    }else if(rb20.isChecked()){
+                        index = IndexOfRange(20);
+                    }else if(rb30.isChecked()){
+                        index = IndexOfRange(30);
+                    }else{
+                        index = IndexOfRange(50);
+                    }
+
                     if(index != -1) {
                         machinesToShow = machineInfos.subList(0, index + 1);
                         ShowInMap(machinesToShow);
@@ -697,5 +734,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    @Override
+    public void onDestroy(){
+        handler.removeCallbacks(runnable);// 关闭定时器处理
     }
 }
