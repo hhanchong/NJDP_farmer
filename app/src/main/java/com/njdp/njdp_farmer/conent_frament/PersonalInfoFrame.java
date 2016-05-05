@@ -90,10 +90,10 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                     // TODO Auto-generated method stub
                     // 在此处添加执行的代码
                     getFarmlandInfos();
-                    handler.postDelayed(this, 50);// 50ms后执行this，即runable
+                    handler.postDelayed(this, 30000);// 30s后执行this，即runable
                 }
             };
-            handler.postDelayed(runnable, 50);// 打开定时器，50ms后执行runnable操作
+            handler.postDelayed(runnable, 30000);// 打开定时器，30s后执行runnable操作
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -261,7 +261,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG, "Release Error: " + error.getMessage());
+            Log.e(TAG, "GetPersonInfo Error: " + error.getMessage());
             error_hint("服务器连接失败");
             hideDialog();
         }
