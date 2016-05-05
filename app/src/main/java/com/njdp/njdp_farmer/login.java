@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -56,7 +57,7 @@ public class login extends AppCompatActivity {
         if (session!=null)
         {
             //检测是否缓存了登录信息
-            if (session.isLoggedIn() && session.getToken() != "") {
+            if (session.isLoggedIn() && !session.getToken().equals("")) {
                 // User is already logged in. Take him to main activity
                 Intent intent = new Intent(login.this, MainLink.class);
                 intent.putExtra("TOKEN", session.getToken());
@@ -88,7 +89,7 @@ public class login extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
 
         // Check if user is already logged in or not
-        if (session.isLoggedIn() && session.getToken() != "") {
+        if (session.isLoggedIn() && !session.getToken().equals("")) {
             Intent intent = new Intent(login.this, MainLink.class);
             intent.putExtra("TOKEN", session.getToken());
             startActivity(intent);
@@ -138,10 +139,9 @@ public class login extends AppCompatActivity {
         pDialog.setMessage("正在登录 ...");
         showDialog();
 
-        if (netutil.checkNet(login.this) == false) {
+        if (!netutil.checkNet(login.this)) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
 
             //服务器请求
@@ -159,6 +159,7 @@ public class login extends AppCompatActivity {
                 }
             };
 
+            strReq.setRetryPolicy(new DefaultRetryPolicy(1000,3,1.0f)); //请求超时时间1S，重复3次
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
         }
@@ -180,7 +181,7 @@ public class login extends AppCompatActivity {
         @Override
         public void onResponse(String response) {
             Log.i("tagconvertstr", "[" + response + "]");
-            Log.d(TAG, "Login Response: " + response.toString());
+            Log.d(TAG, "Login Response: " + response);
             hideDialog();
 
             try {
@@ -311,7 +312,6 @@ public class login extends AppCompatActivity {
                     } else {
                         text_username.setHint("请输入注册手机号");
                     }
-                    ;
                 }
             }
         });
@@ -330,7 +330,7 @@ public class login extends AppCompatActivity {
                     else
                     {
                         text_password.setHint("请输入密码");
-                    };
+                    }
                 }
             }
         });
