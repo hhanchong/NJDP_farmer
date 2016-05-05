@@ -292,6 +292,9 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     params.put("Farmlands_crops_kind", farmlandInfo.getCrops_kind());
                     params.put("Farmlands_area", String.valueOf(farmlandInfo.getArea()));
                     params.put("Farmlands_unit_price", String.valueOf(farmlandInfo.getUnit_price()));
+                    if(farmlandInfo.getBlock_type().length() == 0){
+                        farmlandInfo.setBlock_type("规则");
+                    }
                     params.put("Farmlands_block_type", farmlandInfo.getBlock_type());
                     params.put("Farmlands_province", farmlandInfo.getProvince());
                     params.put("Farmlands_city", farmlandInfo.getCity());
@@ -304,7 +307,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     params.put("Farmlands_start_time", farmlandInfo.getStart_time_String());
                     params.put("Farmlands_end_time", farmlandInfo.getEnd_time_String());
                     //params.put("status", farmlandInfo.getStatus());
-                    params.put("Farmlands_remark", farmlandInfo.getRemark());
+                    params.put("Farmlands_remark", remark.getText().toString());
                     return params;
                 }
             };
@@ -411,6 +414,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         endtime.setText("");
         //remark.setText(""); //街景暂未考虑
         remark.setText("");
+        farmlandInfo = new FarmlandInfo();
     }
 
     private Location getLocalGPS() {

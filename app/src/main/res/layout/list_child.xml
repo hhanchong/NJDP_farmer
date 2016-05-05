@@ -8,6 +8,7 @@
         android:id="@+id/release_div"
         android:orientation="vertical"
         android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 

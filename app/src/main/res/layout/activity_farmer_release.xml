@@ -161,7 +161,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_toRightOf="@+id/tv4"
                     android:editable="false"
-                    android:hint="地块是否规则"
+                    android:hint="地块是否规则（默认规则）"
                     android:focusableInTouchMode="false"/>
 
             </RelativeLayout>
@@ -326,7 +326,7 @@
                     android:textSize="16sp"
                     android:layout_toRightOf="@+id/tv9"
                     android:maxLength="100"
-                    android:hint="其他备注信息" />
+                    android:hint="其他说明信息" />
             </RelativeLayout>
 
             <LinearLayout
