@@ -82,9 +82,9 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.textView.setText(group.get(groupPosition));
-		holder.textView.setTextSize(20);
+		holder.textView.setTextSize(18);
 		holder.textView.setPadding(36, 20, 0, 20);
-		holder.textView.getPaint().setFakeBoldText(true); //加粗
+		//holder.textView.getPaint().setFakeBoldText(true); //加粗
 		return convertView;
 	}
 	

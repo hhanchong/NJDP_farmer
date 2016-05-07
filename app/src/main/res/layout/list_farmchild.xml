@@ -14,7 +14,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="26dp"
             android:gravity="center_vertical"
             android:layout_marginTop="5dp">
             <TextView
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="作物类型：小麦"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"/>
@@ -37,7 +37,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="26dp"
             android:gravity="center_vertical">
             <TextView
                 android:id="@+id/status"
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="作业状态：未收割"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"/>
@@ -60,7 +60,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="30dp">
+            android:layout_height="26dp">
 
             <TextView
                 android:id="@+id/area"
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="面积 (亩)：25.5"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"/>
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="单价 (元)：85.5"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -91,7 +91,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="30dp">
+            android:layout_height="26dp">
 
             <TextView
                 android:id="@+id/block_type"
@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="地块类型：规则"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"/>
@@ -114,22 +114,22 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="60dp">
+            android:layout_height="50dp">
 
             <TextView
                 android:id="@+id/tv"
-                android:layout_width="100dp"
+                android:layout_width="91dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:text="地 址："
-                android:textSize="18sp"
+                android:textSize="16sp"
                 />
             <TextView
                 android:id="@+id/address"
                 android:layout_width="fill_parent"
-                android:layout_height="55dp"
-                android:textSize="18sp"
+                android:layout_height="48dp"
+                android:textSize="16sp"
                 android:layout_gravity="center_vertical|left"
                 android:gravity="center_vertical|left"
                 android:layout_toRightOf="@+id/tv"
@@ -148,7 +148,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="30dp">
+            android:layout_height="26dp">
 
             <TextView
                 android:id="@+id/start_time"
@@ -156,7 +156,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="开始时间：2016-04-27"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"
@@ -172,7 +172,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:gravity="center_vertical"
-            android:layout_height="30dp">
+            android:layout_height="26dp">
 
             <TextView
                 android:id="@+id/end_time"
@@ -180,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="结束时间：2016-04-30"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1" />
@@ -196,7 +196,7 @@
             android:layout_width="match_parent"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical"
-            android:layout_height="30dp">
+            android:layout_height="26dp">
 
             <TextView
                 android:id="@+id/remark"
@@ -204,7 +204,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="补充说明：无"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"/>
@@ -227,14 +227,14 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="补充说明 "
-                android:textSize="20sp" />
+                android:textSize="16sp" />
             <EditText
                 style="@style/Register_style"
                 android:id="@+id/update_time"
                 android:textCursorDrawable="@drawable/login_cursor"
                 android:background="@drawable/login_edit_changecolor"
                 android:paddingLeft="5dp"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:maxLength="100"
                 android:hint="其他备注信息" />
         </RelativeLayout>

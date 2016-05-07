@@ -13,7 +13,7 @@
         <TextView
             android:id="@+id/register_title"
             style="@style/Pages_Title"
-            android:text="发布列表"
+            android:text="发布查询"
             />
         <ImageButton
             android:id="@+id/getback"
@@ -29,10 +29,40 @@
         android:padding="10dp"
         android:id="@+id/register_div"
         android:layout_below="@+id/register_image_top">
+
+        <LinearLayout
+            android:id="@+id/line_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"/>
+            <Spinner
+                android:id="@+id/sp_year"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:textSize="18dp"
+                android:textColor="@color/Black"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="年你的发布"
+                android:textSize="18dp"
+                android:textColor="@color/Black"
+                android:layout_weight="5"/>
+        </LinearLayout>
+
         <ExpandableListView
             android:id="@+id/expandableListView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/line_top"
             android:fadingEdge="horizontal">
         </ExpandableListView>
     </RelativeLayout>

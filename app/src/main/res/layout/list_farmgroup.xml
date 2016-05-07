@@ -8,6 +8,7 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/Black" />
+        android:textColor="@color/Black"
+        android:textSize="16dp" />
 
 </RelativeLayout>
