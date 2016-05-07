@@ -45,6 +45,7 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.njdp.njdp_farmer.MachinesList;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.MyClass.MachineInfo;
@@ -79,6 +80,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private boolean isFirst = true;
     private Handler handler;
     private Runnable runnable;
+    private TextView machineListView;
 
     ////////////////////////地图变量//////////////////////////
     private MapView mMapView = null;
@@ -217,12 +219,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             e.printStackTrace();
         }
         return null;
-        //return inflater.inflate(R.layout.frament_farm_machine, container, false);
     }
 
     //初始化界面及数据
     public View inFlater(LayoutInflater inflater) {
-        view = inflater.inflate(R.layout.activity_farm_machine_search, null, false);
+        view = inflater.inflate(R.layout.activity_machine_search, null, false);
         initView(view);
         // 获取屏幕的高度和宽度
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -241,6 +242,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         rb50 = (RadioButton)view.findViewById(R.id.rb50);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
+        machineListView = (TextView)view.findViewById(R.id.machineListView);
         initOnClick();
     }
 
@@ -251,7 +253,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         rb20.setOnClickListener(this);
         rb30.setOnClickListener(this);
         rb50.setOnClickListener(this);
-        //Thread.setOnClickListener(this);
+        machineListView.setOnClickListener(this);
         //myMessage.setOnClickListener(this);
     }
 
@@ -309,7 +311,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     ShowInMap(machinesToShow);
                 }
                 break;
-
+            case R.id.machineListView:
+                Log.e("------------->", "点击查看农机列表");
+                Intent intent = new Intent(getActivity(), MachinesList.class);
+                intent.putExtra("machineInfos", machineInfos);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -580,7 +587,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         telephone = machineInfo.getTelephone();
 
         window.setWidth(width);
-        window.setHeight(height/2);
+        window.setHeight(height*4/9);
 
         // 设置PopupWindow外部区域是否可触摸
         window.setFocusable(true); //设置PopupWindow可获得焦点
@@ -701,6 +708,9 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         machinesToShow = machineInfos.subList(0, index + 1);
                         ShowInMap(machinesToShow);
                     }
+
+                    //更新农机数据
+                    machineListView.setText("共有" + machineInfos.size()  + "条农机信息，点击查看列表");
                 } else if(status == 1){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");

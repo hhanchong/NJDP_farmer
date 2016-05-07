@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/register_title"
             style="@style/Pages_Title"
-            android:text="农机列表"
+            android:text="农机查询"
             />
         <ImageButton
             android:id="@+id/getback"

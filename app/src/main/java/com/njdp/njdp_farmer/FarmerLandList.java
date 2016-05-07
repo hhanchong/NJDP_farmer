@@ -1,11 +1,7 @@
 package com.njdp.njdp_farmer;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,27 +11,13 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.adpter.FarmAdapter;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
-import com.njdp.njdp_farmer.db.AppConfig;
-import com.njdp.njdp_farmer.db.AppController;
-import com.njdp.njdp_farmer.util.NetUtil;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FarmerLandList extends AppCompatActivity {
     private final String TAG = "FarmLandList";
@@ -47,7 +29,7 @@ public class FarmerLandList extends AppCompatActivity {
     private FarmAdapter adapter;
     private ImageButton getback=null;
     private Spinner spinner;
-    List<String> Years = new ArrayList<String>();
+    List<String> Years = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,15 +47,7 @@ public class FarmerLandList extends AppCompatActivity {
         {
             error_hint("没有发布信息！");
         }
-        /**
-         * 初始化数据
-         */
-        //initData();
-        //if(group.size() >= 0) {
-        //   adapter = new FarmAdapter(this, group, child);
-        //   listView.setAdapter(adapter);
-        //   listView.setGroupIndicator(null);  //不显示向下的箭头
-        //}
+
         //下拉菜单的数据
         int year = Calendar.getInstance().get(Calendar.YEAR);
         Years.add((year-5)+"");
@@ -107,13 +81,9 @@ public class FarmerLandList extends AppCompatActivity {
     private void initData() {
         group = new ArrayList<>();
         child = new ArrayList<>();
-        //addInfo("成功村-小麦-20亩-未收割",new FarmlandInfo[]{farmlandInfo});
-        //addInfo("河北", new FarmlandInfo[]{farmlandInfo1});
-        //addInfo("广东", new FarmlandInfo[]{farmlandInfo});
         for(FarmlandInfo f :farmlandInfos){
             addInfo(f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0")?"未收割":"已收割"), new FarmlandInfo[]{f});
         }
-
     }
 
     /**
@@ -123,10 +93,7 @@ public class FarmerLandList extends AppCompatActivity {
      */
     private void addInfo(String g, FarmlandInfo[] c) {
         group.add(g);
-        List<FarmlandInfo> list = new ArrayList<>();
-        for (FarmlandInfo f : c) {
-            list.add(f);
-        }
+        List<FarmlandInfo> list = Arrays.asList(c);
         child.add(list);
     }
 

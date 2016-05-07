@@ -9,6 +9,7 @@ public class MachineInfo implements Serializable {
     private int id;
     private double longitude;//经度
     private double latitude;//纬度
+    private String image = "";
     private String name;
     private String telephone;
     private String qq;
@@ -41,6 +42,14 @@ public class MachineInfo implements Serializable {
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getName() {

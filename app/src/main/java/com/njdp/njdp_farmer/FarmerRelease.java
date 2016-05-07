@@ -133,8 +133,6 @@ public class FarmerRelease extends AppCompatActivity {
         releaseEditFinish.setEnabled(false);
         releaseEditFinish.setClickable(false);
         editTextIsNull();
-        //Thread.setOnClickListener(this);
-        //myMessage.setOnClickListener(this);
     }
 
     View.OnClickListener handler = new View.OnClickListener()
@@ -183,7 +181,6 @@ public class FarmerRelease extends AppCompatActivity {
         }
         switch (requestCode) {
             case ADDRESSEDIT:
-                //farmer.setAddress(data.getStringExtra("address"));
                 address.setText(data.getStringExtra("address"));
                 break;
         }
@@ -408,7 +405,7 @@ public class FarmerRelease extends AppCompatActivity {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            error_hint("请开放获取当前位置的权限");
+            error_hint("请开放GPS定位的权限。");
             return null;
         }
         return locationManager.getLastKnownLocation(locationProvider);
