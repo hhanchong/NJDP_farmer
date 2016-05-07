@@ -1,34 +1,30 @@
-package com.njdp.njdp_farmer.conent_frament;
+package com.njdp.njdp_farmer;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -42,17 +38,16 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.address.AddressSelect;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
-import com.njdp.njdp_farmer.login;
 import com.njdp.njdp_farmer.util.NetUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +55,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/4/25.
  */
-public class FarmerRelease extends Fragment implements View.OnClickListener {
+public class FarmerRelease extends AppCompatActivity {
     private static final int ADDRESSEDIT = 2;
     private final String[] crops = new String[]{"小麦", "玉米", "水稻", "棉花", "花生", "其他"};
     private final String[] blocks = new String[]{"规则", "不规则"};
@@ -71,79 +66,67 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
     private NetUtil netutil;
     private final String TAG = "FarmerRelease";
     //所有监听的控件
-    EditText croptype, area, price, blocktype, starttime, endtime, remark;
-    EditText address, addresspic;
-    Button releaseEditFinish;
-    View view;
+    private EditText croptype, area, price, blocktype, starttime, endtime, remark;
+    private EditText address, addresspic;
+    private Button releaseEditFinish;
+    private ImageButton getback=null;
 
 
     ////////////////根据地址的经纬度变量///////////////
     GeoCoder mSearch;
     MyOnGetGeoCoderResultListener myOnGetGeoCoderResultListener;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        try {
-            if (farmlandInfo == null) {
-                farmlandInfo = new FarmlandInfo();
-            }
-            if (view == null) {
-                view = inFlater(inflater);
-            }
-            Bundle bundle = getArguments();
-            token = bundle.getString("token");
-            if (token == null) {
-                error_hint("参数传递错误！");
-                return null;
-            }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_farmer_release);
 
-            // 初始化搜索模块，注册事件监听
-            mSearch = GeoCoder.newInstance();
-            myOnGetGeoCoderResultListener = new MyOnGetGeoCoderResultListener();
-            mSearch.setOnGetGeoCodeResultListener(new MyOnGetGeoCoderResultListener());
-
-            return view;
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (farmlandInfo == null) {
+            farmlandInfo = new FarmlandInfo();
         }
-        return null;
+
+        token = getIntent().getStringExtra("token");
+        if (token == null) {
+            error_hint("参数传递错误！");
+            finish();
+        }
+        initView();
+
+        // 初始化搜索模块，注册事件监听
+        mSearch = GeoCoder.newInstance();
+        myOnGetGeoCoderResultListener = new MyOnGetGeoCoderResultListener();
+        mSearch.setOnGetGeoCodeResultListener(new MyOnGetGeoCoderResultListener());
     }
 
-    public View inFlater(LayoutInflater inflater) {
-        view = inflater.inflate(R.layout.activity_farmer_release, null, false);
-        initView(view);
-
-        return view;
-    }
-
-    private void initView(View view) {
-        pDialog = new ProgressDialog(getActivity());
+    private void initView() {
+        pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
         netutil = new NetUtil();
-        croptype = (EditText) view.findViewById(R.id.crops_kind);
-        area = (EditText) view.findViewById(R.id.area);
-        price = (EditText) view.findViewById(R.id.price);
-        blocktype = (EditText) view.findViewById(R.id.block_type);
-        address = (EditText) view.findViewById(R.id.address);
-        addresspic = (EditText) view.findViewById(R.id.addresspic);
-        starttime = (EditText) view.findViewById(R.id.start_time);
-        endtime = (EditText) view.findViewById(R.id.end_time);
-        remark = (EditText) view.findViewById(R.id.remark);
-        releaseEditFinish = (Button) view.findViewById(R.id.btn_editFinish);
+        croptype = (EditText) this.findViewById(R.id.crops_kind);
+        area = (EditText) this.findViewById(R.id.area);
+        price = (EditText) this.findViewById(R.id.price);
+        blocktype = (EditText) this.findViewById(R.id.block_type);
+        address = (EditText) this.findViewById(R.id.address);
+        addresspic = (EditText) this.findViewById(R.id.addresspic);
+        starttime = (EditText) this.findViewById(R.id.start_time);
+        endtime = (EditText) this.findViewById(R.id.end_time);
+        remark = (EditText) this.findViewById(R.id.remark);
+        releaseEditFinish = (Button) this.findViewById(R.id.btn_editFinish);
         if (remark != null) {
             remark.setImeOptions(EditorInfo.IME_ACTION_DONE);
         }
+        getback=(ImageButton) this.findViewById(R.id.getback);
 
         initOnClick();
     }
 
     private void initOnClick() {
-        address.setOnClickListener(this);
-        addresspic.setOnClickListener(this);
-        starttime.setOnClickListener(this);
-        endtime.setOnClickListener(this);
-        releaseEditFinish.setOnClickListener(this);
+        address.setOnClickListener(handler);
+        addresspic.setOnClickListener(handler);
+        starttime.setOnClickListener(handler);
+        endtime.setOnClickListener(handler);
+        releaseEditFinish.setOnClickListener(handler);
+        getback.setOnClickListener(handler);
         croptype.setOnClickListener(new RadioClickListener());
         blocktype.setOnClickListener(new RadioClickListener());
 
@@ -154,36 +137,41 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         //myMessage.setOnClickListener(this);
     }
 
+    View.OnClickListener handler = new View.OnClickListener()
+    {
+        public void onClick (View v) {
+            //1.得到InputMethodManager对象
+            //InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            //2.调用toggleSoftInput方法，实现切换显示软键盘的功能。
+            //imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+            switch (v.getId()) {
+                // TODO: 2015/11/18 头像
+                case R.id.btn_editFinish:
+                    Log.e("------------->", "点击发布农田信息");
+                    checkRelease();
+                    break;
+                case R.id.address:
+                    Intent intent1 = new Intent(FarmerRelease.this, AddressSelect.class);
+                    intent1.putExtra("address", address.getText().toString());
+                    startActivityForResult(intent1, ADDRESSEDIT);
+                    break;
+                case R.id.addresspic:
 
-    @Override
-    public void onClick(View v) {
-        //1.得到InputMethodManager对象
-        //InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        //2.调用toggleSoftInput方法，实现切换显示软键盘的功能。
-        //imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        switch (v.getId()) {
-            // TODO: 2015/11/18 头像
-            case R.id.btn_editFinish:
-                Log.e("------------->", "点击发布农田信息");
-                checkRelease();
-                break;
-            case R.id.address:
-                Intent intent1 = new Intent(getActivity(), AddressSelect.class);
-                intent1.putExtra("address", address.getText().toString());
-                startActivityForResult(intent1, ADDRESSEDIT);
-                break;
-            case R.id.addresspic:
-
-                break;
-            case R.id.start_time:
-                getActivity().showDialog(0);
-                break;
-            case R.id.end_time:
-                getActivity().showDialog(1);
-                break;
+                    break;
+                case R.id.start_time:
+                    showDialog(0);
+                    break;
+                case R.id.end_time:
+                    showDialog(1);
+                    break;
+                case R.id.getback:
+                    finish();
+                    break;
+            }
         }
-    }
+    };
+
 
     //这是跳转到另一个布局页面返回来的操作
     @Override
@@ -201,29 +189,6 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         }
     }
 
-    public static Handler handle = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int what = msg.what;
-            switch (what) {
-                case 1:
-                    //userName.setText("立即登录");
-                    //goldNumber.setVisibility(View.VISIBLE);
-                    //jinbiCount.setVisibility(View.GONE);
-                    //picture.setImageResource(R.mipmap.biz_tie_user_avater_default_common);
-                    //flag=false;
-                    break;
-                case 2:
-                    Bitmap bp = (Bitmap) msg.obj;
-                    if (bp != null) {
-                        //picture.setImageBitmap(bp);
-                    }
-                    break;
-            }
-        }
-    };
-
     /**
      * 单选弹出菜单窗口
      *
@@ -235,7 +200,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             AlertDialog.Builder builder;
             switch (v.getId()) {
                 case R.id.crops_kind:
-                    builder = new AlertDialog.Builder(getContext());
+                    builder = new AlertDialog.Builder(FarmerRelease.this);
                     builder.setTitle("选择作物类型");
                     int a = indexArry(crops, croptype.getText().toString());
                     builder.setSingleChoiceItems(crops, a, new DialogInterface.OnClickListener() {
@@ -248,7 +213,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                     break;
 
                 case R.id.block_type:
-                    builder = new AlertDialog.Builder(getContext());
+                    builder = new AlertDialog.Builder(FarmerRelease.this);
                     builder.setTitle("选择地块类型");
                     int b = indexArry(blocks, blocktype.getText().toString());
                     builder.setSingleChoiceItems(blocks, b, new DialogInterface.OnClickListener() {
@@ -270,7 +235,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         pDialog.setMessage("正在发布 ...");
         showDialog();
         Log.i("GGGG", farmlandInfo.getLongitude());
-        if (!netutil.checkNet(getActivity())) {
+        if (!netutil.checkNet(this)) {
             hideDialog();
             error_hint("网络连接错误");
         } else {
@@ -350,9 +315,9 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
                 } else if(status == 1){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
-                    Intent intent = new Intent(getContext(), login.class);
+                    Intent intent = new Intent(FarmerRelease.this, login.class);
                     startActivity(intent);
-                    getActivity().finish();
+                    finish();
                 }
                 else{
                     error_hint("其他未知错误！");
@@ -379,14 +344,14 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
 
     //错误信息提示1
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(getActivity(), str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(FarmerRelease.this, str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示2
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(getActivity(), getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(FarmerRelease.this, getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
@@ -414,14 +379,14 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         endtime.setText("");
         //remark.setText(""); //街景暂未考虑
         remark.setText("");
-        farmlandInfo = new FarmlandInfo();
+        finish();
     }
 
     private Location getLocalGPS() {
         //地理位置服务提供者
         String locationProvider;
         //获取地理位置管理器
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) FarmerRelease.this.getSystemService(Context.LOCATION_SERVICE);
         //获取所有可用的位置提供器
         List<String> providers = locationManager.getProviders(true);
         if (providers.contains(LocationManager.GPS_PROVIDER)) {
@@ -435,7 +400,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
             return null;
         }
         //获取并返回Location
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(FarmerRelease.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -690,7 +655,7 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         @Override
         public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
             if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                Toast.makeText(getActivity(), "抱歉，未能找到村庄位置，将要获取本地位置！", Toast.LENGTH_LONG)
+                Toast.makeText(FarmerRelease.this, "抱歉，未能找到村庄位置，将要获取本地位置！", Toast.LENGTH_LONG)
                         .show();
                 //获取地址经纬度失败，获取本地GPS经纬度
                 Location location = getLocalGPS();
@@ -714,6 +679,63 @@ public class FarmerRelease extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        final Calendar c = Calendar.getInstance();
 
+        switch (id) {
+            case 0:
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+                return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,
+                        mDay);
+            case 1:
+                mYear = 0;
+                mMonth = 0;
+                mDay = 0;
+                mYear1 = c.get(Calendar.YEAR);
+                mMonth1 = c.get(Calendar.MONTH);
+                mDay1 = c.get(Calendar.DAY_OF_MONTH);
+                return new DatePickerDialog(this, mDateSetListener, mYear1, mMonth1,
+                        mDay1);
+        }
+        return null;
+    }
+
+    private final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+            String yyyy = String.valueOf(year);
+            String mm;
+            String dd;
+
+            mm = String.valueOf(monthOfYear + 1);
+            if (mm.length() < 2)
+                mm = "0" + mm;
+
+            dd = String.valueOf(dayOfMonth);
+            if (dd.length() < 2)
+                dd = "0" + dd;
+            if(mYear > 0) {
+                if (null == starttime) {
+                    starttime = (EditText) findViewById(R.id.start_time);
+                }
+                if (null != starttime){
+                    starttime.setText(yyyy + "-" + mm + "-" + dd);
+                }
+                removeDialog(0);
+            }else{
+                if(null == endtime) {
+                    endtime = (EditText) findViewById(R.id.end_time);
+                }
+                if(null != endtime){
+                    endtime.setText(yyyy + "-" + mm + "-" + dd);
+                }
+                removeDialog(1);
+            }
+        }
+    };
 
 }

@@ -96,7 +96,7 @@ public class register extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (mValidation.validate() == true) {
+                if (mValidation.validate()) {
                     farmer.setName(text_user_name.getText().toString().trim());
                     farmer.setTelephone(text_user_telephone.getText().toString().trim());
                     farmer.setPassword(text_user_password.getText().toString().trim());
@@ -104,11 +104,10 @@ public class register extends AppCompatActivity {
 
                     if (verify_code.equals(t_verify_code)) {
                         register_next();
-                        ;
+
                     } else {
                         error_hint("验证码错误！");
                     }
-
                 }
             }
         });
@@ -119,7 +118,7 @@ public class register extends AppCompatActivity {
             public void onClick(View v) {
                 if (isempty(R.id.user_telephone)) {
                     empty_hint(R.string.err_phone2);
-                } else if (verification_code_Validation.validate() == true) {
+                } else if (verification_code_Validation.validate()) {
                     get_verification_code();
                     //按钮60s倒计时，禁用60s
                     TimeCount time_CountDown = new TimeCount(register.this, 60000, 1000, btn_verification_code);
@@ -134,8 +133,7 @@ public class register extends AppCompatActivity {
     //EditText输入是否为空
     private boolean isempty( int id) {
         EditText editText = (EditText) super.findViewById(id);
-        boolean bl = TextUtils.isEmpty(editText.getText());
-        return bl;
+        return TextUtils.isEmpty(editText.getText());
     }
 
     //信息未输入提示
@@ -157,16 +155,15 @@ public class register extends AppCompatActivity {
 
         String tag_string_req = "req_register_driver_VerifyCode";
 
-        if(netutil.checkNet(register.this)==false){
+        if(!netutil.checkNet(register.this)){
             error_hint("网络连接错误");
-            return;
         } else {
             StringRequest strReq = new StringRequest(Request.Method.GET,
                     AppConfig.URL_REGISTER, vertifySuccessListener, mErrorListener) {
                 @Override
                 protected Map<String, String> getParams() {
 
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("telephone", text_user_telephone.getText().toString());
                     return params;
                 }
@@ -196,7 +193,7 @@ public class register extends AppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            Log.d(TAG, "Register Response: " + response.toString());
+            Log.d(TAG, "Register Response: " + response);
             hideDialog();
 
             try {
@@ -229,10 +226,9 @@ public class register extends AppCompatActivity {
         pDialog.setMessage("正在注册 ...");
         showDialog();
 
-        if (netutil.checkNet(register.this) == false) {
+        if (!netutil.checkNet(register.this)) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
 
             //服务器请求
@@ -242,7 +238,7 @@ public class register extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("telephone", farmer.getTelephone());
                     params.put("password", farmer.getPassword());
                     params.put("name", farmer.getName());
@@ -261,7 +257,7 @@ public class register extends AppCompatActivity {
         @Override
         public void onResponse(String response) {
             Log.i("tagconvertstr", "[" + response + "]");
-            Log.d(TAG, "Register Response: " + response.toString());
+            Log.d(TAG, "Register Response: " + response);
             hideDialog();
 
             try {

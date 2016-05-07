@@ -8,73 +8,86 @@
     <LinearLayout
         android:id="@+id/farmer_machine_top"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:orientation="horizontal"
+        android:layout_height="68dp"
+        android:orientation="vertical"
         android:background="#03601F">
+
         <TextView
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:text="查询范围（公里）"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:textColor="#FFFFFF"
-            android:lines="2"/>
-        <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <RadioButton
-                android:id="@+id/rb5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
-                android:layout_marginTop="8dp"
-                android:textColor="#FFFFFF"
-                android:text="5"
-                android:textSize="18dp"/>
-            <RadioButton
-                android:id="@+id/rb10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
-                android:layout_marginTop="8dp"
-                android:textColor="#FFFFFF"
-                android:text="10"
-                android:textSize="18dp"/>
-            <RadioButton
-                android:id="@+id/rb20"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
-                android:layout_marginTop="8dp"
-                android:textColor="#FFFFFF"
-                android:text="20"
-                android:textSize="18dp"/>
-            <RadioButton
-                android:id="@+id/rb30"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
-                android:layout_marginTop="8dp"
-                android:textColor="#FFFFFF"
-                android:text="30"
-                android:textSize="18dp"/>
-            <RadioButton
-                android:id="@+id/rb50"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
-                android:layout_marginTop="8dp"
-                android:textColor="#FFFFFF"
-                android:text="50"
-                android:textSize="18dp"/>
-        </RadioGroup>
+            android:text="可用农机信息"
+            android:layout_marginTop="5dp"
+            android:textColor="#FFFFFF"
+            android:textSize="18dp"
+            android:layout_gravity="center_horizontal" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:text="查询范围（公里）"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="2dp"
+                android:textColor="#FFFFFF"
+                android:lines="2"/>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <RadioButton
+                    android:id="@+id/rb5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#FFFFFF"
+                    android:text="5"
+                    android:textSize="18dp"/>
+                <RadioButton
+                    android:id="@+id/rb10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#FFFFFF"
+                    android:text="10"
+                    android:textSize="18dp"/>
+                <RadioButton
+                    android:id="@+id/rb20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#FFFFFF"
+                    android:text="20"
+                    android:textSize="18dp"/>
+                <RadioButton
+                    android:id="@+id/rb30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#FFFFFF"
+                    android:text="30"
+                    android:textSize="18dp"/>
+                <RadioButton
+                    android:id="@+id/rb50"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleX="0.7"
+                    android:scaleY="0.7"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#FFFFFF"
+                    android:text="全部"
+                    android:textSize="18dp"/>
+            </RadioGroup>
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -83,7 +96,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/farmer_machine_top"
+        android:layout_above="@+id/machineListView"
         android:clickable="true" />
+
+    <TextView
+        android:id="@+id/machineListView"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:gravity="center"
+        android:text="共有5条农机信息，点击查看列表"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
     <!--ImageButton
         android:id="@+id/my_location"
         android:layout_width="wrap_content"

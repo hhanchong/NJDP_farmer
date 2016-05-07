@@ -17,13 +17,13 @@ import java.util.List;
  * expandableListView适配器
  *
  */
-public class MyAdapter extends BaseExpandableListAdapter {
+public class FarmAdapter extends BaseExpandableListAdapter {
 	private Context context;
 	private List<String> group;
 	private List<List<FarmlandInfo>> child;
 
-	public MyAdapter(Context context, List<String> group,
-					 List<List<FarmlandInfo>> child) {
+	public FarmAdapter(Context context, List<String> group,
+					   List<List<FarmlandInfo>> child) {
 		this.context = context;
 		this.group = group;
 		this.child = child;
@@ -73,7 +73,7 @@ public class MyAdapter extends BaseExpandableListAdapter {
 		ViewHolder holder;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.list_group, null);
+					R.layout.list_farmgroup, null);
 			holder = new ViewHolder();
 			holder.textView = (TextView) convertView
 					.findViewById(R.id.textView);
@@ -97,7 +97,7 @@ public class MyAdapter extends BaseExpandableListAdapter {
 		ViewHolder viewHolder;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.list_child, null);
+					R.layout.list_farmchild, null);
 			viewHolder = new ViewHolder();
 			viewHolder.cropkind = (TextView) convertView.findViewById(R.id.crop_kind);
 			viewHolder.status = (TextView)convertView.findViewById(R.id.status);

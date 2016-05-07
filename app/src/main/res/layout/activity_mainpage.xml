@@ -37,7 +37,7 @@
             android:gravity="center"
             android:paddingTop="0dp"
             android:singleLine="true"
-            android:text="我要发布"
+            android:text="我的发布"
             android:textColor="@drawable/content_textcolor" />
 
         <RadioButton

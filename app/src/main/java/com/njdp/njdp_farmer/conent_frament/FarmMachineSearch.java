@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -544,6 +545,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     ////////////////////////////地图代码结束/////////////////////////////////
 
     // 显示机主信息
+    private LinearLayout machine_div;
     private TextView driver_name, driver_phone, qq, weixin, range, work_time, remark;
     private Button phoneBtn;
     private String telephone;
@@ -553,10 +555,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         final PopupWindow window;
         window = new PopupWindow(cx);
 
-        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.machine_layout, null);
+        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.list_machinechild, null);
         window.setContentView(contentView);
 
         //加载控件
+        machine_div = (LinearLayout)contentView.findViewById(R.id.machine_div);
         driver_name = (TextView)contentView.findViewById(R.id.driver_name);
         driver_phone = (TextView)contentView.findViewById(R.id.driver_phone);
         range = (TextView)contentView.findViewById(R.id.range);
@@ -566,6 +569,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         remark = (TextView)contentView.findViewById(R.id.remark);
         phoneBtn = (Button)contentView.findViewById(R.id.phoneBtn);
 
+        machine_div.setBackgroundResource(R.drawable.my_bg);
         driver_name.setText("机主姓名：" + machineInfo.getName());
         driver_phone.setText("机主电话：" + machineInfo.getTelephone());
         range.setText("距离：" + machineInfo.getRange() + "km");
@@ -740,5 +744,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     @Override
     public void onDestroy(){
         handler.removeCallbacks(runnable);// 关闭定时器处理
+        super.onDestroy();
     }
 }

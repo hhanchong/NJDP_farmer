@@ -76,7 +76,7 @@
         <activity
             android:name=".mainpages"
             android:label="@string/title_activity_mainpages"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".register_image"
             android:label="@string/title_activity_register_image"
@@ -105,16 +105,22 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- 三个主界面 -->
         <activity
-            android:name=".conent_frament.FarmerRelease"
+            android:name=".conent_frament.FarmlandManager"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".conent_frament.PersonalInfoFrame"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".conent_frament.FarmMachineSearch"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".conent_frament.FarmMachineSearch"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FarmerRelease"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FarmerLandList"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".MachinesList"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- 地图配置 -->
         <service
@@ -129,6 +135,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="31dCRj6WmM8spHFHHuNKoGDqig6GD5DN" />
+
     </application>
 
 </manifest>
