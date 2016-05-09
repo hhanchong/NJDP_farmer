@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.njdp.njdp_farmer.MyClass.MachineInfo;
 import com.njdp.njdp_farmer.adpter.MachineAdapter;
+import com.njdp.njdp_farmer.conent_frament.FarmMachineSearch;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +40,8 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
         machineInfos = new ArrayList<>();
         listView = (ExpandableListView) findViewById(R.id.expandableListView);
 
-        //获取传递的参数
-        machineInfos = (ArrayList<MachineInfo>) getIntent().getSerializableExtra("machineInfos");
+        //获取农机数据
+        machineInfos = FarmMachineSearch.getMachines();
         if (machineInfos == null) {
             error_hint("没有发布信息！");
         }

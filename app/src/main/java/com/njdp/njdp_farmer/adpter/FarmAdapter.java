@@ -77,14 +77,19 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 			holder = new ViewHolder();
 			holder.textView = (TextView) convertView
 					.findViewById(R.id.textView);
+			holder.textView1 = (TextView) convertView
+					.findViewById(R.id.textView1);
 			convertView.setTag(holder);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.textView.setText(group.get(groupPosition));
+		String[] temp = group.get(groupPosition).split("-");
+		holder.textView.setText(temp[0]);
 		holder.textView.setTextSize(18);
-		holder.textView.setPadding(36, 20, 0, 20);
-		//holder.textView.getPaint().setFakeBoldText(true); //加粗
+		holder.textView.setPadding(36, 10, 0, 6);
+		holder.textView1.setText(temp[1] + "-" + temp[2] + "-" + temp[3]);
+		holder.textView1.setPadding(36, 0, 0, 10);
+		holder.textView.getPaint().setFakeBoldText(true); //加粗
 		return convertView;
 	}
 	
@@ -131,7 +136,7 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 		LinearLayout layout;
 		TextView cropkind, status, area, price, blocktype, address, starttime, endtime, remark;
 		//父节点使用
-		TextView textView;
+		TextView textView, textView1;
 	}
 
 	@Override

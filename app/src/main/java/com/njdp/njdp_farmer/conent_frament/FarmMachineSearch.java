@@ -72,10 +72,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private ProgressDialog pDialog;
     private NetUtil netutil = new NetUtil();
     private RelativeLayout test_pop_layout;
-    private RadioButton rb5, rb10, rb20, rb30, rb50;//距离现则按钮
-    private static FarmlandInfo farmlandInfo;         //农户最后发布的农田
-    private ArrayList<MachineInfo> machineInfos;     //查询回来的农机
-    private List<MachineInfo> machinesToShow;       //需要显示的农机
+    private RadioButton rb5, rb10, rb20, rb30, rb50;      //距离现则按钮
+    private static FarmlandInfo farmlandInfo;               //农户最后发布的农田
+    private static ArrayList<MachineInfo> machineInfos;     //查询回来的农机
+    private  static List<MachineInfo> machinesToShow;       //需要显示的农机
     private Thread thread;  //延时获取农田数据的线程
     private boolean isFirst = true;
     private Handler handler;
@@ -210,7 +210,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     // TODO Auto-generated method stub
                     // 在此处添加执行的代码
                     getMachineInfos();
-                    handler.postDelayed(this, 30000);// 30s后执行this，即runable
+                    handler.postDelayed(this, 60000);// 60s后执行this，即runable
                 }
             };
             handler.postDelayed(runnable, 30000);// 打开定时器，30s后执行runnable操作
@@ -736,10 +736,15 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG, "GetMachineInfos Error: " + error.getMessage());
-            error_hint("服务器连接失败");
+            error_hint("服务器连接超时");
             hideDialog();
         }
     };
+
+    //获取农机信息，与农机列表界面交互machinesList
+    public static ArrayList<MachineInfo> getMachines() {
+        return machineInfos;
+    }
 
     private void showDialog() {
         if (!pDialog.isShowing())

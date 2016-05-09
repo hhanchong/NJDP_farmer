@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.njdp.njdp_farmer.adpter.FarmAdapter;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
+import com.njdp.njdp_farmer.conent_frament.FarmlandManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,8 +42,8 @@ public class FarmerLandList extends AppCompatActivity {
         listView = (ExpandableListView) findViewById(R.id.expandableListView);
         spinner = (Spinner)findViewById(R.id.sp_year);
 
-        //获取传递的参数
-        farmlandInfoList = (ArrayList<FarmlandInfo>)getIntent().getSerializableExtra("farmlandInfos");
+        //获取农田数据
+        farmlandInfoList = FarmlandManager.getFarmlands();
         if(farmlandInfoList == null)
         {
             error_hint("没有发布信息！");

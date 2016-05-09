@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     private String token;
     private ProgressDialog pDialog;
     private NetUtil netutil = new NetUtil();
-    ArrayList<FarmlandInfo> farmlandInfos;
+    private static ArrayList<FarmlandInfo> farmlandInfos;
     private boolean isFirst = true;
     private Handler handler;
     private Runnable runnable;
@@ -114,7 +115,6 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
             case R.id.bt_my_release:
                 Log.e("------------->", "点击查看发布的信息");
                 Intent intent1 = new Intent(getActivity(), FarmerLandList.class);
-                intent1.putExtra("farmlandInfos", farmlandInfos);
                 startActivity(intent1);
                 break;
             case R.id.bt_new_release:
@@ -232,7 +232,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG, "GetPersonInfo Error: " + error.getMessage());
-            error_hint("服务器连接失败");
+            error_hint("服务器连接超时");
             hideDialog();
         }
     };
@@ -248,6 +248,11 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
             }
         }
         ((mainpages)getActivity()).setLastUndoFarmland(null);
+    }
+
+    //获取农田信息，与农田列表界面交互farmerLandList
+    public static ArrayList<FarmlandInfo> getFarmlands() {
+        return farmlandInfos;
     }
 
     private void showDialog() {

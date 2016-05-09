@@ -23,7 +23,7 @@
     <string name="register_error2">连接服务器错误，请重试！</string>
     <string name="register_error3">头像上传失败，请重试！</string>
     <string name="login_error">注册失败,连接服务器错误</string>
-    <string name="connect_error">连接服务器超时</string>
+    <string name="connect_error">连接服务器错误</string>
     <string name="release_error">发布失败</string>
     <string name="title_activity_register_image">registe_imager</string>
     <string name="title_activity_register">register</string>
