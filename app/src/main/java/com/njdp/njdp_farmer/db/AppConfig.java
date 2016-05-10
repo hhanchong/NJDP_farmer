@@ -21,4 +21,6 @@ public class AppConfig {
     public static  String URL_FARMLAND_GET = URL_IP + "app/farmlands/index";
     //农机查询
     public static  String URL_MACHINE_GET = URL_IP + "app/farmlands/searchMachine";
+    //个人信息修改
+    public static  String URL_USERINFO_EDIT = URL_IP + "app/userInfo";
 }

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -111,7 +112,6 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
             case R.id.rl_setAddress:
                 Intent intent3 = new Intent(this, AddressSelect.class);
                 intent3.putExtra("address", tv_address.getText().toString());
-                intent3.putExtra("token", farmer.getFm_token());
                 startActivityForResult(intent3, ADDRESSEDIT);
                 break;
             case R.id.getback:
@@ -119,7 +119,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.btn_editFinish:
                 mValidation.addValidation(PersonalSet.this, R.id.user_name, "^[\\u4e00-\\u9fa5]+$", R.string.err_name);
-                if((mValidation.validate() == true) && (et_QQ.getText().length() > 5 || TextUtils.isEmpty(et_QQ.getText()))){
+                if((mValidation.validate()) && (et_QQ.getText().length() > 5 || TextUtils.isEmpty(et_QQ.getText()))){
                     farmer.setName(et_name.getText().toString());
                     farmer.setQQ(et_QQ.getText().toString());
                     farmer.setWeixin(et_weixin.getText().toString());
@@ -149,7 +149,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                 //User user = (User) data.getSerializableExtra("user");
                 //Log.i("main", "注册信息是："+user);
                 //Toast.makeText(this,"注册信息是："+user, 50000).show();
-                farmer.setTelephone((String)data.getSerializableExtra("phonenum"));
+                farmer.setTelephone(data.getStringExtra("phonenum"));
                 tv_phone.setText(farmer.getTelephone());
                 break;
             case ADDRESSEDIT:
@@ -167,31 +167,29 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         pDialog.setMessage("正在提交 ...");
         showDialog();
 
-        if (netutil.checkNet(PersonalSet.this) == false) {
+        if (!netutil.checkNet(PersonalSet.this)) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
 
             //服务器请求
             StringRequest strReq = new StringRequest(Request.Method.POST,
-                    AppConfig.URL_REGISTER, mSuccessListener, mErrorListener) {
+                    AppConfig.URL_USERINFO_EDIT, mSuccessListener, mErrorListener) {
 
                 @Override
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("token", farmer.getFm_token());
-                    params.put("telephone", farmer.getTelephone());
-                    params.put("name", farmer.getName());
-                    params.put("qq", farmer.getQQ());
-                    params.put("weixin", farmer.getWeixin());
-                    params.put("address", farmer.getAddress());
-                    params.put("isDriver", "false");
+                    params.put("person_name", farmer.getName());
+                    params.put("person_qq", farmer.getQQ());
+                    params.put("person_weixin", farmer.getWeixin());
+                    params.put("person_address", farmer.getAddress());
                     return params;
                 }
             };
 
+            strReq.setRetryPolicy(new DefaultRetryPolicy(2000,1,1.0f)); //请求超时时间2S，重复1次
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
         }
@@ -202,22 +200,17 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         @Override
         public void onResponse(String response) {
             Log.i("tagconvertstr", "[" + response + "]");
-            Log.d(TAG, "EditUser Response: " + response.toString());
+            Log.d(TAG, "EditUser Response: " + response);
             hideDialog();
 
             try {
                 JSONObject jObj = new JSONObject(response);
-                boolean error = jObj.getBoolean("error");
+                int status = jObj.getInt("status");
 
                 // Check for error node in json
-                if (!error) {
-
-                    // Now store the user in SQLite
-                    JSONObject farmers = jObj.getJSONObject("Farmers");
-                    farmer.setId(farmers.getInt("Id"));
-                    farmer.setName(farmers.getString("Name"));
-                    farmer.setImageUrl(farmers.getString("ImageUrl"));
-
+                if (status == 0) {
+                    //服务器返回修改成功
+                    error_hint("修改成功！");
                     // Inserting row in users table
                     db.editUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
 
@@ -226,11 +219,15 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                     intent.putExtra("farmer_edit", farmer);
                     setResult(RESULT_OK, intent);
                     finish();
-                } else {
-                    error_hint("服务器响应错误！");
-                    // Error in signin Get the error message
-                    String errorMsg = jObj.getString("error_msg");
-                    Log.e(TAG, errorMsg);
+                } else if(status == 1){
+                    //密匙失效
+                    error_hint("用户登录过期，请重新登录！");
+                    Intent intent = new Intent(PersonalSet.this, login.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    error_hint("其他未知错误！");
                 }
             } catch (JSONException e) {
                 error_hint(getResources().getString(R.string.connect_error));

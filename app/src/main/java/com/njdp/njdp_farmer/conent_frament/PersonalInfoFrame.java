@@ -1,5 +1,6 @@
 package com.njdp.njdp_farmer.conent_frament;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -45,6 +46,7 @@ import java.util.Map;
 
 public class PersonalInfoFrame extends Fragment implements View.OnClickListener {
     private final String TAG = "PersonalInfoFrame";
+    private static final int USEREDIT = 1;
     //所有监听的控件
     static ImageView userImage;
     TextView userName, telephone, qq, weixin, address;
@@ -53,7 +55,6 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     private ProgressDialog pDialog;
     private String token;
     private Farmer farmer;
-    ArrayList<FarmlandInfo> farmlandInfos;
 
     @Nullable
     @Override
@@ -127,7 +128,32 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 Log.e("------------->", "点击修改用户信息");
                 Intent intent1 = new Intent(getActivity(), PersonalSet.class);
                 intent1.putExtra("user", farmer);
-                startActivity(intent1);
+                startActivityForResult(intent1, USEREDIT);
+                break;
+        }
+    }
+
+    //这是跳转到另一个布局页面返回来的操作
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        switch (requestCode) {
+            case USEREDIT:
+                farmer = (Farmer) data.getSerializableExtra("user");
+                if(farmer == null){
+                    error_hint("参数传递错误！");
+                    getActivity().finish();
+                }
+                //userImage.setImageURI();
+                userName.setText(farmer.getName());
+                telephone.setText(farmer.getTelephone());
+                qq.setText(farmer.getQQ());
+                weixin.setText(farmer.getWeixin());
+                address.setText(farmer.getAddress());
                 break;
         }
     }

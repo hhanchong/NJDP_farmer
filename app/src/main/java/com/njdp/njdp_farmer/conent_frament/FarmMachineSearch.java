@@ -77,7 +77,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private static ArrayList<MachineInfo> machineInfos;     //查询回来的农机
     private  static List<MachineInfo> machinesToShow;       //需要显示的农机
     private Thread thread;  //延时获取农田数据的线程
-    private boolean isFirst = true;
+    private boolean isFirst = false;
     private Handler handler;
     private Runnable runnable;
     private TextView machineListView;
@@ -124,6 +124,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         try {
             if (view == null) {
                 machineInfos = new ArrayList<>();
+                isFirst = true;
                 view = inFlater(inflater);
             }
 
@@ -195,6 +196,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         //获取农机数据
                         if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
                             getMachineInfos();
+                        else
+                            Log.e("农机查询------------->", "没有找到农田信息");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
