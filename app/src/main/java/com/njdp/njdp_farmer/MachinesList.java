@@ -27,7 +27,7 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
     private ExpandableListView listView;
     private List<String[]> group;
     private List<List<MachineInfo>> child;
-    private ArrayList<MachineInfo> machineInfos;
+    private List<MachineInfo> machineInfos;
     private MachineAdapter adapter;
     private ImageButton getback = null;
 

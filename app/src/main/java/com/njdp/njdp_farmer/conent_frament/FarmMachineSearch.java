@@ -272,7 +272,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 index = IndexOfRange(5);
                 if(index != -1){
                     machinesToShow = machineInfos.subList(0, index + 1);
+                    //更新农机数据
+                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
+                }else {
+                    machineListView.setText("共有0条农机信息，点击查看列表");
                 }
                 break;
 
@@ -281,7 +285,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 index = IndexOfRange(10);
                 if(index != -1){
                     machinesToShow = machineInfos.subList(0, index + 1);
+                    //更新农机数据
+                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
+                }else {
+                    machineListView.setText("共有0条农机信息，点击查看列表");
                 }
                 break;
 
@@ -290,7 +298,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 index = IndexOfRange(20);
                 if(index != -1){
                     machinesToShow = machineInfos.subList(0, index + 1);
+                    //更新农机数据
+                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
+                }else {
+                    machineListView.setText("共有0条农机信息，点击查看列表");
                 }
                 break;
 
@@ -299,7 +311,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 index = IndexOfRange(30);
                 if(index != -1){
                     machinesToShow = machineInfos.subList(0, index + 1);
+                    //更新农机数据
+                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
+                }else {
+                    machineListView.setText("共有0条农机信息，点击查看列表");
                 }
                 break;
 
@@ -308,7 +324,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 index = IndexOfRange(50);
                 if(index != -1){
                     machinesToShow = machineInfos.subList(0, index + 1);
+                    //更新农机数据
+                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
+                }else {
+                    machineListView.setText("共有0条农机信息，点击查看列表");
                 }
                 break;
             case R.id.machineListView:
@@ -431,6 +451,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         int index = IndexOfRange(5);
         if(index != -1){
             machinesToShow = machineInfos.subList(0, index + 1);
+            //更新农机数据
+            machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
             ShowInMap(machinesToShow);
         }
         //mMapView.refreshDrawableState();
@@ -706,11 +728,16 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
                     if(index != -1) {
                         machinesToShow = machineInfos.subList(0, index + 1);
+                        //更新农机数据
+                        machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                         ShowInMap(machinesToShow);
+                    }
+                    else{
+                        machineListView.setText("共有0条农机信息，点击查看列表");
                     }
 
                     //更新农机数据
-                    machineListView.setText("共有" + machineInfos.size()  + "条农机信息，点击查看列表");
+                    //machineListView.setText("共有" + machineInfos.size()  + "条农机信息，点击查看列表");
                 } else if(status == 1){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
@@ -742,8 +769,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     };
 
     //获取农机信息，与农机列表界面交互machinesList
-    public static ArrayList<MachineInfo> getMachines() {
-        return machineInfos;
+    public static List<MachineInfo> getMachines() {
+        return machinesToShow;
     }
 
     private void showDialog() {

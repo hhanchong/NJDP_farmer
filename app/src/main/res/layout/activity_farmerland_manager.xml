@@ -12,7 +12,7 @@
         android:background="#03601F">
         <TextView
             style="@style/Pages_Title"
-            android:text="发布管理"
+            android:text="我的发布"
             />
     </RelativeLayout>
 
@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="80dp"
             android:layout_marginBottom="20dp"
-            android:text="我的发布"
+            android:text="发布查询"
             android:textSize="18dp"
             android:layout_weight="1"
             />
