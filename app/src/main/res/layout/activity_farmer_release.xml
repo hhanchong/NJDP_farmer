@@ -40,6 +40,64 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv0"
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingLeft="10dp"
+                    android:text="作业类型"
+                    android:textSize="18sp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" />
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginRight="20dp"
+                    android:layout_toRightOf="@+id/tv0">
+                    <RadioButton
+                        android:id="@+id/rbH"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/colorBlack"
+                        android:text="收割"
+                        android:textSize="18dp" />
+                    <RadioButton
+                        android:id="@+id/rbC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/colorBlack"
+                        android:text="耕作"
+                        android:textSize="18dp"/>
+                    <RadioButton
+                        android:id="@+id/rbS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:layout_marginTop="3dp"
+                        android:textColor="@color/colorBlack"
+                        android:text="播种"
+                        android:textSize="18dp"/>
+
+                </RadioGroup>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical">
                 <TextView
                     android:id="@+id/tv1"
                     android:layout_width="95dp"
@@ -60,7 +118,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_toRightOf="@+id/tv1"
                     android:editable="false"
-                    android:hint="请选择农作物类型"
+                    android:hint="请选择农作物种类"
                     android:focusableInTouchMode="false"/>
 
             </RelativeLayout>

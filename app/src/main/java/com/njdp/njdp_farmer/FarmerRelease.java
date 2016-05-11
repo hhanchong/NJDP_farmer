@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -57,8 +59,13 @@ import java.util.Map;
  */
 public class FarmerRelease extends AppCompatActivity {
     private static final int ADDRESSEDIT = 2;
-    private final String[] crops = new String[]{"小麦", "玉米", "水稻", "棉花", "花生", "其他"};
+    private String typeTitle;
+    private final String[] crops = new String[]{"小麦", "玉米", "水稻", "谷物", "其他"};
+    private final String[] crops1 = new String[]{"WH", "CO", "RC", "GR", "OT"};
+    private final String[] cultivation = new String[]{"深松", "平地"};
+    private final String[] cultivation1 = new String[]{"SS", "HA"};
     private final String[] blocks = new String[]{"规则", "不规则"};
+    private String[] typeArray;
     private int mYear, mMonth, mDay, mYear1, mMonth1, mDay1;
     private FarmlandInfo farmlandInfo;
     private String token;
@@ -66,8 +73,10 @@ public class FarmerRelease extends AppCompatActivity {
     private NetUtil netutil;
     private final String TAG = "FarmerRelease";
     //所有监听的控件
+    private TextView tv1;
     private EditText croptype, area, price, blocktype, starttime, endtime, remark;
     private EditText address, addresspic;
+    private RadioButton rbH, rbC, rbS;
     private Button releaseEditFinish;
     private ImageButton getback=null;
 
@@ -91,6 +100,9 @@ public class FarmerRelease extends AppCompatActivity {
             finish();
         }
         initView();
+        rbH.setChecked(true);
+        typeTitle = "选择作物类型";
+        typeArray = crops;
 
         // 初始化搜索模块，注册事件监听
         mSearch = GeoCoder.newInstance();
@@ -116,6 +128,10 @@ public class FarmerRelease extends AppCompatActivity {
             remark.setImeOptions(EditorInfo.IME_ACTION_DONE);
         }
         getback=(ImageButton) this.findViewById(R.id.getback);
+        tv1=(TextView)this.findViewById(R.id.tv1);
+        rbH=(RadioButton)this.findViewById(R.id.rbH);   //收割Harvest
+        rbC=(RadioButton)this.findViewById(R.id.rbC);   //耕作Cultivation
+        rbS=(RadioButton)this.findViewById(R.id.rbS);   //播种Seeding
 
         initOnClick();
     }
@@ -129,6 +145,9 @@ public class FarmerRelease extends AppCompatActivity {
         getback.setOnClickListener(handler);
         croptype.setOnClickListener(new RadioClickListener());
         blocktype.setOnClickListener(new RadioClickListener());
+        rbH.setOnClickListener(new RadioClickListener());
+        rbC.setOnClickListener(new RadioClickListener());
+        rbS.setOnClickListener(new RadioClickListener());
 
         releaseEditFinish.setEnabled(false);
         releaseEditFinish.setClickable(false);
@@ -198,11 +217,11 @@ public class FarmerRelease extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.crops_kind:
                     builder = new AlertDialog.Builder(FarmerRelease.this);
-                    builder.setTitle("选择作物类型");
-                    int a = indexArry(crops, croptype.getText().toString());
-                    builder.setSingleChoiceItems(crops, a, new DialogInterface.OnClickListener() {
+                    builder.setTitle(typeTitle);
+                    int a = indexArry(typeArray, croptype.getText().toString());
+                    builder.setSingleChoiceItems(typeArray, a, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int position) {
-                            croptype.setText(crops[position]);
+                            croptype.setText(typeArray[position]);
                             dialog.dismiss();
                         }
                     });
@@ -220,6 +239,21 @@ public class FarmerRelease extends AppCompatActivity {
                         }
                     });
                     builder.show();
+                    break;
+                case R.id.rbH:
+                case R.id.rbS:
+                    tv1.setText("作物类型");
+                    typeTitle = "选择作物类型";
+                    typeArray = crops;
+                    croptype.setText("");
+                    croptype.setHint("请选择农作物种类");
+                    break;
+                case R.id.rbC:
+                    tv1.setText("耕作类型");
+                    typeTitle = "选择耕作类型";
+                    typeArray = cultivation;
+                    croptype.setText("");
+                    croptype.setHint("请选择耕作类型");
                     break;
             }
         }
@@ -251,7 +285,18 @@ public class FarmerRelease extends AppCompatActivity {
                     // Posting parameters to url
                     Map<String, String> params = new HashMap<>();
                     params.put("token", token);
-                    params.put("Farmlands_crops_kind", farmlandInfo.getCrops_kind());
+                    String crops_kind;
+                    if(rbH.isChecked()){
+                        crops_kind = "H";
+                        crops_kind += crops1[indexArry(typeArray, croptype.getText().toString())];
+                    }else if(rbS.isChecked()){
+                        crops_kind = "S";
+                        crops_kind += crops1[indexArry(typeArray, croptype.getText().toString())];
+                    }else {
+                        crops_kind = "C";
+                        crops_kind += cultivation1[indexArry(typeArray, croptype.getText().toString())];
+                    }
+                    params.put("Farmlands_crops_kind", crops_kind);
                     params.put("Farmlands_area", String.valueOf(farmlandInfo.getArea()));
                     params.put("Farmlands_unit_price", String.valueOf(farmlandInfo.getUnit_price()));
                     if(farmlandInfo.getBlock_type().length() == 0){
@@ -367,6 +412,9 @@ public class FarmerRelease extends AppCompatActivity {
 
     //清空发布界面的录入信息
     private void setContentNUll() {
+        rbH.setChecked(true);
+        typeTitle = "选择作物类型";
+        typeArray = crops;
         croptype.setText("");
         area.setText("");
         price.setText("");

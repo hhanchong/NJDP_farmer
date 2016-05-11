@@ -117,8 +117,8 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.cropkind.setText("作物类型：" + child.get(groupPosition).get(childPosition).getCrops_kind());
-		viewHolder.status.setText("作业状态："+ (child.get(groupPosition).get(childPosition).getStatus().equals("0")?"未收割":"已收割"));
+		viewHolder.cropkind.setText("作业类型：" + child.get(groupPosition).get(childPosition).getCrops_kind());
+		viewHolder.status.setText("作业状态："+ (child.get(groupPosition).get(childPosition).getStatus().equals("0")?"未完成":"已完成"));
 		viewHolder.area.setText("面积 (亩)："+child.get(groupPosition).get(childPosition).getArea());
 		viewHolder.price.setText("单价 (元)："+child.get(groupPosition).get(childPosition).getUnit_price());
 		viewHolder.blocktype.setText("地块类型："+child.get(groupPosition).get(childPosition).getBlock_type());

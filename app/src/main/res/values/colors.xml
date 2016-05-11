@@ -5,5 +5,10 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorDefault">#03601F</color>
     <color name="colorUnable">#3F601F</color>
-    <color name="Black">#000000</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+    <!--Drawable Part-->
+    <drawable name="selected_Green">#03601F</drawable>
+    <drawable name="selected_White">#FFFFFF</drawable>
 </resources>

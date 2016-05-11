@@ -22,6 +22,8 @@ import java.util.List;
 
 public class FarmerLandList extends AppCompatActivity {
     private final String TAG = "FarmLandList";
+    private final String[][] cropsType = new String[][]{{"H","收割"}, {"C", "耕作"}, {"S", "播种"},
+            {"WH", "小麦"}, {"CO", "玉米"}, {"RC", "水稻"}, {"GR", "谷物"}, {"OT", "其他"}, {"SS", "深松"}, {"HA", "平地"}};
     private ExpandableListView listView;
     private List<String> group;
     private List<List<FarmlandInfo>> child;
@@ -83,7 +85,8 @@ public class FarmerLandList extends AppCompatActivity {
         group = new ArrayList<>();
         child = new ArrayList<>();
         for(FarmlandInfo f :farmlandInfos){
-            addInfo(f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0")?"未收割":"已收割"), new FarmlandInfo[]{f});
+            f.setCrops_kind(ConvertToCHS(f.getCrops_kind()));
+            addInfo(f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{f});
         }
     }
 
@@ -132,6 +135,29 @@ public class FarmerLandList extends AppCompatActivity {
         public void onNothingSelected(AdapterView<?> arg0) {
 
         }
+    }
+
+    //转换为
+    private String ConvertToCHS(String s){
+        String operation = "", crop = "";
+
+        if(s.length() == 3){
+            for(int i = 0; i < cropsType.length; i++){
+                if(cropsType[i][0].equals(s.substring(0,1))){
+                    operation = cropsType[i][1];
+                }
+                if(cropsType[i][0].equals(s.substring(1,3))){
+                    crop = cropsType[i][1];
+                }
+            }
+            if(operation.isEmpty() || crop.isEmpty()){
+                operation = "未知";
+                crop = "";
+            }
+        }else {
+            operation = "未知";
+        }
+        return operation + crop;
     }
 
     //错误信息提示

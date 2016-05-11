@@ -53,6 +53,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     Button personalEdit;
     View view;
     private ProgressDialog pDialog;
+    private NetUtil netutil = new NetUtil();
     private String token;
     private Farmer farmer;
 
@@ -62,24 +63,21 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         try {
             Bundle bundle = getArguments();
             token = bundle.getString("token");
-            farmer = (Farmer)bundle.getSerializable("farmer");
-            //自测用户
-            farmer = new Farmer();
-            farmer.setFm_token(token);
-            farmer.setName("李占伟");
-            farmer.setImageUrl("@drawable/ic_launcher");
-            farmer.setTelephone("18932659760");
-            farmer.setQQ("842558891");
-            farmer.setWeixin("ZhiHuiNongJi");
-            farmer.setAddress("河北省保定市清苑县***乡***村");
+
             //判断参数传递是否正确
-            if (token == null || farmer == null) {
+            if (token == null) {
                 error_hint("参数传递错误！");
                 return null;
             }
             if (view == null) {
                 view = inFlater(inflater);
             }
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setCancelable(false);
+            pDialog.setMessage("正在获取用户信息 ...");
+            showDialog();
+            //获取用户信息
+            getUserInfo();
 
             return view;
         } catch (Exception e) {
@@ -98,15 +96,10 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         userImage = (ImageView) view.findViewById(R.id.user_image);
         //userImage.setImageURI();
         userName = (TextView) view.findViewById(R.id.tv_user_name);
-        userName.setText(farmer.getName());
         telephone = (TextView) view.findViewById(R.id.tv_phonenum);
-        telephone.setText(farmer.getTelephone());
         qq = (TextView) view.findViewById(R.id.tv_qq);
-        qq.setText(farmer.getQQ());
         weixin = (TextView) view.findViewById(R.id.tv_weixin);
-        weixin.setText(farmer.getWeixin());
         address = (TextView) view.findViewById(R.id.tv_address);
-        address.setText(farmer.getAddress());
         personalEdit = (Button) view.findViewById(R.id.btn_edit);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
@@ -133,6 +126,13 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         }
     }
 
+    public void updateView(){
+        userName.setText(farmer.getName());
+        telephone.setText(farmer.getTelephone());
+        qq.setText(farmer.getQQ());
+        weixin.setText(farmer.getWeixin());
+        address.setText(farmer.getAddress());
+    }
     //这是跳转到另一个布局页面返回来的操作
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -156,6 +156,116 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 address.setText(farmer.getAddress());
                 break;
         }
+    }
+
+    //获取用户信息
+    public void getUserInfo() {
+
+        String tag_string_req = "req_farmerInfo_get";
+
+        if (!netutil.checkNet(getActivity())) {
+            hideDialog();
+            error_hint("网络连接错误");
+        } else {
+            //服务器请求
+            StringRequest strReq = new StringRequest(Request.Method.POST,
+                    AppConfig.URL_GETUSERINFO, mSuccessListener, mErrorListener) {
+
+                @Override
+                protected Map<String, String> getParams() {
+                    // Posting parameters to url
+                    Map<String, String> params = new HashMap<>();
+                    params.put("token", token);
+                    return params;
+                }
+            };
+            strReq.setRetryPolicy(new DefaultRetryPolicy(2000,1,1.0f)); //请求超时时间2S，重复1次
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        }
+    }
+
+    //响应服务器成功
+    private Response.Listener<String> mSuccessListener = new Response.Listener<String>() {
+
+        @Override
+        public void onResponse(String response) {
+            Log.i("tagconvertstr", "[" + response + "]");
+            Log.d(TAG, "Release Response: " + response);
+            hideDialog();
+
+            try {
+                JSONObject jObj = new JSONObject(response);
+                int status = jObj.getInt("status");
+
+                // Check for error node in json
+                if (status == 0) {
+                    //解析用户数据
+                    farmer = new Farmer();
+                    JSONObject user = jObj.getJSONObject("result");
+                    farmer.setFm_token(token);
+                    farmer.setId(user.getInt("fm_id"));
+                    farmer.setName(user.getString("person_name"));
+                    farmer.setTelephone(user.getString("person_phone"));
+                    if(user.getString("person_photo").equals("null")){
+                        farmer.setImageUrl("未设置");
+                    }else {
+                        farmer.setImageUrl(user.getString("person_photo"));
+                    }
+                    if(user.getString("person_qq").equals("null")){
+                        farmer.setQQ("未设置");
+                    }else {
+                        farmer.setQQ(user.getString("person_qq"));
+                    }
+                    if(user.getString("person_weixin").equals("null")){
+                        farmer.setWeixin("未设置");
+                    }else {
+                        farmer.setWeixin(user.getString("person_weixin"));
+                    }
+                    if(user.getString("person_address").equals("null")){
+                        farmer.setAddress("未设置");
+                    }else {
+                        farmer.setAddress(user.getString("person_address"));
+                    }
+                    updateView();
+                } else if(status == 1){
+                    //密匙失效
+                    error_hint("用户登录过期，请重新登录！");
+                    Intent intent = new Intent(getContext(), login.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+                else{
+                    error_hint("其他未知错误！");
+                }
+            } catch (JSONException e) {
+                empty_hint(R.string.connect_error);
+                // JSON error
+                e.printStackTrace();
+                Log.e(TAG, "Json error：response错误！" + e.getMessage());
+            }
+        }
+    };
+
+    //响应服务器失败
+    private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e(TAG, "GetPersonInfo Error: " + error.getMessage());
+            error_hint("服务器连接超时");
+            hideDialog();
+        }
+    };
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
     //错误信息提示1

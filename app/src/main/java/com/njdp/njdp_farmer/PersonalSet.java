@@ -109,6 +109,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
             case R.id.rl_set_user_image:
                 Intent intent2 = new Intent(this, register_image.class);
                 intent2.putExtra("token", farmer.getFm_token());
+                intent2.putExtra("IsSetImage", true);
                 startActivity(intent2);
 
                 break;

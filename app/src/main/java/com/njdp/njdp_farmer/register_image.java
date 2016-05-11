@@ -52,10 +52,6 @@ public class register_image extends AppCompatActivity {
     private TextView notice=null;
     private TextView setImage=null;
     private ImageView userImage=null;
-    private String name;
-    private String password;
-    private String telephone;
-    private String imageurl;
     private String s1="服务条款";
     private String s2="隐私协议";
     private ProgressDialog pDialog;
@@ -68,8 +64,8 @@ public class register_image extends AppCompatActivity {
     private String Url_Image;
     private String Url;
     private int crop = 300;// 裁剪大小
-    private static final int REQUEST_IMAGE=001;
-    private static final int CROP_PHOTO_CODE = 002;
+    private final int REQUEST_IMAGE=001;
+    private final int CROP_PHOTO_CODE = 002;
     private ArrayList<String> defaultDataArray;
     public boolean IsSetImage=false;
     private NormalUtil nutil=new NormalUtil();
@@ -84,7 +80,7 @@ public class register_image extends AppCompatActivity {
 
         //修改
         Url=AppConfig.URL_REGISTER;
-        Url_Image=AppConfig.URL_GETPASSWORD2;
+        Url_Image=AppConfig.URL_USERINFO_EDIT;
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -102,6 +98,7 @@ public class register_image extends AppCompatActivity {
         this.userImage = (ImageView) super.findViewById(R.id.user_image);
 
         token = getIntent().getStringExtra("token");
+        IsSetImage = getIntent().getBooleanExtra("IsSetImage", false);
         if(token==null)
         {
             error_hint("程序错误！请联系管理员！");
@@ -138,7 +135,7 @@ public class register_image extends AppCompatActivity {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (IsSetImage==true)
+                if (IsSetImage)
                 {
                     //上传头像注册
                     register_uploadImage(Url_Image, path);
@@ -238,7 +235,7 @@ public class register_image extends AppCompatActivity {
     private void register_uploadImage(String url,String path) {
 
         File file=new File(path);
-        String tag_string_req = "req_register_image";
+        String tag_string_req = "req_edit_image";
 
         pDialog.setMessage("正在上传图片 ...");
         showDialog();
@@ -246,13 +243,12 @@ public class register_image extends AppCompatActivity {
         if (!file.exists()) {
             hideDialog();
             Toast.makeText(register_image.this, "头像图片不存在!请重新选择！", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (netutil.checkNet(register_image.this) == false) {
+        } else if (!netutil.checkNet(register_image.this)) {
             hideDialog();
             error_hint("网络连接错误");
             return;
         } else {
-            ImageUploadRequest register_request = new ImageUploadRequest(url,file, mSuccessListener_image, mErrorListener);
+            ImageUploadRequest register_request = new ImageUploadRequest(url,file, token, mSuccessListener_image, mErrorListener);
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(register_request, tag_string_req);
         }
@@ -277,7 +273,7 @@ public class register_image extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
 
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                         params.put("token", token);
                         params.put("setImage", "NO");
                         params.put("tag", "F");
@@ -295,7 +291,7 @@ public class register_image extends AppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            Log.d(TAG, "Register Response: " + response.toString());
+            Log.d(TAG, "Register Response: " + response);
             hideDialog();
 
             try {
@@ -304,10 +300,9 @@ public class register_image extends AppCompatActivity {
                 if (imageError)
                 {
                     empty_hint(R.string.register_error3);
-                    return;
                 } else {
                     //头像上传成功，完成注册
-                    register_finish(Url);
+                    //register_finish(Url);
                 }
             } catch (JSONException e) {
                 empty_hint(R.string.register_error2);
@@ -322,7 +317,7 @@ public class register_image extends AppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            Log.d(TAG, "Register Response: 0-" + response.toString());
+            Log.d(TAG, "Register Response: 0-" + response);
             hideDialog();
 
             try {

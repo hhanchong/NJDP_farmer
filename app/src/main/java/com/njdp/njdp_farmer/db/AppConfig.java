@@ -1,5 +1,7 @@
 package com.njdp.njdp_farmer.db;
 
+import java.net.URL;
+
 /**
  * Created by USER-PC on 2016/4/13.
  */
@@ -21,6 +23,8 @@ public class AppConfig {
     public static  String URL_FARMLAND_GET = URL_IP + "app/farmlands/index";
     //农机查询
     public static  String URL_MACHINE_GET = URL_IP + "app/farmlands/searchMachine";
+    //获取个人信息
+    public static String URL_GETUSERINFO = URL_IP + "app/getUserInfo";
     //个人信息修改
     public static  String URL_USERINFO_EDIT = URL_IP + "app/userInfo";
 }

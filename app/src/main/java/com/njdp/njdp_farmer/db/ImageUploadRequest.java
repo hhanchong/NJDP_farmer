@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 /**
  * Created by USER-PC on 2016/4/13.
@@ -24,11 +25,13 @@ public class ImageUploadRequest extends Request<String> {
 
     private MultipartEntityBuilder mBuilder = MultipartEntityBuilder.create();
     private final Response.Listener mListener;
-    protected Map<String, String> headers;
+    protected Map<String, String> params;
 
-    public ImageUploadRequest(String url, File imageFile, Response.Listener listener, Response.ErrorListener errorListener) {
+    public ImageUploadRequest(String url, File imageFile, String token, Response.Listener listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mListener = listener;
+        params = new HashMap<>();
+        params.put("token", token);
 
         mBuilder.addBinaryBody("record_image", imageFile, ContentType.create("image/jpeg"), imageFile.getName());
         mBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -44,6 +47,11 @@ public class ImageUploadRequest extends Request<String> {
             VolleyLog.e("IOException writing to ByteArrayOutputStream bos, building the multipart request.");
         }
         return bos.toByteArray();
+    }
+
+    @Override
+    protected Map<String, String> getParams() {
+        return params;
     }
 
     @Override

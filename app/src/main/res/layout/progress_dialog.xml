@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:text="正在加载中......"
-        android:textColor="@color/Black"
+        android:textColor="@color/colorBlack"
         android:layout_below="@+id/loadingIv"
         android:layout_centerHorizontal="true" />
 
