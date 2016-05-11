@@ -67,6 +67,9 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
             error_hint("参数传输错误！");
             finish();
         }
+        // SQLite database handler
+        db = new SQLiteHandler(getApplicationContext());
+
         setPhoneNum = (RelativeLayout)super.findViewById(R.id.rl_setPhonenum);
         setAddress = (RelativeLayout)super.findViewById(R.id.rl_setAddress);
         setUserPic = (RelativeLayout)super.findViewById(R.id.rl_set_user_image);
@@ -216,7 +219,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
                     //Launch main activity
                     Intent intent = new Intent(PersonalSet.this, mainpages.class);
-                    intent.putExtra("farmer_edit", farmer);
+                    intent.putExtra("user", farmer);
                     setResult(RESULT_OK, intent);
                     finish();
                 } else if(status == 1){
@@ -242,8 +245,8 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     private Response.ErrorListener mErrorListener= new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG, "RegisterError: " + error.getMessage());
-            error_hint(error.getMessage());
+            Log.e(TAG, "UpdateError: " + error.toString());
+            error_hint(error.toString());
             hideDialog();
         }
     };
