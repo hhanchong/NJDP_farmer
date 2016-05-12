@@ -324,16 +324,6 @@ public class FarmerRelease extends AppCompatActivity {
         }
     }
 
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
-    private void hideDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
-
     //响应服务器成功
     private Response.Listener<String> mSuccessListener = new Response.Listener<String>() {
 
@@ -383,6 +373,16 @@ public class FarmerRelease extends AppCompatActivity {
             hideDialog();
         }
     };
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
+    }
 
     //错误信息提示1
     private void error_hint(String str) {

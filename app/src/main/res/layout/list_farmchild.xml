@@ -136,7 +136,7 @@
                 android:layout_toEndOf="@+id/tv"
                 android:layout_marginRight="1dp"
                 android:layout_centerVertical="true"
-                android:text="河北省保定市新市区花庄村朝阳路"/>
+                android:text="河北省保定市满城县要庄乡南宋村"/>
 
         </RelativeLayout>
 
