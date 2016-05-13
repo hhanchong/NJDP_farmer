@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:id="@+id/register_image_top"
-        android:background="#03601F">
+        android:background="@drawable/top_title">
         <TextView
             android:id="@+id/register_title"
             style="@style/Pages_Title"

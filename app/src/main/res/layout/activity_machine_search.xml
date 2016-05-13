@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="76dp"
         android:orientation="vertical"
-        android:background="#03601F">
+        android:background="@drawable/top_title">
 
         <TextView
             android:layout_width="wrap_content"
@@ -116,6 +116,9 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:gravity="center"
+        android:background="#F1B245"
+        android:textSize="16dp"
+        android:textColor="@color/colorBlack"
         android:text="共有0条农机信息，点击查看列表"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"

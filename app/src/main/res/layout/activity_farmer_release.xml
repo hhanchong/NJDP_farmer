@@ -9,7 +9,7 @@
         android:id="@+id/release_top_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#03601F">
+        android:background="@drawable/top_title">
         <TextView
             style="@style/Pages_Title"
             android:text="请输入你的需求信息"
@@ -25,7 +25,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/release_top_title">
+        android:layout_below="@+id/release_top_title"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -404,7 +405,7 @@
                 <Button
                     style="@style/Register_Button_Finish"
                     android:id="@+id/btn_editFinish"
-                    android:background="@drawable/rounded_green_button"
+                    android:background="@drawable/button_normal_selector"
                     android:layout_below="@+id/regiser_div"
                     android:text="确认发布"
                     android:layout_height="wrap_content"

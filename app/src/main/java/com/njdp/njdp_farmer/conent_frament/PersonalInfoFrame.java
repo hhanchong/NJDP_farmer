@@ -119,9 +119,11 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             // TODO: 2015/11/18 头像
             case R.id.btn_edit:
                 Log.e("------------->", "点击修改用户信息");
-                Intent intent1 = new Intent(getActivity(), PersonalSet.class);
-                intent1.putExtra("user", farmer);
-                startActivityForResult(intent1, USEREDIT);
+                if(farmer != null) {
+                    Intent intent1 = new Intent(getActivity(), PersonalSet.class);
+                    intent1.putExtra("user", farmer);
+                    startActivityForResult(intent1, USEREDIT);
+                }
                 break;
         }
     }

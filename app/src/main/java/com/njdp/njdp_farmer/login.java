@@ -12,6 +12,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -41,7 +42,7 @@ public class login extends AppCompatActivity {
     private EditText text_password=null;
     private ImageButton password_reveal=null;
     private ImageButton password_show=null;
-    private com.beardedhen.androidbootstrap.BootstrapButton login_check=null;
+    private Button login_check=null;
     private static final String TAG = login.class.getSimpleName();
     private ProgressDialog pDialog;
     private SessionManager session;
@@ -70,7 +71,7 @@ public class login extends AppCompatActivity {
         this.text_password=(EditText) super.findViewById(R.id.user_password);
         this.password_reveal=(ImageButton) super.findViewById(R.id.reveal_button);
         this.password_show=(ImageButton) super.findViewById(R.id.show_button);
-        this.login_check=(com.beardedhen.androidbootstrap.BootstrapButton) super.findViewById(R.id.loginin_button);
+        this.login_check=(Button) super.findViewById(R.id.loginin_button);
 
         //根据输入框是否为空判断是否禁用按钮
         login_check.setEnabled(false);
@@ -151,7 +152,7 @@ public class login extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("fm_username", farmer.getTelephone());
                     params.put("fm_password", farmer.getPassword());
                     params.put("fm_tag", "F");

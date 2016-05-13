@@ -44,15 +44,18 @@
     </LinearLayout>
 
     <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:text="退出登录"
+        android:text="切换用户"
         android:id="@+id/btn_logout"
+        android:textSize="18dp"
+        android:textColor="#AA612E"
+        android:textStyle="bold"
+        android:background="#00000000"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="logoutClick"
-        android:nestedScrollingEnabled="true" />
+        android:layout_marginTop="5dp"
+        android:onClick="logoutClick" />
 
 </RelativeLayout>

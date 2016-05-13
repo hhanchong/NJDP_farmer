@@ -11,4 +11,8 @@
     <!--Drawable Part-->
     <drawable name="selected_Green">#03601F</drawable>
     <drawable name="selected_White">#FFFFFF</drawable>
+    <drawable name="button_normal">#F98205</drawable>
+    <drawable name="button_click">#D97024</drawable>
+    <drawable name="button_unable">#CEA47C</drawable>
+    <drawable name="top_title">#E2943C</drawable>
 </resources>

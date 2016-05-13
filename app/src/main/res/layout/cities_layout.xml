@@ -23,6 +23,7 @@
 
         <Button
             android:id="@+id/button_ok"
+			android:background="@drawable/button_normal_selector"
             android:layout_width="60dip"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

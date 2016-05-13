@@ -183,7 +183,7 @@
             android:textSize="20dp"
             android:textColor="#FFFFFF"
             android:id="@+id/btn_edit"
-            android:background="@drawable/rounded_green_button"
+            android:background="@drawable/button_normal_selector"
             android:text="编辑个人信息"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="30dp"

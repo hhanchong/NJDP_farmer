@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/main_bg"
     tools:context="com.njdp.njdp_farmer.mainpages">
     <com.njdp.njdp_farmer.viewpage.ContentViewPager
         android:id="@+id/content_viewpager"
@@ -13,11 +14,17 @@
         android:layout_marginBottom="50dp"
         android:layout_weight="1" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#8E3939"
+        android:layout_above="@+id/content_radiogroup" />
+
     <RadioGroup
         android:id="@+id/content_radiogroup"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@mipmap/content_radiogroup_backgroup"
+        android:background="#00000000"
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
@@ -32,13 +39,13 @@
             android:layout_weight="1"
             android:background="#00000000"
             android:button="@null"
-            android:drawableTop="@drawable/content_xinwen_selector"
+            android:drawableTop="@drawable/content_fabu_selector"
             android:ellipsize="marquee"
             android:gravity="center"
             android:paddingTop="0dp"
             android:singleLine="true"
             android:text="我的发布"
-            android:textColor="@drawable/content_textcolor" />
+            android:textColor="@drawable/selected_White" />
 
         <RadioButton
             android:id="@+id/rb_search"
@@ -47,13 +54,13 @@
             android:layout_weight="1"
             android:background="#00000000"
             android:button="@null"
-            android:drawableTop="@drawable/content_redian_selector"
+            android:drawableTop="@drawable/content_chaxun_selector"
             android:ellipsize="marquee"
             android:gravity="center"
             android:paddingTop="0dp"
             android:singleLine="true"
             android:text="农机查询"
-            android:textColor="@drawable/content_textcolor" />
+            android:textColor="@drawable/selected_White" />
 
         <RadioButton
             android:id="@+id/rb_userInfo"
@@ -62,13 +69,13 @@
             android:layout_weight="1"
             android:background="#00000000"
             android:button="@null"
-            android:drawableTop="@drawable/content_shezhi_selector"
+            android:drawableTop="@drawable/content_gerenxinxi_selector"
             android:ellipsize="marquee"
             android:gravity="center"
             android:paddingTop="0dp"
             android:singleLine="true"
             android:text="个人信息"
-            android:textColor="@drawable/content_textcolor" />
+            android:textColor="@drawable/selected_White" />
     </RadioGroup>
 
 </RelativeLayout>

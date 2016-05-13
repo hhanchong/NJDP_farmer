@@ -9,7 +9,7 @@
         android:layout_height="60dp"
         android:layout_alignParentTop="true"
         android:id="@+id/register_top"
-        android:background="#03601F">
+        android:background="@drawable/top_title">
         <ImageButton
             android:id="@+id/getback"
             android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
         <Button
             style="@style/Register_Button_Finish"
             android:id="@+id/btn_editFinish"
-            android:background="@drawable/rounded_green_button"
+            android:background="@drawable/button_normal_selector"
             android:layout_below="@+id/regiser_div"
             android:text="确认修改"
             android:layout_height="wrap_content"
