@@ -123,14 +123,15 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                 break;
             case R.id.btn_editFinish:
                 mValidation.addValidation(PersonalSet.this, R.id.user_name, "^[\\u4e00-\\u9fa5]+$", R.string.err_name);
-                if((mValidation.validate()) && (et_QQ.getText().length() > 5 || TextUtils.isEmpty(et_QQ.getText()))){
-                    farmer.setName(et_name.getText().toString());
-                    farmer.setQQ(et_QQ.getText().toString());
-                    farmer.setWeixin(et_weixin.getText().toString());
-                    checkEdit(farmer);
-                }
-                else {
-                    error_hint("请输入正确的QQ号！");
+                if(mValidation.validate()){
+                    if(et_QQ.getText().length() > 5 || TextUtils.isEmpty(et_QQ.getText())){
+                        farmer.setName(et_name.getText().toString());
+                        farmer.setQQ(et_QQ.getText().toString());
+                        farmer.setWeixin(et_weixin.getText().toString());
+                        checkEdit(farmer);
+                    }else{
+                        error_hint("请输入正确的QQ号！");
+                    }
                 }
                 break;
 

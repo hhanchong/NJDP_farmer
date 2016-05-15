@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_sign_up_reveal_default"
-            android:layout_marginBottom="@dimen/login_ImageButton_marginBottom5"
+            android:layout_marginBottom="@dimen/login_ImageButton_marginBottom10"
             android:layout_alignBottom="@+id/user_password"
             android:layout_alignRight="@+id/user_password"
             android:layout_alignEnd="@+id/user_password" />
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_sign_up_reveal_on"
-            android:layout_marginBottom="@dimen/login_ImageButton_marginBottom5"
+            android:layout_marginBottom="@dimen/login_ImageButton_marginBottom10"
             android:layout_alignBottom="@+id/user_password"
             android:layout_alignRight="@+id/user_password"
             android:layout_alignEnd="@+id/user_password" />

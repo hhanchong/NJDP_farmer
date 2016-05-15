@@ -3,6 +3,7 @@
     <dimen name="activity_vertical_margin">10dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="login_ImageButton_marginBottom5">5dp</dimen>
+    <dimen name="login_ImageButton_marginBottom10">10dp</dimen>
     <dimen name="login_ImageButton_marginLeft10">10dp</dimen>
     <dimen name="login_ImageButton_marginLeft16">16dp</dimen>
     <dimen name="listview_image_margin5">5dp</dimen>

@@ -7,8 +7,8 @@ import java.net.URL;
  */
 public class AppConfig {
     //服务器地址
-    //public static String URL_IP="http://211.68.180.9:88/";
-    public static String URL_IP="http://218.12.43.229:81/";
+    //public static String URL_IP="http://211.68.180.9:88/"; //BaoDing
+    public static String URL_IP="http://218.12.43.229:81/"; //ShiJiaZhuang
     // 登录 url
     public static String URL_LOGIN = URL_IP+"appLogin";
     // 注册 url
