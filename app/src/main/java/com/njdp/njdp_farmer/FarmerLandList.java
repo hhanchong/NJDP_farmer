@@ -32,6 +32,7 @@ public class FarmerLandList extends AppCompatActivity {
     private FarmAdapter adapter;
     private ImageButton getback=null;
     private Spinner spinner;
+    private View farmlandlist;
     List<String> Years = new ArrayList<>();
 
     @Override
@@ -43,6 +44,8 @@ public class FarmerLandList extends AppCompatActivity {
         farmlandInfos = new ArrayList<>();
         listView = (ExpandableListView) findViewById(R.id.expandableListView);
         spinner = (Spinner)findViewById(R.id.sp_year);
+        farmlandlist = findViewById(R.id.farmlandlist_div);
+        farmlandlist.getBackground().setAlpha(180);
 
         //获取农田数据
         farmlandInfoList = FarmlandManager.getFarmlands();

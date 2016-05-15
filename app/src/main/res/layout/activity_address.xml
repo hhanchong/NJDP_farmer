@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/main_bg"
     tools:context="com.njdp.njdp_farmer.address.AddressSelect"
     android:id="@+id/top_layout">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:id="@+id/register_top"
         android:background="@drawable/top_title">

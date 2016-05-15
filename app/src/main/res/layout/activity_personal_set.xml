@@ -7,7 +7,7 @@
     tools:context="com.njdp.njdp_farmer.PersonalSet">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:id="@+id/register_image_top"
         android:background="@drawable/top_title">

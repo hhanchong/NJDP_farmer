@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:id="@+id/machines_image_top"
         android:background="@drawable/top_title">
@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:id="@+id/machines_div"
+        android:background="@drawable/main_bg1"
         android:layout_below="@+id/machines_image_top">
         <ExpandableListView
             android:id="@+id/expandableListView"

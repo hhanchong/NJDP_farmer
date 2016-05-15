@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:id="@+id/login_top"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_width="match_parent">
     </RelativeLayout>
     <RelativeLayout

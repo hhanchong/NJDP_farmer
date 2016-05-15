@@ -30,6 +30,7 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
     private List<MachineInfo> machineInfos;
     private MachineAdapter adapter;
     private ImageButton getback = null;
+    private View machinelist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,8 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
         //初始化参数及控件
         machineInfos = new ArrayList<>();
         listView = (ExpandableListView) findViewById(R.id.expandableListView);
+        machinelist = findViewById(R.id.machines_div);
+        machinelist.getBackground().setAlpha(180);
 
         //获取农机数据
         machineInfos = FarmMachineSearch.getMachines();

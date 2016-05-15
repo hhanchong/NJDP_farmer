@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/main_bg"
     tools:context="com.njdp.njdp_farmer.SetPhoneNum">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:id="@+id/register_top"
         android:background="@drawable/top_title">
@@ -32,8 +33,8 @@
             style="@style/Register_style"
             android:id="@+id/user_telephone"
             android:textCursorDrawable="@drawable/login_cursor"
-            android:background="@drawable/login_edit_changecolor"
-            android:drawableLeft="@drawable/ic_phone_android_grey600_24dp"
+            android:background="@drawable/selected_White"
+            android:drawableLeft="@drawable/ic_phone_outline"
             android:hint="新手机号"
             android:maxLength="11"
             android:inputType="phone"
@@ -52,8 +53,8 @@
                 style="@style/Register_VertifyInput_style"
                 android:id="@+id/verification_code"
                 android:textCursorDrawable="@drawable/login_cursor"
-                android:background="@drawable/login_edit_changecolor"
-                android:drawableLeft="@drawable/ic_vpn_key_grey600_24dp"
+                android:background="@drawable/selected_White"
+                android:drawableLeft="@drawable/ic_key_outline"
                 android:hint="验证码"
                 android:maxLength="6"
                 android:inputType="number"
@@ -65,7 +66,10 @@
                 android:id="@+id/line" />
             <Button
                 style="@style/Register_Button_Vertify"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:id="@+id/register_get_verification_code"
+                android:background="@drawable/button_normal_selector"
                 android:text="获取验证码" />
         </RelativeLayout>
         <View

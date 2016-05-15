@@ -34,14 +34,14 @@
                     android:layout_height="wrap_content"
                     android:text="查询范围"
                     android:layout_marginLeft="5dp"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="@color/colorWhite" />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="（公里）"
                     android:layout_marginLeft="5dp"
                     android:layout_marginTop="2dp"
-                    android:textColor="#FFFFFF" />
+                    android:textColor="@color/colorWhite" />
             </LinearLayout>
 
             <RadioGroup
@@ -55,7 +55,7 @@
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:layout_marginTop="3dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/colorWhite"
                     android:text="5"
                     android:textSize="18dp"/>
                 <RadioButton
@@ -65,7 +65,7 @@
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:layout_marginTop="3dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/colorWhite"
                     android:text="10"
                     android:textSize="18dp"/>
                 <RadioButton
@@ -75,7 +75,7 @@
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:layout_marginTop="3dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/colorWhite"
                     android:text="20"
                     android:textSize="18dp"/>
                 <RadioButton
@@ -85,7 +85,7 @@
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:layout_marginTop="3dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/colorWhite"
                     android:text="30"
                     android:textSize="18dp"/>
                 <RadioButton
@@ -95,7 +95,7 @@
                     android:scaleX="0.7"
                     android:scaleY="0.7"
                     android:layout_marginTop="3dp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/colorWhite"
                     android:text="全部"
                     android:textSize="18dp"/>
             </RadioGroup>

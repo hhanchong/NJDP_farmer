@@ -37,7 +37,7 @@ public class getpassword extends AppCompatActivity {
 
     private String verify_code = "";
     //private String name;
-    private com.beardedhen.androidbootstrap.BootstrapButton getPassword_next = null;
+    private Button getPassword_next = null;
     private AwesomeValidation verification_code_Validation = new AwesomeValidation(ValidationStyle.BASIC);
     private Button btn_VerificationCcode = null;
     private ImageButton getback=null;
@@ -55,7 +55,7 @@ public class getpassword extends AppCompatActivity {
         setContentView(R.layout.activity_getpassword);
 
         verification_code_Validation.addValidation(getpassword.this, R.id.user_telephone, "^1[3-9]\\d{9}+$", R.string.err_phone);
-        this.getPassword_next = (com.beardedhen.androidbootstrap.BootstrapButton) super.findViewById(R.id.btn_getPassword_next);
+        this.getPassword_next = (Button) super.findViewById(R.id.btn_getPassword_next);
         this.btn_VerificationCcode = (Button) super.findViewById(R.id.btn_get_verificationCode);
         getback=(ImageButton) super.findViewById(R.id.getback);
         getPassword_next.setEnabled(false);
@@ -77,7 +77,7 @@ public class getpassword extends AppCompatActivity {
             public void onClick(View v) {
                 if (nutil.isempty(text_telephone)) {
                     nutil.error_hint(getpassword.this, "手机号不能为空");
-                } else if (verification_code_Validation.validate() == true) {
+                } else if (verification_code_Validation.validate()) {
 
                     //String name = text_user_name.getText().toString().trim();
                     get_VerifyCode(text_telephone.getText().toString().trim());
@@ -119,16 +119,15 @@ public class getpassword extends AppCompatActivity {
 
         String tag_string_req = "req_farmer_VerifyCode";
 
-        if(netutil.checkNet(getpassword.this)==false){
+        if(!netutil.checkNet(getpassword.this)){
             nutil.error_hint(getpassword.this, "网络连接错误");
-            return;
         } else {
             StringRequest strReq = new StringRequest(Request.Method.GET,
                     AppConfig.URL_REGISTER, vertifySuccessListener, mErrorListener) {
                 @Override
                 protected Map<String, String> getParams() {
 
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     //params.put("name", name);
                     params.put("telephone", telephone);
                     return params;
@@ -156,7 +155,7 @@ public class getpassword extends AppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            Log.d(TAG, "Register Response: " + response.toString());
+            Log.d(TAG, "Register Response: " + response);
             hideDialog();
 
             try {
