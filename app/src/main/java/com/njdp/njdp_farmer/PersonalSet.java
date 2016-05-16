@@ -46,9 +46,9 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     private AwesomeValidation mValidation=new AwesomeValidation(ValidationStyle.BASIC);
     private ProgressDialog pDialog;
     Farmer farmer = new Farmer();
-    RelativeLayout setPhoneNum;
-    RelativeLayout setUserPic;
-    RelativeLayout setAddress;
+    EditText setPhoneNum;
+    EditText setUserPic;
+    EditText setAddress;
     ImageButton getback;
     Button editFinish;
     TextView tv_phone;
@@ -87,9 +87,9 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
-        setPhoneNum = (RelativeLayout)super.findViewById(R.id.rl_setPhonenum);
-        setAddress = (RelativeLayout)super.findViewById(R.id.rl_setAddress);
-        setUserPic = (RelativeLayout)super.findViewById(R.id.rl_set_user_image);
+        setPhoneNum = (EditText)super.findViewById(R.id.phonenum);
+        setAddress = (EditText)super.findViewById(R.id.address);
+        setUserPic = (EditText)super.findViewById(R.id.set_user_image);
         getback = (ImageButton)super.findViewById(R.id.getback);
         editFinish = (Button)super.findViewById(R.id.btn_editFinish);
         tv_phone = (TextView)super.findViewById(R.id.phonenum);
@@ -118,19 +118,19 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.rl_setPhonenum:
+            case R.id.phonenum:
                 Intent intent = new Intent(this, SetPhoneNum.class);
                 intent.putExtra("token", farmer.getFm_token());
                 startActivityForResult(intent, PHONEEDIT);
                 break;
-            case R.id.rl_set_user_image:
+            case R.id.set_user_image:
                 Intent intent2 = new Intent(this, register_image.class);
                 intent2.putExtra("token", farmer.getFm_token());
                 intent2.putExtra("IsSetImage", true);
                 startActivity(intent2);
 
                 break;
-            case R.id.rl_setAddress:
+            case R.id.address:
                 Intent intent3 = new Intent(this, AddressSelect.class);
                 intent3.putExtra("address", tv_address.getText().toString());
                 startActivityForResult(intent3, ADDRESSEDIT);

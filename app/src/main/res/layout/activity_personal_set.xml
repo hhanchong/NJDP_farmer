@@ -31,7 +31,7 @@
         android:id="@+id/register_div"
         android:orientation="vertical"
         android:layout_below="@+id/register_image_top"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3dp"
         android:layout_height="match_parent"
         android:background="@drawable/selected_White">
 
@@ -42,9 +42,10 @@
 
             <TextView
                 android:id="@+id/tv1"
-                android:layout_width="80dp"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:text="姓名"
                 android:textSize="18sp" />
             <EditText
@@ -53,15 +54,10 @@
                 android:textCursorDrawable="@drawable/login_cursor"
                 android:background="@drawable/login_edit_changecolor"
                 android:layout_toRightOf="@+id/tv1"
-                android:layout_alignBaseline="@+id/tv1"
+                android:layout_marginRight="10dp"
                 android:textSize="16sp"/>
 
         </RelativeLayout>
-
-        <View
-            style="@style/Register_HorizontalLine_style"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
 
         <RelativeLayout
             android:id="@+id/rl_setPhonenum"
@@ -70,38 +66,36 @@
             android:gravity="center_vertical">
             <TextView
                 android:id="@+id/tv2"
-                android:layout_width="80dp"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="手机号"
                 android:textSize="18sp"
-                android:layout_alignTop="@+id/phoneView"
+                android:layout_marginTop="10dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
-            <TextView
+            <EditText
+                style="@style/Register_style"
                 android:id="@+id/phonenum"
-                android:layout_width="160dp"
-                android:layout_height="wrap_content"
+                android:textCursorDrawable="@drawable/login_cursor"
+                android:background="@drawable/login_edit_changecolor"
                 android:text="18932659760"
                 android:textSize="16sp"
-                android:layout_alignTop="@+id/tv2"
                 android:layout_toRightOf="@+id/tv2"
-                android:layout_toEndOf="@+id/tv2" />
+                android:layout_toEndOf="@+id/tv2"
+                android:layout_marginRight="10dp"
+                android:editable="false"
+                android:focusableInTouchMode="false"/>
 
             <ImageView
+                android:id="@+id/phoneView"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="8dp"
                 android:src="@drawable/into"
-                android:id="@+id/phoneView" />
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp" />
         </RelativeLayout>
-
-        <View
-            style="@style/Register_HorizontalLine_style"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -110,9 +104,10 @@
 
             <TextView
                 android:id="@+id/tv3"
-                android:layout_width="80dp"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:text="QQ"
                 android:textSize="18sp" />
             <EditText
@@ -123,14 +118,9 @@
                 android:inputType="numberDecimal"
                 android:textSize="16sp"
                 android:layout_toRightOf="@+id/tv3"
-                android:layout_alignBaseline="@+id/tv3"
-                android:maxLength="10" />
+                android:maxLength="10"
+                android:layout_marginRight="10dp"/>
         </RelativeLayout>
-
-        <View
-            style="@style/Register_HorizontalLine_style"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -139,9 +129,10 @@
 
             <TextView
                 android:id="@+id/tv4"
-                android:layout_width="80dp"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:text="微信"
                 android:textSize="18sp" />
             <EditText
@@ -152,14 +143,9 @@
                 android:inputType=""
                 android:textSize="16sp"
                 android:layout_toRightOf="@+id/tv4"
-                android:layout_alignBaseline="@+id/tv4"
-                android:maxLength="30" />
+                android:maxLength="30"
+                android:layout_marginRight="10dp"/>
         </RelativeLayout>
-
-        <View
-            style="@style/Register_HorizontalLine_style"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -169,16 +155,18 @@
 
             <TextView
                 android:id="@+id/tv5"
-                android:layout_width="80dp"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:text="地址"
                 android:textSize="18sp"
                 />
-            <TextView
+            <EditText
+                style="@style/Register_style"
                 android:id="@+id/address"
-                android:layout_width="match_parent"
+                android:textCursorDrawable="@drawable/login_cursor"
+                android:background="@drawable/login_edit_changecolor"
                 android:layout_height="50dp"
                 android:text="河北省保定市清苑县***乡***村"
                 android:textSize="16sp"
@@ -186,22 +174,19 @@
                 android:gravity="center_vertical|left"
                 android:layout_toRightOf="@+id/tv5"
                 android:layout_toEndOf="@+id/tv5"
-                android:layout_marginRight="45dp"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:editable="false"
+                android:focusableInTouchMode="false"/>
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/into" />
         </RelativeLayout>
-
-        <View
-            style="@style/Register_HorizontalLine_style"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <RelativeLayout
             android:id="@+id/rl_set_user_image"
@@ -210,30 +195,38 @@
             android:gravity="center_vertical">
             <TextView
                 android:id="@+id/tv6"
-                android:layout_width="80dp"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
+                android:layout_marginTop="10dp"
                 android:text="头像"
                 android:textSize="18sp"
-                android:layout_alignTop="@+id/imageView"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true" />
-
+            <EditText
+                style="@style/Register_style"
+                android:id="@+id/set_user_image"
+                android:textCursorDrawable="@drawable/login_cursor"
+                android:background="@drawable/login_edit_changecolor"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_toRightOf="@+id/tv6"
+                android:layout_toEndOf="@+id/tv6"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:hint=""
+                android:editable="false"
+                android:focusableInTouchMode="false"/>
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
                 android:src="@drawable/into"
                 android:id="@+id/imageView" />
 
         </RelativeLayout>
-
-        <View
-            style="@style/Register_HorizontalLine_style"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
 
         <RelativeLayout
             android:layout_width="match_parent"

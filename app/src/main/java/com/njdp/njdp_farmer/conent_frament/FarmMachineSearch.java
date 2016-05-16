@@ -649,6 +649,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         }else{
             if(null != ((mainpages)getActivity()).getLastUndoFarmland()){
                 farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
+            }else if(null == farmlandInfo){
+                return;
             }
         }
 

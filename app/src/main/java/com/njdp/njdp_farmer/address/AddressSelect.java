@@ -121,12 +121,13 @@ public class AddressSelect extends Activity {
             public void onClick(View v) {
                 mValidation.addValidation(AddressSelect.this, R.id.xiang, "^[\\u4e00-\\u9fa5]+$", R.string.err_xiangcun);
                 mValidation.addValidation(AddressSelect.this, R.id.cun, "^[\\u4e00-\\u9fa5]+$", R.string.err_xiangcun);
-                if(mValidation.validate() == true) {
+                if(mValidation.validate()) {
                     //返回选择的地市
                     Intent intent = new Intent(AddressSelect.this, PersonalSet.class);
                     String temp = select_et.getText() + "-" + xiang.getText() + "乡-" + cun.getText() + "村";
-                    temp.replace("村村", "村");
-                    temp.replace("乡乡", "乡");
+                    temp = temp.replace("村村", "村");
+                    temp = temp.replace("乡乡", "乡");
+                    temp = temp.replace("镇乡", "镇");
                     intent.putExtra("address", temp);
                     setResult(RESULT_OK, intent);
                     finish();
@@ -220,7 +221,7 @@ public class AddressSelect extends Activity {
             }
         });
 
-        if(str_province == null || str_city == null || str_county == null || str_province == "不限") {
+        if(str_province == null || str_city == null || str_county == null || str_province.equals("不限")) {
             country.setCurrentItem(3);
         }else {
             int x = indexArry(AddressData.PROVINCES, str_province);
@@ -264,7 +265,7 @@ public class AddressSelect extends Activity {
         try
         {
             ArrayWheelAdapter<String> adapter =
-                    new ArrayWheelAdapter<String>(this, cities[index]);
+                    new ArrayWheelAdapter<>(this, cities[index]);
             adapter.setTextSize(18);
             city.setViewAdapter(adapter);
             city.setCurrentItem(cities[index].length / 2);
@@ -281,7 +282,7 @@ public class AddressSelect extends Activity {
         try
         {
             ArrayWheelAdapter<String> adapter =
-                    new ArrayWheelAdapter<String>(this, ccities[index][index2]);
+                    new ArrayWheelAdapter<>(this, ccities[index][index2]);
             adapter.setTextSize(18);
             city.setViewAdapter(adapter);
             city.setCurrentItem(ccities[index][index2].length / 2);
