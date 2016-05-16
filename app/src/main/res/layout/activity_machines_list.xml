@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_div"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/main_bg1"
     tools:context="com.njdp.njdp_farmer.MachinesList">
 
     <RelativeLayout
@@ -29,7 +32,6 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:id="@+id/machines_div"
-        android:background="@drawable/main_bg1"
         android:layout_below="@+id/machines_image_top">
         <ExpandableListView
             android:id="@+id/expandableListView"

@@ -12,7 +12,7 @@
         android:background="@drawable/top_title">
         <TextView
             style="@style/Pages_Title"
-            android:text="我的发布"
+            android:text="我要发布"
             />
     </RelativeLayout>
 

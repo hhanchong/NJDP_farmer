@@ -3,6 +3,8 @@ package com.njdp.njdp_farmer.address;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.Gravity;
@@ -10,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -53,6 +57,19 @@ public class AddressSelect extends Activity {
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
+        //设置沉浸模式
+        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
+                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
+        }
 		setContentView(R.layout.activity_address);
 
         address = ((String)getIntent().getExtras().get("address")).split("-");
@@ -107,7 +124,10 @@ public class AddressSelect extends Activity {
                 if(mValidation.validate() == true) {
                     //返回选择的地市
                     Intent intent = new Intent(AddressSelect.this, PersonalSet.class);
-                    intent.putExtra("address", select_et.getText() + "-" + xiang.getText() + "乡-" + cun.getText() + "村");
+                    String temp = select_et.getText() + "-" + xiang.getText() + "乡-" + cun.getText() + "村";
+                    temp.replace("村村", "村");
+                    temp.replace("乡乡", "乡");
+                    intent.putExtra("address", temp);
                     setResult(RESULT_OK, intent);
                     finish();
                 }

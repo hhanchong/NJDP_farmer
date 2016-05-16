@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/top_title"
+    android:fitsSystemWindows="true"
     tools:context="com.njdp.njdp_farmer.FarmerRelease">
 
     <RelativeLayout
@@ -26,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/release_top_title"
+        android:background="@drawable/selected_White"
         >
 
         <LinearLayout
