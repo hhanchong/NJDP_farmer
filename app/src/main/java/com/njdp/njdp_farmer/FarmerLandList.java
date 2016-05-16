@@ -104,9 +104,11 @@ public class FarmerLandList extends AppCompatActivity {
     private void initData() {
         group = new ArrayList<>();
         child = new ArrayList<>();
+        int i = 1;
         for(FarmlandInfo f :farmlandInfos){
             f.setCrops_kind(ConvertToCHS(f.getCrops_kind()));
-            addInfo(f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{f});
+            addInfo(i+"."+f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{f});
+            i++;
         }
     }
 
