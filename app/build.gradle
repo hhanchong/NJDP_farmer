@@ -55,4 +55,6 @@ dependencies {
     compile 'com.android.support:support-v4:23.3.0'
     compile files('libs/lbsCoreSDK.jar')
     compile files('libs/locSDK_6.23.jar')
+    compile files('libs/okhttputils-2_4_1.jar')
+    compile files('libs/okhttp-3.2.0.jar')
 }

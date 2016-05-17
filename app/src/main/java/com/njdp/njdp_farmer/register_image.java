@@ -27,29 +27,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.changeDefault.NewClickableSpan;
 import com.njdp.njdp_farmer.db.AppConfig;
-import com.njdp.njdp_farmer.db.AppController;
-import com.njdp.njdp_farmer.db.ImageUploadRequest;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
-import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.util.NetUtil;
 import com.njdp.njdp_farmer.util.NormalUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import okhttp3.Call;
 
 public class register_image extends AppCompatActivity {
 
@@ -61,7 +54,6 @@ public class register_image extends AppCompatActivity {
     private String s1="服务条款";
     private String s2="隐私协议";
     private ProgressDialog pDialog;
-    private SessionManager session;
     private SQLiteHandler db;
     private String path;//用户头像路径
     private File tempFile;
@@ -78,6 +70,7 @@ public class register_image extends AppCompatActivity {
     private static final String TAG = register_image.class.getSimpleName();
     private NetUtil netutil=new NetUtil();
     private String token;
+    private String telephone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +97,6 @@ public class register_image extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
 
-        // Session manager
-        session = new SessionManager(getApplicationContext());
-
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
 
@@ -117,9 +107,9 @@ public class register_image extends AppCompatActivity {
         this.userImage = (ImageView) super.findViewById(R.id.user_image);
 
         token = getIntent().getStringExtra("token");
+        telephone = getIntent().getStringExtra("telephone");
         IsSetImage = getIntent().getBooleanExtra("IsSetImage", false);
-        if(token==null)
-        {
+        if(token==null&&telephone==null) {
             error_hint("程序错误！请联系管理员！");
         }
 
@@ -139,16 +129,14 @@ public class register_image extends AppCompatActivity {
         //设置Textview超链接高亮背景色为透明色
         notice.setHighlightColor(00000000);
 
-        imageName="njdp_user_image.png";
+        imageName="njdp_" +telephone + "_image.png";
         //设置头像本地存储路径
-        if(nutil.ExistSDCard())
-        {
+        if(nutil.ExistSDCard()) {
             tempFile=Environment.getExternalStorageDirectory();
-        }else
-        {
+        }else {
             tempFile=getCacheDir();
         }
-        path=tempFile.getAbsolutePath()+"/temp/"+imageName;
+        path=tempFile.getAbsolutePath()+"/NJDP/"+imageName;
 
         //完成注册
         finish.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +148,7 @@ public class register_image extends AppCompatActivity {
                     register_uploadImage(Url_Image, path);
                 }
                 //默认头像注册
-                register_finish(Url);
+                //register_finish(Url);
             }
         });
 
@@ -265,122 +253,39 @@ public class register_image extends AppCompatActivity {
         } else if (!netutil.checkNet(register_image.this)) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
-            ImageUploadRequest register_request = new ImageUploadRequest(url,file, token, mSuccessListener_image, mErrorListener);
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(register_request, tag_string_req);
+            OkHttpUtils.post()
+                    .url(url)
+                    .addParams("token", token)
+                    .addFile("person_photo", imageName, file)
+                    .addHeader("content-disposition","form-data")
+                    .build()
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onError(Call call, Exception e) {
+                            Log.e(TAG, "3 Connect Error: " + e.getMessage());
+                        }
+
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                Log.e(TAG, "UploadImage:" + response);
+                                JSONObject jObj = new JSONObject(response);
+                                int status = jObj.getInt("status");
+                                if (status == 0) {
+                                    String msg = jObj.getString("result");
+                                    Log.e(TAG, "UploadImage response：" + msg);
+                                } else {
+                                    String errorMsg = jObj.getString("error_msg");
+                                    Log.e(TAG, "1 Json error：response错误：" + errorMsg);
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "2 Json error：response错误： " + e.getMessage());
+                            }
+                        }
+                    });
         }
     }
-
-    //完成注册
-    private void register_finish(String url) {
-
-        // Tag used to cancel the request
-        String tag_string_req = "req_register_image";
-
-        pDialog.setMessage("即将完成注册 ...");
-        showDialog();
-
-        if (!netutil.checkNet(register_image.this)) {
-            error_hint("网络连接错误");
-            return;
-        }else {
-            StringRequest strReq = new StringRequest(Request.Method.POST,
-                    url,mSuccessListener,mErrorListener) {
-
-                @Override
-                protected Map<String, String> getParams() {
-
-                    Map<String, String> params = new HashMap<>();
-                        params.put("token", token);
-                        params.put("setImage", "NO");
-                        params.put("tag", "F");
-                    return params;
-                }
-            };
-
-            // Adding request to request queue
-            AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
-        }
-    }
-
-    //上传头像响应服务器成功
-    private Response.Listener<String> mSuccessListener_image =new Response.Listener<String>() {
-
-        @Override
-        public void onResponse(String response) {
-            Log.d(TAG, "Register Response: " + response);
-            hideDialog();
-
-            try {
-                JSONObject jObj = new JSONObject(response);
-                boolean imageError=jObj.getBoolean("imageError");
-                if (imageError)
-                {
-                    empty_hint(R.string.register_error3);
-                } else {
-                    //头像上传成功，完成注册
-                    //register_finish(Url);
-                }
-            } catch (JSONException e) {
-                empty_hint(R.string.register_error2);
-                e.printStackTrace();
-                Log.e(TAG, "RegisterError: " + e.getMessage());
-            }
-        }
-    };
-
-    //注册响应服务器成功
-    private Response.Listener<String> mSuccessListener =new Response.Listener<String>() {
-
-        @Override
-        public void onResponse(String response) {
-            Log.d(TAG, "Register Response: 0-" + response);
-            hideDialog();
-
-            try {
-                JSONObject jObj = new JSONObject(response);
-                boolean error = jObj.getBoolean("error");
-                if(!error) {
-                    //session.setLogin(true, false);
-                    // Now store the user in sqlite
-                    // Inserting row in users table
-                    JSONObject farmers = jObj.getJSONObject("Farmers");
-                    //完成后的其他操作
-                    //Intent intent = new Intent(register_image.this, PersonalSet.class);
-                    //intent.putExtra("phonenum", phonenum);
-                    //setResult(RESULT_OK, intent);
-                    empty_hint(R.string.edit_success);
-                    finish();
-
-                    // 跳转到主页面
-                    //Intent intent = new Intent(register_image.this, mainpages.class);
-                    //startActivity(intent);
-                } else {
-                    // Error occurred in registration. Get the error
-                    // message
-                    String errorMsg = jObj.getString("error_msg");
-                    Log.d(TAG, "Register Response: 1-" + errorMsg);
-                    empty_hint(R.string.register_error1);
-                }
-            } catch (JSONException e) {
-                empty_hint(R.string.register_error2);
-                e.printStackTrace();
-                Log.e(TAG, "RegisterError: 2-" + e.getMessage());
-            }
-        }
-    };
-
-    //响应服务器失败
-    private Response.ErrorListener mErrorListener= new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            Log.e(TAG, "RegisterError: 3-" + error.getMessage());
-            empty_hint(R.string.register_error2);
-            hideDialog();
-        }
-    };
 
     //ProgressDialog显示与隐藏
     private void showDialog() {

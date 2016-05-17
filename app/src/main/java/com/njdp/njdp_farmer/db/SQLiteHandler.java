@@ -73,7 +73,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
 
         //未查询到记录才插入
         Cursor cursor = db.query(TABLE_USER, null, KEY_ID + "=?", new String[]{String.valueOf(fm_id)}, null, null, null);
-        if(cursor == null) {
+        if(cursor.getCount() == 0) {
             // Inserting Row
             long id = db.insert(TABLE_USER, null, values);
             Log.d(TAG, "New user inserted into sqlite: " + id);
@@ -107,7 +107,7 @@ public class SQLiteHandler extends SQLiteOpenHelper {
     }
 
     public HashMap<String, String> getUserDetails() {
-        HashMap<String, String> user = new HashMap<String, String>();
+        HashMap<String, String> user = new HashMap<>();
         String selectQuery = "SELECT  * FROM " + TABLE_USER;
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -115,10 +115,11 @@ public class SQLiteHandler extends SQLiteOpenHelper {
         // Move to first row
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
-            user.put("telephone", cursor.getString(1));
-            user.put("password", cursor.getString(2));
-            user.put("name", cursor.getString(3));
-            user.put("imageUrl", cursor.getString(4));
+            user.put(KEY_ID, cursor.getString(0));
+            user.put(KEY_NAME, cursor.getString(1));
+            user.put(KEY_TELEPHONE, cursor.getString(2));
+            user.put(KEY_PASSWORD, cursor.getString(3));
+            user.put(KEY_URL, cursor.getString(4));
         }
         cursor.close();
         db.close();

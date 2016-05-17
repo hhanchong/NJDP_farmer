@@ -15,6 +15,7 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -55,6 +56,8 @@ public class login extends AppCompatActivity {
     private SQLiteHandler db;
     private Farmer farmer;
     private NetUtil netutil;
+    private boolean historyLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +117,17 @@ public class login extends AppCompatActivity {
             intent.putExtra("TOKEN", session.getToken());
             startActivity(intent);
             finish();
+        }else{
+            HashMap<String, String> user = db.getUserDetails();
+            text_username.setText(user.get("telephone"));
+            text_password.setText(user.get("password"));
+            farmer.setTelephone(text_username.getText().toString());
+            farmer.setPassword(text_password.getText().toString());
+            if(user.get("password").length()>0) {
+                historyLogin = true;
+            }
         }
+
 
         login_check.setOnClickListener(new View.OnClickListener() {
 
@@ -222,7 +235,7 @@ public class login extends AppCompatActivity {
                     finish();
 
                     // Inserting row in users table
-                    //db.addUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone() ,farmer.getImageUrl());
+                    db.addUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
 
                 } else if(status == 1) {
                     error_hint("无此用户！");
@@ -264,7 +277,7 @@ public class login extends AppCompatActivity {
     //错误信息提示2
     private void empty_hint(int in){
         Toast toast = Toast.makeText(login.this, getResources().getString(in), Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER,0,-50);
+        toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
@@ -284,6 +297,12 @@ public class login extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                //当记录的历史用户修改后，密码置空
+                if (historyLogin) {
+                    historyLogin = false;
+                    text_password.setText("");
+                    db.editUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), "", farmer.getImageUrl());
+                }
                 if ((s.length() > 0) && !TextUtils.isEmpty(text_password.getText())) {
                     login_check.setClickable(true);
                     login_check.setEnabled(true);
@@ -351,6 +370,22 @@ public class login extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private long timeMillis;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            if ((System.currentTimeMillis() - timeMillis) > 2000) {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                timeMillis = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     //不跟随系统变化字体大小

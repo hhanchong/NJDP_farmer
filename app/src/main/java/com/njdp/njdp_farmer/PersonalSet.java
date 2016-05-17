@@ -95,14 +95,19 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         getback = (ImageButton)super.findViewById(R.id.getback);
         editFinish = (Button)super.findViewById(R.id.btn_editFinish);
         tv_phone = (TextView)super.findViewById(R.id.phonenum);
+        assert tv_phone != null;
         tv_phone.setText(farmer.getTelephone());
         tv_address = (TextView)super.findViewById(R.id.address);
+        assert tv_address != null;
         tv_address.setText(farmer.getAddress());
         et_name = (EditText)super.findViewById(R.id.user_name);
+        assert et_name != null;
         et_name.setText(farmer.getName());
         et_QQ = (EditText)super.findViewById(R.id.qq);
+        assert et_QQ != null;
         et_QQ.setText(farmer.getQQ());
         et_weixin = (EditText)super.findViewById(R.id.weixin);
+        assert et_weixin != null;
         et_weixin.setText(farmer.getWeixin());
 
         listenerEvent();
@@ -129,6 +134,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                 Intent intent2 = new Intent(this, register_image.class);
                 intent2.putExtra("token", farmer.getFm_token());
                 intent2.putExtra("IsSetImage", true);
+                intent2.putExtra("telephone", farmer.getTelephone());
                 startActivity(intent2);
 
                 break;

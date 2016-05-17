@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -31,14 +33,18 @@ import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
+import com.njdp.njdp_farmer.db.SQLiteHandler;
 import com.njdp.njdp_farmer.login;
 import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
+import com.njdp.njdp_farmer.util.NormalUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,6 +53,8 @@ import java.util.Map;
 public class PersonalInfoFrame extends Fragment implements View.OnClickListener {
     private final String TAG = "PersonalInfoFrame";
     private static final int USEREDIT = 1;
+    private SQLiteHandler db;
+    private NormalUtil nutil=new NormalUtil();
     //所有监听的控件
     static ImageView userImage;
     TextView userName, telephone, qq, weixin, address;
@@ -56,6 +64,8 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     private NetUtil netutil = new NetUtil();
     private String token;
     private Farmer farmer;
+    private String path;//用户头像路径
+    private boolean imageexists = true;
 
     @Nullable
     @Override
@@ -69,6 +79,9 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 error_hint("参数传递错误！");
                 return null;
             }
+            // SQLite database handler
+            db = new SQLiteHandler(getActivity().getApplicationContext());
+
             if (view == null) {
                 view = inFlater(inflater);
             }
@@ -94,7 +107,19 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
     private void initView(View view) {
         userImage = (ImageView) view.findViewById(R.id.user_image);
-        //userImage.setImageURI();
+        HashMap<String, String> user = db.getUserDetails();
+        //设置头像本地存储路径
+        if(nutil.ExistSDCard()) {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/NJDP/"+"njdp_" +user.get("telephone") + "_image.png";
+        }else {
+            path = getActivity().getCacheDir().getAbsolutePath()+"/NJDP/"+"njdp_" +user.get("telephone") + "_image.png";
+        }
+        if(new File(path).exists()) {
+            userImage.setImageURI(Uri.parse(path));
+        }else {
+            imageexists = false;
+        }
+
         userName = (TextView) view.findViewById(R.id.tv_user_name);
         telephone = (TextView) view.findViewById(R.id.tv_phonenum);
         qq = (TextView) view.findViewById(R.id.tv_qq);
@@ -184,6 +209,8 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             strReq.setRetryPolicy(new DefaultRetryPolicy(2000,1,1.0f)); //请求超时时间2S，重复1次
             // Adding request to request queue
             AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+            //获取头像
+
         }
     }
 
