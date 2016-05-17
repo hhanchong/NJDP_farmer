@@ -2,6 +2,8 @@ package com.njdp.njdp_farmer;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -334,24 +336,31 @@ public class login extends AppCompatActivity {
             }
         });
 
-        text_password.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+        text_password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus){
+            public void onFocusChange(View v, boolean hasFocus) {
                 // TODO Auto-generated method stub
-                if(hasFocus){ //如果组件获得焦点
+                if (hasFocus) { //如果组件获得焦点
                     text_password.setHint(null);
-                }else{
-                    if(text_password.getText().length() > 0)
-                    {
+                } else {
+                    if (text_password.getText().length() > 0) {
                         text_password.setHint(null);
-                    }
-                    else
-                    {
+                    } else {
                         text_password.setHint("请输入密码");
                     }
                 }
             }
         });
+    }
+
+    //不跟随系统变化字体大小
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
+        return res;
     }
 }
 

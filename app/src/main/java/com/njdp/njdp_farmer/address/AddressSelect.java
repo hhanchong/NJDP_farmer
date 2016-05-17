@@ -3,6 +3,8 @@ package com.njdp.njdp_farmer.address;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -338,6 +340,16 @@ public class AddressSelect extends Activity {
             }
         }
         return -1;
+    }
+
+    //不跟随系统变化字体大小
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config,res.getDisplayMetrics() );
+        return res;
     }
 
 }

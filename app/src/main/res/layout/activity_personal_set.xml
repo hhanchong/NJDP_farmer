@@ -79,7 +79,6 @@
                 android:id="@+id/phonenum"
                 android:textCursorDrawable="@drawable/login_cursor"
                 android:background="@drawable/login_edit_changecolor"
-                android:text="18932659760"
                 android:textSize="16sp"
                 android:layout_toRightOf="@+id/tv2"
                 android:layout_toEndOf="@+id/tv2"
@@ -168,8 +167,8 @@
                 android:textCursorDrawable="@drawable/login_cursor"
                 android:background="@drawable/login_edit_changecolor"
                 android:layout_height="50dp"
-                android:text="河北省保定市清苑县***乡***村"
                 android:textSize="16sp"
+                android:hint="点击修改地址"
                 android:layout_gravity="center_vertical|left"
                 android:gravity="center_vertical|left"
                 android:layout_toRightOf="@+id/tv5"
@@ -214,7 +213,7 @@
                 android:layout_toEndOf="@+id/tv6"
                 android:layout_marginRight="20dp"
                 android:layout_centerVertical="true"
-                android:hint=""
+                android:hint="点击设置头像"
                 android:editable="false"
                 android:focusableInTouchMode="false"/>
             <ImageView

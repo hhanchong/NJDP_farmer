@@ -1,5 +1,7 @@
 package com.njdp.njdp_farmer;
 
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -187,5 +189,15 @@ public class FarmerLandList extends AppCompatActivity {
         Toast toast = Toast.makeText(this, str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
+    }
+
+    //不跟随系统变化字体大小
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
+        return res;
     }
 }

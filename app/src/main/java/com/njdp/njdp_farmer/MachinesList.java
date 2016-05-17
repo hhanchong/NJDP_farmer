@@ -3,6 +3,8 @@ package com.njdp.njdp_farmer;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -136,5 +138,15 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
         Toast toast = Toast.makeText(this, str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
+    }
+
+    //不跟随系统变化字体大小
+    @Override
+    public Resources getResources() {
+        Resources res = super.getResources();
+        Configuration config=new Configuration();
+        config.setToDefaults();
+        res.updateConfiguration(config, res.getDisplayMetrics());
+        return res;
     }
 }
