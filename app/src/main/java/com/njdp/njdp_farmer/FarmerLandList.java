@@ -108,8 +108,7 @@ public class FarmerLandList extends AppCompatActivity {
         child = new ArrayList<>();
         int i = 1;
         for(FarmlandInfo f :farmlandInfos){
-            f.setCrops_kind(ConvertToCHS(f.getCrops_kind()));
-            addInfo(i+"."+f.getVillage() + "-" + f.getCrops_kind() + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{f});
+            addInfo(i+"."+f.getVillage() + "-" + ConvertToCHS(f.getCrops_kind()) + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{f});
             i++;
         }
     }
@@ -161,7 +160,7 @@ public class FarmerLandList extends AppCompatActivity {
         }
     }
 
-    //转换为
+    //类型转换为中文
     private String ConvertToCHS(String s){
         String operation = "", crop = "";
 

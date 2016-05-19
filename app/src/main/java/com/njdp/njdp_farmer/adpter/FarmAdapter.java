@@ -18,6 +18,8 @@ import java.util.List;
  *
  */
 public class FarmAdapter extends BaseExpandableListAdapter {
+	private final String[][] cropsType = new String[][]{{"H","收割"}, {"C", "耕作"}, {"S", "播种"},
+			{"WH", "小麦"}, {"CO", "玉米"}, {"RC", "水稻"}, {"GR", "谷物"}, {"OT", "其他"}, {"SS", "深松"}, {"HA", "平地"}};
 	private Context context;
 	private List<String> group;
 	private List<List<FarmlandInfo>> child;
@@ -117,7 +119,7 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
-		viewHolder.cropkind.setText("作业类型：" + child.get(groupPosition).get(childPosition).getCrops_kind());
+		viewHolder.cropkind.setText("作业类型：" + ConvertToCHS(child.get(groupPosition).get(childPosition).getCrops_kind()));
 		viewHolder.status.setText("作业状态："+ (child.get(groupPosition).get(childPosition).getStatus().equals("0")?"未完成":"已完成"));
 		viewHolder.area.setText("面积 (亩)："+child.get(groupPosition).get(childPosition).getArea());
 		viewHolder.price.setText("单价 (元)："+child.get(groupPosition).get(childPosition).getUnit_price());
@@ -142,6 +144,29 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return false;
+	}
+
+	//类型转换为中文
+	private String ConvertToCHS(String s){
+		String operation = "", crop = "";
+
+		if(s.length() == 3){
+			for(int i = 0; i < cropsType.length; i++){
+				if(cropsType[i][0].equals(s.substring(0,1))){
+					operation = cropsType[i][1];
+				}
+				if(cropsType[i][0].equals(s.substring(1,3))){
+					crop = cropsType[i][1];
+				}
+			}
+			if(operation.isEmpty() || crop.isEmpty()){
+				operation = "未知";
+				crop = "";
+			}
+		}else {
+			operation = "未知";
+		}
+		return operation + crop;
 	}
 
 }

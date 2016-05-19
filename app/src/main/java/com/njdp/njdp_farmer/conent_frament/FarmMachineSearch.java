@@ -103,6 +103,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private BDLocation curlocation ; //当前位置
     ////////////////////////地图变量//////////////////////////
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Nullable
     @Override
@@ -189,20 +195,20 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             runnable = new Runnable(){
                 @Override
                 public void run() {
-                // TODO Auto-generated method stub
-                // 在此处添加执行的代码
-                try {
-                    farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
-                    //获取农机数据
-                    if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
-                        Log.e("农机查询------------->", "使用农田位置查询农机");
-                    else
-                        Log.e("农机查询------------->", "没有找到农田信息，使用本地位置查询农机");
-                    getMachineInfos();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                    handler.postDelayed(this, 60000);// 以后每60s后执行this，即runable
+                    // TODO Auto-generated method stub
+                    // 在此处添加执行的代码
+                    try {
+                        farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
+                        //获取农机数据
+                        if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
+                            Log.e("农机查询------------->", "使用农田位置查询农机");
+                        else
+                            Log.e("农机查询------------->", "没有找到农田信息，使用本地位置查询农机");
+                        getMachineInfos();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    //handler.postDelayed(this, 60000);// 以后每60s后执行this，即runable
                 }
             };
             handler.postDelayed(runnable, 3000);// 打开定时器，3s后执行runnable操作
