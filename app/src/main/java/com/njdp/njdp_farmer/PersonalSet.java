@@ -33,6 +33,7 @@ import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
+import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.util.NetUtil;
 
 import org.json.JSONException;
@@ -249,9 +250,20 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                     intent.putExtra("user", farmer);
                     setResult(RESULT_OK, intent);
                     finish();
-                } else if(status == 1){
+                } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(PersonalSet.this, login.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(status == 4){
+                    //密匙不存在
+                    error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getApplicationContext());
+                    session.setLogin(false, false, "");
                     Intent intent = new Intent(PersonalSet.this, login.class);
                     startActivity(intent);
                     finish();

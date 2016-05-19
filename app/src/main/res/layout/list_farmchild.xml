@@ -22,7 +22,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="作物类型：小麦"
+                android:text="作物类型："
                 android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -44,7 +44,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="作业状态：未收割"
+                android:text="作业状态："
                 android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -67,7 +67,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="面积 (亩)：25.5"
+                android:text="面积 (亩)："
                 android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -78,7 +78,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="单价 (元)：85.5"
+                android:text="单价 (元)："
                 android:textSize="16sp"
                 android:layout_weight="1" />
         </LinearLayout>
@@ -98,7 +98,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="地块类型：规则"
+                android:text="地块类型："
                 android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -136,7 +136,7 @@
                 android:layout_toEndOf="@+id/tv"
                 android:layout_marginRight="1dp"
                 android:layout_centerVertical="true"
-                android:text="河北省保定市满城县要庄乡南宋村"/>
+                android:text=""/>
 
         </RelativeLayout>
 
@@ -155,7 +155,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="开始时间：2016-04-27"
+                android:text="开始时间："
                 android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -179,7 +179,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="结束时间：2016-04-30"
+                android:text="结束时间："
                 android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
@@ -203,7 +203,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:text="补充说明：无"
+                android:text="补充说明："
                 android:textSize="16sp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"

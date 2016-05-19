@@ -119,12 +119,14 @@ public class login extends AppCompatActivity {
             finish();
         }else{
             HashMap<String, String> user = db.getUserDetails();
-            text_username.setText(user.get("telephone"));
-            text_password.setText(user.get("password"));
-            farmer.setTelephone(text_username.getText().toString());
-            farmer.setPassword(text_password.getText().toString());
-            if(user.get("password").length()>0) {
-                historyLogin = true;
+            if(user.size() > 0) {
+                text_username.setText(user.get("telephone"));
+                text_password.setText(user.get("password"));
+                farmer.setTelephone(text_username.getText().toString());
+                farmer.setPassword(text_password.getText().toString());
+                if (user.get("password").length() > 0) {
+                    historyLogin = true;
+                }
             }
         }
 

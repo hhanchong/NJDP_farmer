@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="机主：韩默默"
+                    android:text="机主："
                     android:textSize="16dp"
                     android:textColor="@color/colorBlack"
                     android:layout_weight="1"/>
@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="距离：18km"
+                    android:text="距离："
                     android:textSize="16dp"
                     android:textColor="@color/colorBlack"
                     android:layout_weight="1"/>
@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="5dp"
-                    android:text="电话：12345678901"
+                    android:text="电话："
                     android:textSize="16dp"
                     android:textColor="@color/colorBlack"
                     android:layout_weight="1"/>

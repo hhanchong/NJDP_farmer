@@ -48,8 +48,10 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.njdp.njdp_farmer.address.AddressSelect;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
+import com.njdp.njdp_farmer.conent_frament.FarmlandManager;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
+import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.util.NetUtil;
 
 import org.json.JSONException;
@@ -363,14 +365,24 @@ public class FarmerRelease extends AppCompatActivity {
                     //clean frament
                     setContentNUll();
 
-                } else if(status == 1){
+                } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getApplicationContext());
+                    session.setLogin(false, false, "");
                     Intent intent = new Intent(FarmerRelease.this, login.class);
                     startActivity(intent);
                     finish();
                 }
-                else{
+                else if(status == 4){
+                    //密匙不存在
+                    error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(FarmerRelease.this, login.class);
+                    startActivity(intent);
+                    finish();
+                }else{
                     error_hint("其他未知错误！");
                 }
             } catch (JSONException e) {
@@ -443,6 +455,8 @@ public class FarmerRelease extends AppCompatActivity {
         endtime.setText("");
         //remark.setText(""); //街景暂未考虑
         remark.setText("");
+        Intent intent = new Intent(FarmerRelease.this, FarmlandManager.class);
+        setResult(RESULT_OK, intent);
         finish();
     }
 

@@ -103,7 +103,7 @@ public class NormalUtil {
     }
 
     //保存照片到本地
-    public boolean saveBitmap(Context context,Bitmap mBitmap) {
+    public boolean saveBitmap(Context context,String telephone,Bitmap mBitmap) {
         File file;
         File tempFile=null;
         if(ExistSDCard())
@@ -116,28 +116,54 @@ public class NormalUtil {
         Bitmap bitmap = zoomBitmap(mBitmap, 400, 400);
         FileOutputStream fOut;
         if (!file.exists()) {
-            try {
-                file.mkdirs();
-                tempFile=new File(file.getAbsolutePath(),"/njdpTemp");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else {
-            tempFile=new File(file.getAbsolutePath(),"/njdpTemp");
+            //未获取到根目录，返回错误
+            return false;
         }
-            try {
-                File file1=new File(tempFile,"userimage"+".png");
-                fOut = new FileOutputStream(tempFile);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 60, fOut);
-                fOut.flush();
-                Log.d(TAG, "path:" + file1.getAbsolutePath().toString());
-                fOut.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(context, "头像保存失败！请重试", Toast.LENGTH_SHORT).show();
-                return false;
+        try {
+            tempFile=new File(file.getAbsolutePath(),"/NJDP/" + telephone + "/photo/");
+            if(!tempFile.exists()){
+                if(!createFilePath(tempFile)){
+                    Toast.makeText(context, "文件目录创建失败！", Toast.LENGTH_SHORT).show();
+                }
+            }
+            File file1=new File(tempFile,"userimage.png");
+            if(!file1.exists()){
+                file1.createNewFile();
+            }
+            fOut = new FileOutputStream(file1);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 60, fOut);
+            fOut.flush();
+            Log.d(TAG, "path:" + file1.getAbsolutePath().toString());
+            fOut.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(context, "头像保存失败！请重试", Toast.LENGTH_SHORT).show();
+            return false;
         }
         return true;
+    }
+
+    //创建文件目录
+    public boolean createFilePath(File file){
+        try{
+            if(!file.getParentFile().exists()){
+                //父节点创建失败
+                if(!createFilePath(file.getParentFile())){
+                    return false;
+                }
+            }
+            if(!file.exists()){
+                if (file.isFile())
+                    file.createNewFile();
+                else
+                    file.mkdir();
+            }
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

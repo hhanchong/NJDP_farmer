@@ -58,7 +58,6 @@ public class getpassword2 extends AppCompatActivity {
     private SQLiteHandler db;
     private NormalUtil nutil=new NormalUtil();
     private NetUtil netutil=new NetUtil();
-    private LruBitmapCache lruBitmapCache=new LruBitmapCache();
     private String URL_GETPASSWORD2;//设置连接数据用户的URL，Driver Or Farmer
 
     @Override
@@ -197,11 +196,6 @@ public class getpassword2 extends AppCompatActivity {
 
                             JSONObject user = jObj.getJSONObject("Farmers");
                             boolean islogined = user.getBoolean("isLogined");
-                            String imageurl=user.getString("imageurl");
-                            Bitmap bitmap=lruBitmapCache.getBitmap(imageurl);
-                            Bitmap zoobitmap=nutil.zoomBitmap(bitmap, 400, 400);
-                            nutil.saveBitmap(getpassword2.this,zoobitmap);
-                            //imageurl=tempFile.getAbsolutePath().toString()+"temp"+filename;
                             // Inserting row in users table
                             //farmer.setPassword(password);
                             //db.editUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone(), farmer.getImageUrl());

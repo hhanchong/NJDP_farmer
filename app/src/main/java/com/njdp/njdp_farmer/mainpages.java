@@ -104,7 +104,7 @@ public class mainpages extends AppCompatActivity {
         contentViewPager = (ContentViewPager) findViewById(R.id.content_viewpager);
         contentradiogroup = (RadioGroup) findViewById(R.id.content_radiogroup);
         //预加载一页
-        contentViewPager.setOffscreenPageLimit(3);
+        contentViewPager.setOffscreenPageLimit(5);
         contentViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int i) {

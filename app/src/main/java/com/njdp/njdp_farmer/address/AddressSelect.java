@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -85,7 +86,9 @@ public class AddressSelect extends Activity {
 	    test_pop_layout = (RelativeLayout)findViewById(R.id.top_layout);
 
         xiang = (EditText)this.findViewById(R.id.xiang);
+        xiang.setImeOptions(EditorInfo.IME_ACTION_NEXT);
         cun = (EditText)this.findViewById(R.id.cun);
+        cun.setImeOptions(EditorInfo.IME_ACTION_DONE);
 		select_et = (EditText) findViewById(R.id.tpop_tv);
 		select_et.setOnClickListener(new OnClickListener()
 		{

@@ -59,7 +59,6 @@ public class Edit_Password extends AppCompatActivity {
     private SQLiteHandler db;
     private NormalUtil nutil=new NormalUtil();
     private NetUtil netutil=new NetUtil();
-    private LruBitmapCache lruBitmapCache=new LruBitmapCache();
     private String URL_EDITPASSWORD;//设置连接数据用户的URL，Driver Or Farmer
 
     @Override
@@ -215,13 +214,6 @@ public class Edit_Password extends AppCompatActivity {
 
                             JSONObject user = jObj.getJSONObject("Farmers");
                             boolean islogined = user.getBoolean("isLogined");
-                            String imageurl=user.getString("imageurl");
-                            Bitmap bitmap=lruBitmapCache.getBitmap(imageurl);
-                            Bitmap zoobitmap=nutil.zoomBitmap(bitmap, 400, 400);
-                            nutil.saveBitmap(Edit_Password.this,zoobitmap);
-                            //imageurl=tempFile.getAbsolutePath().toString()+"temp"+filename;
-                            // Inserting row in users table
-                            //farmer.setPassword(password);
                             //db.editUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone(), farmer.getImageUrl());
                             nutil.error_hint(Edit_Password.this, "重置密码成功");
 

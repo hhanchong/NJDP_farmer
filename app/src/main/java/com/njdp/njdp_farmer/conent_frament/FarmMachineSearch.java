@@ -51,6 +51,7 @@ import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.MyClass.MachineInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
+import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.login;
 import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
@@ -74,9 +75,9 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private RelativeLayout test_pop_layout;
     private RadioButton rb5, rb10, rb20, rb30, rb50;      //距离现则按钮
     private static FarmlandInfo farmlandInfo;               //农户最后发布的农田
+    private static FarmlandInfo farmlandLocal;              //本地GPS位置农田
     private static ArrayList<MachineInfo> machineInfos;     //查询回来的农机
     private  static List<MachineInfo> machinesToShow;       //需要显示的农机
-    private Thread thread;  //延时获取农田数据的线程
     private boolean isFirst = false;
     private Handler handler;
     private Runnable runnable;
@@ -159,12 +160,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             //Log.i(TAG, "启动activity获取50公里农田经纬度");
 
 
-            //定义Maker坐标点
+            //定义Maker坐标点，测试用标记点
             //西廉良村，河北大学，东站,保定站,植物园
             String[] names = new String[]{"保定站", "河北大学", "西廉良村", "植物园", "东站"};
             Double[][] numthree = new Double[][]{{38.86317366367406, 115.47990000000006}, {38.86858730724386, 115.51474000000007},{38.885335516312644, 115.44805233879083},
                     {38.914613417728475, 115.4850954388619}, {38.86430366154974, 115.60169999999994}};
-            this.markMachine(numthree, names);
+            //this.markMachine(numthree, names);
 
             // 开启图层定位
             // -----------location config ------------
@@ -183,40 +184,28 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
             /////////////////地图代码结束////////////////////////
 
-            //延时获取农田信息
-            thread=new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    try {
-                        Thread.sleep(2000);
-                        //在这里添加调用接口获取数据的代码
-                        farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
-                        //获取农机数据
-                        if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
-                            getMachineInfos();
-                        else
-                            Log.e("农机查询------------->", "没有找到农田信息");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            thread.start();
-
             //定时刷新任务
             handler = new Handler();
             runnable = new Runnable(){
                 @Override
                 public void run() {
-                    // TODO Auto-generated method stub
-                    // 在此处添加执行的代码
+                // TODO Auto-generated method stub
+                // 在此处添加执行的代码
+                try {
+                    farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
+                    //获取农机数据
+                    if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
+                        Log.e("农机查询------------->", "使用农田位置查询农机");
+                    else
+                        Log.e("农机查询------------->", "没有找到农田信息，使用本地位置查询农机");
                     getMachineInfos();
-                    handler.postDelayed(this, 60000);// 60s后执行this，即runable
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                    handler.postDelayed(this, 60000);// 以后每60s后执行this，即runable
                 }
             };
-            handler.postDelayed(runnable, 30000);// 打开定时器，30s后执行runnable操作
+            handler.postDelayed(runnable, 3000);// 打开定时器，3s后执行runnable操作
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -390,12 +379,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         location.getLongitude());
                 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                 mBaiduMap.animateMapStatus(u);
-                if(null == farmlandInfo){
-                    farmlandInfo = new FarmlandInfo();
-                    farmlandInfo.setCrops_kind("小麦");
-                    farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
-                    farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
-                    getMachineInfos();
+                if(null == farmlandLocal){
+                    farmlandLocal = new FarmlandInfo();
+                    farmlandLocal.setCrops_kind("小麦");
+                    farmlandLocal.setLongitude(String.valueOf(location.getLongitude()));
+                    farmlandLocal.setLatitude(String.valueOf(location.getLatitude()));
                 }
             }
         }
@@ -640,25 +628,27 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     public void getMachineInfos() {
 
         String tag_string_req = "req_machines_get";
+        final FarmlandInfo searchFarmland;
 
         if(isFirst) {
             pDialog.setMessage("正在获取农机数据 ...");
             showDialog();
             rb5.setChecked(true);
             isFirst = false;
-        }else{
-            if(null != ((mainpages)getActivity()).getLastUndoFarmland()){
-                farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
-            }
         }
         //农田信息为空则返回
-        if(null == farmlandInfo){
+        if(null != farmlandInfo){
+            searchFarmland = farmlandInfo;
+        }else if(null != farmlandLocal){
+            searchFarmland = farmlandLocal;
+        }else {
+            hideDialog();
             return;
         }
 
         if (!netutil.checkNet(getActivity())) {
             hideDialog();
-            error_hint("网络连接错误");
+            error_hint("网络不通，请检查！");
         } else {
             //服务器请求
             StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -669,9 +659,9 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     // Posting parameters to url
                     Map<String, String> params = new HashMap<>();
                     params.put("token", token);
-                    params.put("Farmlands_longitude", farmlandInfo.getLongitude());
-                    params.put("Farmlands_Latitude", farmlandInfo.getLatitude());
-                    params.put("Farmlands_crops_kind", farmlandInfo.getCrops_kind());
+                    params.put("Farmlands_longitude", searchFarmland.getLongitude());
+                    params.put("Farmlands_Latitude", searchFarmland.getLatitude());
+                    params.put("Farmlands_crops_kind", searchFarmland.getCrops_kind());
                     //params.put("Machine_type", farmlandInfo.getOperation_kind());
                     params.put("Search_range", "50");
                     return params;
@@ -698,8 +688,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
                 // Check for error node in json
                 if (status == 0) {
-                    //清空旧数据，因为暂时没有农机数据，所以使用模拟数据，不清空
-                    //machineInfos.clear();
+                    //清空旧数据
+                    machineInfos.clear();
                     //此处引入JSON jar包
                     JSONArray jObjs = jObj.getJSONArray("result");
                     for(int i = 0; i < jObjs.length(); i++){
@@ -745,10 +735,21 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
                     //更新农机数据
                     //machineListView.setText("共有" + machineInfos.size()  + "条农机信息，点击查看列表");
-                } else if(status == 1){
+                } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
-                    Intent intent = new Intent(getContext(), login.class);
+                    SessionManager session=new SessionManager(getActivity().getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(getActivity(), login.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+                else if(status == 4){
+                    //密匙不存在
+                    error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getActivity().getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(getActivity(), login.class);
                     startActivity(intent);
                     getActivity().finish();
                 }

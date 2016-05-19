@@ -53,7 +53,7 @@ public class MainLink extends AppCompatActivity {
         intent.putExtra("TOKEN", token);
     }
 
-    //退出登录
+    //注销登录
     public void logoutClick(View v){
         intent = new Intent(MainLink.this, login.class);
         startActivity(intent);

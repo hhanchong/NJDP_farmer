@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,29 +36,40 @@ import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
+import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.login;
 import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
 import com.njdp.njdp_farmer.util.NormalUtil;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.FileCallBack;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.Call;
+
 public class PersonalInfoFrame extends Fragment implements View.OnClickListener {
     private final String TAG = "PersonalInfoFrame";
     private static final int USEREDIT = 1;
+    private static final int MSG_Image = 10000;
     private SQLiteHandler db;
+    private SessionManager session;
     private NormalUtil nutil=new NormalUtil();
     //所有监听的控件
-    static ImageView userImage;
+    static com.njdp.njdp_farmer.changeDefault.CircleImageView userImage;
     TextView userName, telephone, qq, weixin, address;
     Button personalEdit;
     View view;
@@ -66,6 +79,18 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     private Farmer farmer;
     private String path;//用户头像路径
     private boolean imageexists = true;
+    private ProgressBar mProgressbar;
+
+    public static Handler mHandler = new Handler() {
+        public void handleMessage (Message msg) {//此方法在ui线程运行
+            switch(msg.what) {
+                case MSG_Image:
+                    userImage.setImageURI((Uri) msg.obj);//imageview显示从网络获取到的logo
+                    break;
+
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -81,10 +106,13 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             }
             // SQLite database handler
             db = new SQLiteHandler(getActivity().getApplicationContext());
+            // Session manager
+            session = new SessionManager(getActivity().getApplicationContext());
 
             if (view == null) {
                 view = inFlater(inflater);
             }
+            mProgressbar = new ProgressBar(getContext());
             pDialog = new ProgressDialog(getActivity());
             pDialog.setCancelable(false);
             pDialog.setMessage("正在获取用户信息 ...");
@@ -106,13 +134,13 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     }
 
     private void initView(View view) {
-        userImage = (ImageView) view.findViewById(R.id.user_image);
+        userImage = (com.njdp.njdp_farmer.changeDefault.CircleImageView) view.findViewById(R.id.user_image);
         HashMap<String, String> user = db.getUserDetails();
         //设置头像本地存储路径
         if(nutil.ExistSDCard()) {
-            path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/NJDP/"+"njdp_" +user.get("telephone") + "_image.png";
+            path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/NJDP/"+user.get("telephone") + "/photo/userimage.png";
         }else {
-            path = getActivity().getCacheDir().getAbsolutePath()+"/NJDP/"+"njdp_" +user.get("telephone") + "_image.png";
+            path = getActivity().getCacheDir().getAbsolutePath()+"/NJDP/"+user.get("telephone") + "/photo/userimage.png";
         }
         if(new File(path).exists()) {
             userImage.setImageURI(Uri.parse(path));
@@ -121,10 +149,15 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         }
 
         userName = (TextView) view.findViewById(R.id.tv_user_name);
+        userName.setText(session.getName());
         telephone = (TextView) view.findViewById(R.id.tv_phonenum);
+        telephone.setText(session.getTelephone());
         qq = (TextView) view.findViewById(R.id.tv_qq);
+        qq.setText(session.getQQ());
         weixin = (TextView) view.findViewById(R.id.tv_weixin);
+        weixin.setText(session.getWeixin());
         address = (TextView) view.findViewById(R.id.tv_address);
+        address.setText(session.getAddress());
         personalEdit = (Button) view.findViewById(R.id.btn_edit);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
@@ -153,13 +186,17 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         }
     }
 
+    //更新界面数据及Session缓存
     public void updateView(){
         userName.setText(farmer.getName());
         telephone.setText(farmer.getTelephone());
         qq.setText(farmer.getQQ());
         weixin.setText(farmer.getWeixin());
         address.setText(farmer.getAddress());
+        //更新Session信息
+        session.setUserInfo(farmer.getName(),farmer.getTelephone(),farmer.getQQ(),farmer.getWeixin(),farmer.getAddress());
     }
+
     //这是跳转到另一个布局页面返回来的操作
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -181,6 +218,11 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 qq.setText(farmer.getQQ());
                 weixin.setText(farmer.getWeixin());
                 address.setText(farmer.getAddress());
+                if(new File(path).exists()) {
+                    Uri uri = Uri.parse(path);
+                    userImage.setImageURI(null);
+                    userImage.setImageURI(uri);
+                }
                 break;
         }
     }
@@ -256,11 +298,25 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                     }else {
                         farmer.setAddress(user.getString("person_address"));
                     }
+                    if(!imageexists && farmer.getImageUrl().contains("userimage.png")){
+                        new Thread(networkTask).start();
+                    }
                     updateView();
-                } else if(status == 1){
+                } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
-                    Intent intent = new Intent(getContext(), login.class);
+                    SessionManager session=new SessionManager(getActivity().getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(getActivity(), login.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+                else if(status == 4){
+                    //密匙不存在
+                    error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getActivity().getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(getActivity(), login.class);
                     startActivity(intent);
                     getActivity().finish();
                 }
@@ -284,6 +340,46 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             Log.e(TAG, "GetPersonInfo Error: " + error.getMessage());
             error_hint("服务器连接超时");
             hideDialog();
+        }
+    };
+
+    //获取图片
+    Runnable networkTask = new Runnable() {
+
+        @Override
+        public void run() {
+            // 在这里进行 http request.网络请求相关操作
+            try {
+                // 从网络上获取图片
+                URL url = new URL(AppConfig.URL_IP + farmer.getImageUrl());
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(5000);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                if (conn.getResponseCode() == 200) {
+
+                    InputStream is = conn.getInputStream();
+                    //file.delete();
+                    File file = new File(path);
+                    if(!file.exists()){
+                        if(!file.getParentFile().exists())
+                            file.getParentFile().mkdirs();
+                        file.createNewFile();
+                    }
+                    FileOutputStream fos = new FileOutputStream(path);
+                    byte[] buffer = new byte[1024];
+                    int len = 0;
+                    while ((len = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, len);
+                    }
+                    is.close();
+                    fos.close();
+                    Uri uri = Uri.parse(path);
+                    mHandler.obtainMessage(MSG_Image,uri).sendToTarget();//获取图片成功，向ui线程发送MSG_Image标识和uri对象
+                }
+            } catch (Exception e) {
+                e.getMessage();
+            }
         }
     };
 

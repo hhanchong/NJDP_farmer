@@ -1,7 +1,9 @@
 package com.njdp.njdp_farmer.conent_frament;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -21,10 +23,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.FarmerLandList;
 import com.njdp.njdp_farmer.FarmerRelease;
+import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
+import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.login;
 import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
@@ -33,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +49,7 @@ import java.util.Map;
  */
 public class FarmlandManager extends Fragment implements View.OnClickListener {
     private final String TAG = "FarmLandManager";
+    private final int FARM_RELEASE = 1;
     private Button myrelease, newrelease;
     private View view;
     private String token;
@@ -70,16 +76,16 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
                 view = inFlater(inflater);
             }
             //定时刷新任务
-            handler = new Handler();
-            runnable = new Runnable(){
-                @Override
-                public void run() {
+            //handler = new Handler();
+            //runnable = new Runnable(){
+            //    @Override
+            //    public void run() {
                     // 在此处添加执行的代码
-                    getFarmlandInfos();
-                    handler.postDelayed(this, 30000);// 30s后执行this，即runable
-                }
-            };
-            handler.postDelayed(runnable, 30000);// 打开定时器，30s后执行runnable操作
+            //        getFarmlandInfos();
+            //        handler.postDelayed(this, 30000);// 30s后执行this，即runable
+            //    }
+            //};
+            //handler.postDelayed(runnable, 30000);// 打开定时器，30s后执行runnable操作
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -121,7 +127,22 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
                 Log.e("------------->", "新建我的发布信息");
                 Intent intent2 = new Intent(getActivity(), FarmerRelease.class);
                 intent2.putExtra("token", token);
-                startActivity(intent2);
+                startActivityForResult(intent2, FARM_RELEASE);
+                break;
+        }
+    }
+
+    //这是跳转到另一个布局页面返回来的操作
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK){
+            return;
+        }
+        switch (requestCode) {
+            case FARM_RELEASE:
+                getFarmlandInfos();
                 break;
         }
     }
@@ -207,10 +228,21 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
                         returnLastReleaseUndo();
                     }
 
-                } else if(status == 1){
+                } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
-                    Intent intent = new Intent(getContext(), login.class);
+                    SessionManager session=new SessionManager(getActivity().getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(getActivity(), login.class);
+                    startActivity(intent);
+                    getActivity().finish();
+                }
+                else if(status == 4){
+                    //密匙不存在
+                    error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getActivity().getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(getActivity(), login.class);
                     startActivity(intent);
                     getActivity().finish();
                 }
@@ -281,7 +313,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
 
     @Override
     public void onDestroy(){
-        handler.removeCallbacks(runnable);// 关闭定时器处理
+        //handler.removeCallbacks(runnable);// 关闭定时器处理
         super.onDestroy();
     }
 

@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.njdp.njdp_farmer.changeDefault.NewClickableSpan;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
+import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.util.NetUtil;
 import com.njdp.njdp_farmer.util.NormalUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
@@ -40,6 +41,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
@@ -50,7 +52,7 @@ public class register_image extends AppCompatActivity {
     private ImageButton getback;
     private TextView notice=null;
     private TextView setImage=null;
-    private ImageView userImage=null;
+    private com.njdp.njdp_farmer.changeDefault.CircleImageView userImage=null;
     private String s1="服务条款";
     private String s2="隐私协议";
     private ProgressDialog pDialog;
@@ -60,7 +62,6 @@ public class register_image extends AppCompatActivity {
     private String imageName;
     private Uri imageUri;
     private String Url_Image;
-    private String Url;
     private int crop = 300;// 裁剪大小
     private final int REQUEST_IMAGE=001;
     private final int CROP_PHOTO_CODE = 002;
@@ -91,7 +92,6 @@ public class register_image extends AppCompatActivity {
         setContentView(R.layout.activity_register_image);
 
         //修改
-        Url=AppConfig.URL_REGISTER;
         Url_Image=AppConfig.URL_USERINFO_EDIT;
         // Progress dialog
         pDialog = new ProgressDialog(this);
@@ -104,7 +104,7 @@ public class register_image extends AppCompatActivity {
         this.setImage = (TextView) super.findViewById(R.id.set_user_image);
         this.getback=(ImageButton) super.findViewById(R.id.getback);
         this.finish=(Button) super.findViewById(R.id.btn_registerFinish);
-        this.userImage = (ImageView) super.findViewById(R.id.user_image);
+        this.userImage = (com.njdp.njdp_farmer.changeDefault.CircleImageView) super.findViewById(R.id.user_image);
 
         token = getIntent().getStringExtra("token");
         telephone = getIntent().getStringExtra("telephone");
@@ -129,14 +129,17 @@ public class register_image extends AppCompatActivity {
         //设置Textview超链接高亮背景色为透明色
         notice.setHighlightColor(00000000);
 
-        imageName="njdp_" +telephone + "_image.png";
+        imageName ="userimage.png";
         //设置头像本地存储路径
         if(nutil.ExistSDCard()) {
             tempFile=Environment.getExternalStorageDirectory();
         }else {
             tempFile=getCacheDir();
         }
-        path=tempFile.getAbsolutePath()+"/NJDP/"+imageName;
+        path=tempFile.getAbsolutePath()+"/NJDP/" + telephone + "/photo/"+imageName;
+        if(new File(path).exists()){
+            userImage.setImageURI(Uri.parse(path));
+        }
 
         //完成注册
         finish.setOnClickListener(new View.OnClickListener() {
@@ -229,7 +232,7 @@ public class register_image extends AppCompatActivity {
         Bundle bundle = picdata.getExtras();
         if (null != bundle) {
             Bitmap mBitmap = bundle.getParcelable("data");
-            boolean tag= nutil.saveBitmap(register_image.this, mBitmap);
+            boolean tag= nutil.saveBitmap(register_image.this,telephone, mBitmap);
             if(tag)
             {
                 userImage.setImageBitmap(mBitmap);
@@ -254,36 +257,64 @@ public class register_image extends AppCompatActivity {
             hideDialog();
             error_hint("网络连接错误");
         } else {
-            OkHttpUtils.post()
-                    .url(url)
-                    .addParams("token", token)
-                    .addFile("person_photo", imageName, file)
-                    .addHeader("content-disposition","form-data")
-                    .build()
-                    .execute(new StringCallback() {
-                        @Override
-                        public void onError(Call call, Exception e) {
-                            Log.e(TAG, "3 Connect Error: " + e.getMessage());
-                        }
-
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                Log.e(TAG, "UploadImage:" + response);
-                                JSONObject jObj = new JSONObject(response);
-                                int status = jObj.getInt("status");
-                                if (status == 0) {
-                                    String msg = jObj.getString("result");
-                                    Log.e(TAG, "UploadImage response：" + msg);
-                                } else {
-                                    String errorMsg = jObj.getString("error_msg");
-                                    Log.e(TAG, "1 Json error：response错误：" + errorMsg);
-                                }
-                            } catch (Exception e) {
-                                Log.e(TAG, "2 Json error：response错误： " + e.getMessage());
+            try {
+                OkHttpUtils.post()
+                        .url(url)
+                        .addParams("token", token)
+                        .addFile("person_photo", imageName, file)
+                        .addHeader("content-disposition", "form-data")
+                        .build()
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onError(Call call, Exception e) {
+                                Log.e(TAG, "3 Connect Error: " + e.getMessage());
+                                hideDialog();
                             }
-                        }
-                    });
+
+                            @Override
+                            public void onResponse(String response) {
+                                hideDialog();
+                                try {
+                                    Log.e(TAG, "UploadImage:" + response);
+                                    JSONObject jObj = new JSONObject(response);
+                                    int status = jObj.getInt("status");
+                                    if (status == 0) {
+                                        String msg = jObj.getString("result");
+                                        error_hint("保存成功！");
+                                        Log.e(TAG, "UploadImage response：" + msg);
+                                        finish();
+                                    }else if(status == 3){
+                                        //密匙失效
+                                        error_hint("用户登录过期，请重新登录！");
+                                        SessionManager session=new SessionManager(getApplicationContext());
+                                        session.setLogin(false, false, "");
+                                        Intent intent = new Intent(register_image.this, login.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    else if(status == 4){
+                                        //密匙不存在
+                                        error_hint("用户登录过期，请重新登录！");
+                                        SessionManager session=new SessionManager(getApplicationContext());
+                                        session.setLogin(false, false, "");
+                                        Intent intent = new Intent(register_image.this, login.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        error_hint("保存失败！");
+                                        String errorMsg = jObj.getString("error_msg");
+                                        Log.e(TAG, "1 Json error：response错误：" + errorMsg);
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(TAG, "2 Json error：response错误： " + e.getMessage());
+                                }
+                            }
+                        });
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                hideDialog();
+            }
         }
     }
 
