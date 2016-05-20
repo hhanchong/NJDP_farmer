@@ -3,6 +3,7 @@ package com.njdp.njdp_farmer.conent_frament;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -79,6 +80,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private static ArrayList<MachineInfo> machineInfos;     //查询回来的农机
     private  static List<MachineInfo> machinesToShow;       //需要显示的农机
     private boolean isFirst = false;
+    private boolean isUseLocalGPS=true;
     private Handler handler;
     private Runnable runnable;
     private TextView machineListView;
@@ -186,6 +188,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             mBaiduMap.setMyLocationEnabled(true);
             locationService.start();// 定位SDK
+            // 设置定位图层的配置（定位模式，是否允许方向信息，用户自定义定位图标）
+            BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory
+                    .fromResource(R.drawable.icon_geo);
+            MyLocationConfiguration config = new MyLocationConfiguration(mCurrentMode, false, mCurrentMarker);
+            mBaiduMap.setMyLocationConfigeration(config);
             //添加覆盖物鼠标点击事件
             mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
             /////////////////地图代码结束////////////////////////
@@ -201,7 +208,25 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
                         //获取农机数据
                         if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
+                        {
+                            // 构造定位数据
+                            MyLocationData locData = new MyLocationData.Builder()
+                                    .accuracy(0.0f)
+                                            // 此处设置开发者获取到的方向信息，顺时针0-360
+                                    .direction(100).latitude(Double.parseDouble(farmlandInfo.getLatitude()))
+                                            .longitude(Double.parseDouble(farmlandInfo.getLongitude()))
+                                            .build();
+                            // 设置定位数据
+                            mBaiduMap.setMyLocationData(locData);
+                            LatLng ll = new LatLng(Double.parseDouble(farmlandInfo.getLatitude()),
+                                    Double.parseDouble(farmlandInfo.getLongitude()));
+                            MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+                            mBaiduMap.animateMapStatus(u);
+                            //地图不再定位本地位置
+                            isFristLocation = false;
+                            isUseLocalGPS = false;
                             Log.e("农机查询------------->", "使用农田位置查询农机");
+                        }
                         else
                             Log.e("农机查询------------->", "没有找到农田信息，使用本地位置查询农机");
                         getMachineInfos();
@@ -357,21 +382,18 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            // 构造定位数据
-            MyLocationData locData = new MyLocationData.Builder()
-                    .accuracy(location.getRadius())
-                            // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(100).latitude(location.getLatitude())
-                    .longitude(location.getLongitude())
-                    .build();
-            // 设置定位数据
-            mBaiduMap.setMyLocationData(locData);
-            // 设置定位图层的配置（定位模式，是否允许方向信息，用户自定义定位图标）
-            BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory
-                    .fromResource(R.drawable.icon_geo);
-            MyLocationConfiguration config = new MyLocationConfiguration(mCurrentMode, false, mCurrentMarker);
-            mBaiduMap.setMyLocationConfigeration(config);
-            Log.i("wwwwwwwwwwwwwwww", location.getLatitude() + "---" + location.getLongitude());
+            if(isUseLocalGPS) {
+                // 构造定位数据
+                MyLocationData locData = new MyLocationData.Builder()
+                        .accuracy(location.getRadius())
+                                // 此处设置开发者获取到的方向信息，顺时针0-360
+                        .direction(100).latitude(location.getLatitude())
+                        .longitude(location.getLongitude())
+                        .build();
+                // 设置定位数据
+                mBaiduMap.setMyLocationData(locData);
+                Log.i("wwwwwwwwwwwwwwww", location.getLatitude() + "---" + location.getLongitude());
+            }
             // 当不需要定位图层时关闭定位图层
 
             // 第一次定位时，将地图位置移动到当前位置，这里有问题，先定位到河北农业大学

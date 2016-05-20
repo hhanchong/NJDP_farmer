@@ -104,6 +104,7 @@ public class register_image extends AppCompatActivity {
         this.setImage = (TextView) super.findViewById(R.id.set_user_image);
         this.getback=(ImageButton) super.findViewById(R.id.getback);
         this.finish=(Button) super.findViewById(R.id.btn_registerFinish);
+        finish.setEnabled(false);
         this.userImage = (com.njdp.njdp_farmer.changeDefault.CircleImageView) super.findViewById(R.id.user_image);
 
         token = getIntent().getStringExtra("token");
@@ -194,6 +195,7 @@ public class register_image extends AppCompatActivity {
                 if (null != data)
                 {
                     setCropImg(data);
+                    finish.setEnabled(true);
                 }
                 break;
             default:
