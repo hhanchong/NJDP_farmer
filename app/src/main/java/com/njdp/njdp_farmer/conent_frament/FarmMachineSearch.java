@@ -80,7 +80,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private static ArrayList<MachineInfo> machineInfos;     //查询回来的农机
     private  static List<MachineInfo> machinesToShow;       //需要显示的农机
     private boolean isFirst = false;
-    private boolean isUseLocalGPS=true;
+    private boolean isUseLocalGPS=false;
     private Handler handler;
     private Runnable runnable;
     private TextView machineListView;
@@ -224,11 +224,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                             mBaiduMap.animateMapStatus(u);
                             //地图不再定位本地位置
                             isFristLocation = false;
-                            isUseLocalGPS = false;
                             Log.e("农机查询------------->", "使用农田位置查询农机");
                         }
-                        else
+                        else {
+                            isUseLocalGPS = true;
                             Log.e("农机查询------------->", "没有找到农田信息，使用本地位置查询农机");
+                        }
                         getMachineInfos();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -236,7 +237,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     //handler.postDelayed(this, 60000);// 以后每60s后执行this，即runable
                 }
             };
-            handler.postDelayed(runnable, 3000);// 打开定时器，3s后执行runnable操作
+            handler.postDelayed(runnable, 2000);// 打开定时器，2s后执行runnable操作
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -344,7 +345,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb50:
                 mBaiduMap.clear();
-                index = IndexOfRange(50);
+                //index = IndexOfRange(50);
+                index = IndexOfRange(1000); //演示用为1000公里
                 if(index != -1){
                     machinesToShow = machineInfos.subList(0, index + 1);
                     //更新农机数据
@@ -392,25 +394,26 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 // 设置定位数据
                 mBaiduMap.setMyLocationData(locData);
                 Log.i("wwwwwwwwwwwwwwww", location.getLatitude() + "---" + location.getLongitude());
-            }
-            // 当不需要定位图层时关闭定位图层
 
-            // 第一次定位时，将地图位置移动到当前位置，这里有问题，先定位到河北农业大学
-            if (isFristLocation) {
-                isFristLocation = false;
+                // 当不需要定位图层时关闭定位图层
 
-                //保存当前location
-                curlocation = location;
+                // 第一次定位时，将地图位置移动到当前位置，这里有问题，先定位到河北农业大学
+                if (isFristLocation) {
+                    isFristLocation = false;
 
-                LatLng ll = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-                mBaiduMap.animateMapStatus(u);
-                if(null == farmlandLocal){
+                    //保存当前location
+                    curlocation = location;
+
+                    LatLng ll = new LatLng(location.getLatitude(),
+                            location.getLongitude());
+                    MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+                    mBaiduMap.animateMapStatus(u);
+
                     farmlandLocal = new FarmlandInfo();
-                    farmlandLocal.setCrops_kind("小麦");
+                    farmlandLocal.setCrops_kind("HWH");
                     farmlandLocal.setLongitude(String.valueOf(location.getLongitude()));
                     farmlandLocal.setLatitude(String.valueOf(location.getLatitude()));
+                    getMachineInfos();
                 }
             }
         }
@@ -690,7 +693,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     params.put("Farmlands_Latitude", searchFarmland.getLatitude());
                     params.put("Farmlands_crops_kind", searchFarmland.getCrops_kind());
                     //params.put("Machine_type", farmlandInfo.getOperation_kind());
-                    params.put("Search_range", "50");
+                    //params.put("Search_range", "50");
+                    params.put("Search_range", "1000"); //演示用为1000公里
                     return params;
                 }
             };
@@ -747,7 +751,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     }else if(rb30.isChecked()){
                         index = IndexOfRange(30);
                     }else{
-                        index = IndexOfRange(50);
+                        //index = IndexOfRange(50);
+                        index = IndexOfRange(1000); //演示用为1000公里
                     }
 
                     if(index != -1) {

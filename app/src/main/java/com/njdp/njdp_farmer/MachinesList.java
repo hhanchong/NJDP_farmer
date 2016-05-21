@@ -63,16 +63,12 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
 
         //获取农机数据
         machineInfos = FarmMachineSearch.getMachines();
-        if (machineInfos == null) {
-            error_hint("没有周边农机信息！");
-            return;
-        }
 
         /**
          * 初始化列表数据
          */
         initData();
-        if (group.size() >= 0) {
+        if (group.size() > 0) {
             adapter = new MachineAdapter(MachinesList.this, group, child, mListener);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(this);
@@ -92,6 +88,12 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
     private void initData() {
         group = new ArrayList<>();
         child = new ArrayList<>();
+        //没有农机信息，直接返回
+        if(machineInfos == null) {
+            error_hint("没有周边农机信息！");
+            return;
+        }
+
         for (MachineInfo f : machineInfos) {
             addInfo(new String[]{f.getImage(), f.getName(), f.getRange(), f.getTelephone()}, new MachineInfo[]{f});
         }
