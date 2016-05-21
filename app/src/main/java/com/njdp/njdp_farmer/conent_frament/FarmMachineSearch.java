@@ -357,7 +357,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             case R.id.machineListView:
                 Log.e("------------->", "点击查看农机列表");
                 Intent intent = new Intent(getActivity(), MachinesList.class);
-                intent.putExtra("machineInfos", machineInfos);
                 startActivity(intent);
                 break;
         }

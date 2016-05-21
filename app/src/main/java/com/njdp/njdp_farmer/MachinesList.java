@@ -64,7 +64,8 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
         //获取农机数据
         machineInfos = FarmMachineSearch.getMachines();
         if (machineInfos == null) {
-            error_hint("没有发布信息！");
+            error_hint("没有周边农机信息！");
+            return;
         }
 
         /**

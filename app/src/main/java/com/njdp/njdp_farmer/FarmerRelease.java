@@ -733,17 +733,37 @@ public class FarmerRelease extends AppCompatActivity {
         @Override
         public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
             if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-                Toast.makeText(FarmerRelease.this, "抱歉，未能找到村庄位置，将要获取本地位置！", Toast.LENGTH_LONG)
-                        .show();
-                //获取地址经纬度失败，获取本地GPS经纬度
-                Location location = getLocalGPS();
-                if (location != null) {
-                    farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
-                    farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
-                }
-                else {
-                    error_hint("获取本地GPS位置失败！");
-                }
+                //未找到村庄位置，显示提示信息
+                new AlertDialog.Builder(FarmerRelease.this)
+                        .setTitle("系统提示")
+                        .setMessage("未能找到村庄位置，请确认输入是否正确，否则将要定位本地位置。")
+                        .setIcon(R.drawable.ic_dialog_info)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击“确认”后的操作
+                                //获取地址经纬度失败，获取本地GPS经纬度
+                                Location location = getLocalGPS();
+                                if (location != null) {
+                                    farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
+                                    farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
+                                }
+                                else {
+                                    error_hint("获取本地GPS位置失败！");
+                                }
+                            }
+                        })
+                        .setNegativeButton("返回", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击“返回”后的操作,这里返回到地址录入界面
+                                Intent intent = new Intent(FarmerRelease.this, AddressSelect.class);
+                                intent.putExtra("address", address.getText().toString());
+                                startActivityForResult(intent, ADDRESSEDIT);
+                            }
+                        }).show();
                 return;
             }
             farmlandInfo.setLatitude(String.valueOf(geoCodeResult.getLocation().latitude));
