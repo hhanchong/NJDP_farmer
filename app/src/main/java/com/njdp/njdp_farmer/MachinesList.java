@@ -68,7 +68,7 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
          * 初始化列表数据
          */
         initData();
-        if (group.size() > 0) {
+        if (group.size() >= 0) {
             adapter = new MachineAdapter(MachinesList.this, group, child, mListener);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(this);

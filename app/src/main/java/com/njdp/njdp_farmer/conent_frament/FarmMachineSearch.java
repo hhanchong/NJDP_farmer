@@ -133,6 +133,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         try {
             if (view == null) {
                 machineInfos = new ArrayList<>();
+                machinesToShow = new ArrayList<>();
                 isFirst = true;
                 view = inFlater(inflater);
             }
@@ -293,9 +294,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.rb5:
                 mBaiduMap.clear();
+                machinesToShow.clear();
                 index = IndexOfRange(5);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index + 1);
+                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
                     //更新农机数据
                     machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
@@ -306,9 +308,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb10:
                 mBaiduMap.clear();
+                machinesToShow.clear();
                 index = IndexOfRange(10);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index + 1);
+                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
                     //更新农机数据
                     machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
@@ -319,9 +322,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb20:
                 mBaiduMap.clear();
+                machinesToShow.clear();
                 index = IndexOfRange(20);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index + 1);
+                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
                     //更新农机数据
                     machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
@@ -332,9 +336,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb30:
                 mBaiduMap.clear();
+                machinesToShow.clear();
                 index = IndexOfRange(30);
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index + 1);
+                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
                     //更新农机数据
                     machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
@@ -345,10 +350,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb50:
                 mBaiduMap.clear();
+                machinesToShow.clear();
                 //index = IndexOfRange(50);
                 index = IndexOfRange(1000); //演示用为1000公里
                 if(index != -1){
-                    machinesToShow = machineInfos.subList(0, index + 1);
+                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
                     //更新农机数据
                     machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                     ShowInMap(machinesToShow);
@@ -471,7 +477,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         rb5.setChecked(true);
         int index = IndexOfRange(5);
         if(index != -1){
-            machinesToShow = machineInfos.subList(0, index + 1);
+            machinesToShow.addAll(machineInfos.subList(0, index + 1));
             //更新农机数据
             machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
             ShowInMap(machinesToShow);
@@ -756,7 +762,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     }
 
                     if(index != -1) {
-                        machinesToShow = machineInfos.subList(0, index + 1);
+                        machinesToShow.addAll(machineInfos.subList(0, index + 1));
                         //更新农机数据
                         machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                         ShowInMap(machinesToShow);
