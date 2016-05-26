@@ -19,8 +19,14 @@ public class AppConfig {
     public static String URL_GETPASSWORD2= URL_IP+"db_xskq/forget_password_finish.php";
     //农田发布
     public static String URL_FARMLAND_RELEASE = URL_IP+"app/farmlands/store";
-    //农田发查询
+    //农田查询
     public static  String URL_FARMLAND_GET = URL_IP + "app/farmlands/index";
+    //删除单块农田
+    public static  String URL_FARMLAND_DEL = URL_IP + "app/farmlands/del";
+    //删除全部农田
+    public static  String URL_FARMLAND_DEL_ALL = URL_IP + "app/farmlands/delAll";
+    //编辑农田信息
+    public static  String URL_FARMLAND_EDIT = URL_IP + "app/farmlands/edit";
     //农机查询
     public static  String URL_MACHINE_GET = URL_IP + "app/farmlands/searchMachine";
     //获取个人信息

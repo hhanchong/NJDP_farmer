@@ -1,12 +1,19 @@
 package com.njdp.njdp_farmer;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -17,14 +24,29 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.adpter.FarmAdapter;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.conent_frament.FarmlandManager;
+import com.njdp.njdp_farmer.db.AppConfig;
+import com.njdp.njdp_farmer.db.AppController;
+import com.njdp.njdp_farmer.db.SessionManager;
+import com.njdp.njdp_farmer.util.NetUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FarmerLandList extends AppCompatActivity {
     private final String TAG = "FarmLandList";
@@ -40,6 +62,9 @@ public class FarmerLandList extends AppCompatActivity {
     private Spinner spinner;
     private View farmlandlist;
     List<String> Years = new ArrayList<>();
+    private ProgressDialog pDialog;
+    private NetUtil netutil = new NetUtil();
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,13 +86,24 @@ public class FarmerLandList extends AppCompatActivity {
         //初始化参数及控件
         farmlandInfoList = new ArrayList<>();
         farmlandInfos = new ArrayList<>();
+        //获取扩展列表
         listView = (ExpandableListView) findViewById(R.id.expandableListView);
+        listView.setOnItemLongClickListener(new OnItemLongClickListenerImpl()); // 长按事件
+        this.registerForContextMenu(listView); // 为所有列表项注册上下文菜单
+        //获取时间选择下拉窗
         spinner = (Spinner)findViewById(R.id.sp_year);
+        //获取背景
         farmlandlist = findViewById(R.id.root_div);
         farmlandlist.getBackground().setAlpha(180);
 
         //获取农田数据
         farmlandInfoList = FarmlandManager.getFarmlands();
+        token = getIntent().getStringExtra("token");
+        //判断参数传递是否正确
+        if (token == null) {
+            error_hint("参数传递错误！");
+            finish();
+        }
         if(farmlandInfoList == null)
         {
             error_hint("没有发布信息！");
@@ -92,8 +128,11 @@ public class FarmerLandList extends AppCompatActivity {
         //为spinner绑定监听器
         spinner.setOnItemSelectedListener(new SpinnerListener());
         spinner.setSelection(5);
-        getback=(ImageButton) super.findViewById(R.id.getback);
+        //进度条
+        pDialog = new ProgressDialog(this);
+        pDialog.setCancelable(false);
         //返回上一界面
+        getback=(ImageButton) super.findViewById(R.id.getback);
         getback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,6 +149,12 @@ public class FarmerLandList extends AppCompatActivity {
         for(FarmlandInfo f :farmlandInfos){
             addInfo(i+"."+f.getVillage() + "-" + ConvertToCHS(f.getCrops_kind()) + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{f});
             i++;
+        }
+        //刷新界面
+        if(group.size() >= 0) {
+            adapter = new FarmAdapter(FarmerLandList.this, group, child);
+            listView.setAdapter(adapter);
+            listView.setGroupIndicator(null);  //不显示向下的箭头
         }
     }
 
@@ -148,17 +193,224 @@ public class FarmerLandList extends AppCompatActivity {
              * 初始化列表数据
              */
             initData();
-            if(group.size() >= 0) {
-                adapter = new FarmAdapter(FarmerLandList.this, group, child);
-                listView.setAdapter(adapter);
-                listView.setGroupIndicator(null);  //不显示向下的箭头
-            }
         }
         //当用户不做选择时调用的该方法
         public void onNothingSelected(AdapterView<?> arg0) {
 
         }
     }
+
+    private class OnItemLongClickListenerImpl implements AdapterView.OnItemLongClickListener{
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            if(view.getTag(R.id.flag)!=null){
+                int groupPos = (Integer) view.getTag(R.id.flag); //参数值是在setTag时使用的对应资源id号
+                Log.i("LongClickListener----", "触发长按事件，触发的是第" + groupPos + "项！");
+            }else {
+                return true; //返回TRUE不会弹出菜单选项
+            }
+
+            return false;
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view,ContextMenu.ContextMenuInfo menuInfo) {
+
+        super.onCreateContextMenu(menu, view, menuInfo);
+        ExpandableListView.ExpandableListContextMenuInfo info =(ExpandableListView.ExpandableListContextMenuInfo) menuInfo;
+        int type = ExpandableListView
+                .getPackedPositionType(info.packedPosition);
+        if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP )
+        {
+            menu.add(0, 1, 0, "修改");
+            menu.add(1, 2, 0, "删除" );
+            menu.add(1, 3, 0, "全部删除" );
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        // 得到当前被选中的item信息
+        //AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        ExpandableListView.ExpandableListContextMenuInfo menuInfo = (ExpandableListView.ExpandableListContextMenuInfo)item.getMenuInfo();
+        final int groupposion = ExpandableListView.getPackedPositionGroup(menuInfo.packedPosition);
+
+        switch(item.getItemId()) {
+            case 1:
+                // 修改
+                break;
+            case 2:
+                // 删除
+                new AlertDialog.Builder(FarmerLandList.this)
+                        .setTitle("系统提示")
+                        .setMessage("将要删除【" + group.get(groupposion) + "】，删除后将无法恢复，确定删除吗？")
+                        .setIcon(R.drawable.ic_dialog_info)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击“确认”后的操作，需要配合后台返回的结果执行下面的3行代码
+                                DeleteFarmlandInfos(child.get(groupposion).get(0).getId());
+                                farmlandInfoList.remove(child.get(groupposion).get(0));
+                                farmlandInfos.remove(child.get(groupposion).get(0));
+                                initData();
+
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击“取消”后的操作
+                            }
+                        }).show();
+                break;
+            case 3:
+                // 全部删除
+                new AlertDialog.Builder(FarmerLandList.this)
+                        .setTitle("系统提示")
+                        .setMessage("将要删除发布的全部农田，删除后将无法恢复，确定删除吗？")
+                        .setIcon(R.drawable.ic_dialog_info)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击“确认”后的操作
+                                DeleteFarmlandInfos(-1);
+                                farmlandInfoList.clear();
+                                farmlandInfos.clear();
+                                initData();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 点击“取消”后的操作
+
+                            }
+                        }).show();
+                break;
+
+            default:
+                return super.onContextItemSelected(item);
+        }
+        return true;
+    }
+
+    //获取发布的农田信息
+    public void DeleteFarmlandInfos(final int id) {
+
+        String tag_string_req = "req_farmland_Delete";
+
+        pDialog.setMessage("正在更新农田数据 ...");
+        showDialog();
+
+        if (!netutil.checkNet(this)) {
+            hideDialog();
+            error_hint("网络连接错误");
+        } else {
+            //服务器请求
+            StringRequest strReq;
+            //id=-1删除全部，否则删除单条记录
+            if(id >= 0){
+                strReq = new StringRequest(Request.Method.POST,
+                        AppConfig.URL_FARMLAND_DEL, mSuccessListener, mErrorListener) {
+
+                    @Override
+                    protected Map<String, String> getParams() {
+                        // Posting parameters to url
+                        Map<String, String> params = new HashMap<>();
+                        params.put("token", token);
+                        params.put("id", String.valueOf(id));
+                        return params;
+                    }
+                };
+            } else {
+                strReq = new StringRequest(Request.Method.POST,
+                        AppConfig.URL_FARMLAND_DEL_ALL, mSuccessListener, mErrorListener) {
+
+                    @Override
+                    protected Map<String, String> getParams() {
+                        // Posting parameters to url
+                        Map<String, String> params = new HashMap<>();
+                        params.put("token", token);
+                        return params;
+                    }
+                };
+            }
+            strReq.setRetryPolicy(new DefaultRetryPolicy(2000,1,1.0f)); //请求超时时间2S，重复1次
+            // Adding request to request queue
+            AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
+        }
+    }
+
+    //响应服务器成功
+    private Response.Listener<String> mSuccessListener = new Response.Listener<String>() {
+
+        @Override
+        public void onResponse(String response) {
+            Log.i("tagconvertstr", "[" + response + "]");
+            Log.d(TAG, "Release Response: " + response);
+            hideDialog();
+
+            try {
+                JSONObject jObj = new JSONObject(response);
+                int status = jObj.getInt("status");
+
+                // Check for error node in json
+                if (status == 0) {
+                    //清空旧数据
+                    farmlandInfos.clear();
+                    //此处引入JSON jar包
+                    JSONArray jObjs = jObj.getJSONArray("result");
+
+
+                } else if(status == 3){
+                    //密匙失效
+                    error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(FarmerLandList.this, login.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if(status == 4){
+                    //密匙不存在
+                    error_hint("用户登录过期，请重新登录！");
+                    SessionManager session=new SessionManager(getApplicationContext());
+                    session.setLogin(false, false, "");
+                    Intent intent = new Intent(FarmerLandList.this, login.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else{
+                    error_hint("其他未知错误！");
+                }
+            } catch (JSONException e) {
+                empty_hint(R.string.connect_error);
+                // JSON error
+                e.printStackTrace();
+                Log.e(TAG, "Json error：response错误！" + e.getMessage());
+            }
+        }
+    };
+
+    //响应服务器失败
+    private Response.ErrorListener mErrorListener = new Response.ErrorListener() {
+
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Log.e(TAG, "DeleteFarmLandInfo Error: " + error.getMessage());
+            error_hint("服务器连接超时");
+            hideDialog();
+            SessionManager session=new SessionManager(getApplicationContext());
+            session.setLogin(false, false, "");
+            Intent intent = new Intent(FarmerLandList.this, login.class);
+            startActivity(intent);
+            finish();
+        }
+    };
 
     //类型转换为中文
     private String ConvertToCHS(String s){
@@ -183,11 +435,28 @@ public class FarmerLandList extends AppCompatActivity {
         return operation + crop;
     }
 
-    //错误信息提示
+    //错误信息提示1
     private void error_hint(String str) {
         Toast toast = Toast.makeText(this, str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
+    }
+
+    //错误信息提示2
+    private void empty_hint(int in) {
+        Toast toast = Toast.makeText(this, getResources().getString(in), Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, -50);
+        toast.show();
+    }
+
+    private void showDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hideDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
     //不跟随系统变化字体大小
@@ -198,5 +467,11 @@ public class FarmerLandList extends AppCompatActivity {
         config.setToDefaults();
         res.updateConfiguration(config, res.getDisplayMetrics());
         return res;
+    }
+
+    @Override
+    public void onDestroy(){
+        this.unregisterForContextMenu(listView);
+        super.onDestroy();
     }
 }

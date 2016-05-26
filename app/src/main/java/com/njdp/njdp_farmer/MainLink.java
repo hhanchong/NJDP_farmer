@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.db.SessionManager;
 
 public class MainLink extends AppCompatActivity {
@@ -39,6 +40,7 @@ public class MainLink extends AppCompatActivity {
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_main_link);
+        AgentApplication.addActivity(this);
 
         token = getIntent().getStringExtra("TOKEN");
         if(token == null){
@@ -94,8 +96,7 @@ public class MainLink extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 timeMillis = System.currentTimeMillis();
             } else {
-                finish();
-                System.exit(0);
+                AgentApplication.ExitApp();
             }
             return true;
         }

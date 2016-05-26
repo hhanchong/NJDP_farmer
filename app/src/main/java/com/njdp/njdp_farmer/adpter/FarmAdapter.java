@@ -82,6 +82,7 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 			holder.textView1 = (TextView) convertView
 					.findViewById(R.id.textView1);
 			convertView.setTag(holder);
+			convertView.setTag(R.id.flag, groupPosition);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}

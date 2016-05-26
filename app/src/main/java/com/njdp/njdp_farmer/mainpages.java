@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.njdp.njdp_farmer.CostomProgressDialog.CustomProgressDialog;
+import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.conent_frament.*;
 import com.njdp.njdp_farmer.viewpage.ContentViewPager;
@@ -51,6 +52,7 @@ public class mainpages extends AppCompatActivity {
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_mainpage);
+        AgentApplication.addActivity(this);
 
         progressDialog = new CustomProgressDialog(this,"数据正在请求中...", R.anim.donghua_frame);
         progressDialog.show();

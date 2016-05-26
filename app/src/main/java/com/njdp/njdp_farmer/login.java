@@ -29,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
@@ -75,6 +76,7 @@ public class login extends AppCompatActivity {
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_login);
+        AgentApplication.addActivity(this);
 
         farmer = new Farmer();
         if (session!=null)
@@ -382,8 +384,7 @@ public class login extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 timeMillis = System.currentTimeMillis();
             } else {
-                finish();
-                System.exit(0);
+                AgentApplication.ExitApp();
             }
             return true;
         }

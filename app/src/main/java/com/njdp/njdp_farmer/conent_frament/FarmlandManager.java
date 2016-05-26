@@ -57,6 +57,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     private NetUtil netutil = new NetUtil();
     private static ArrayList<FarmlandInfo> farmlandInfos;
     private boolean isFirst = true;
+    private boolean isRefreshData = false;
     private Handler handler;
     private Runnable runnable;
 
@@ -121,7 +122,9 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
             case R.id.bt_my_release:
                 Log.e("------------->", "点击查看发布的信息");
                 Intent intent1 = new Intent(getActivity(), FarmerLandList.class);
+                intent1.putExtra("token", token);
                 startActivity(intent1);
+                isRefreshData = true;
                 break;
             case R.id.bt_new_release:
                 Log.e("------------->", "新建我的发布信息");
@@ -263,7 +266,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
 
         @Override
         public void onErrorResponse(VolleyError error) {
-            Log.e(TAG, "GetPersonInfo Error: " + error.getMessage());
+            Log.e(TAG, "GetFarmLandInfo Error: " + error.getMessage());
             error_hint("服务器连接超时");
             hideDialog();
         }
@@ -309,6 +312,16 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
         Toast toast = Toast.makeText(getActivity(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
+    }
+
+    @Override
+    public void onResume() {
+        if(isRefreshData) {
+            Log.w(TAG, "重新获取农田数据");
+            getFarmlandInfos();
+            isRefreshData = false;
+        }
+        super.onResume();
     }
 
     @Override
