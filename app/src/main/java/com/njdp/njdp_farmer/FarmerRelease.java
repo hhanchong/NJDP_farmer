@@ -66,7 +66,9 @@ import java.util.Map;
  * Created by Administrator on 2016/4/25.
  */
 public class FarmerRelease extends AppCompatActivity {
+    private static final int FARMLAND_EDIT = 1;
     private static final int ADDRESSEDIT = 2;
+    private boolean isEdit = false;
     private String typeTitle;
     private final String[] crops = new String[]{"小麦", "玉米", "水稻", "谷物", "其他"};
     private final String[] crops1 = new String[]{"WH", "CO", "RC", "GR", "OT"};
@@ -81,7 +83,7 @@ public class FarmerRelease extends AppCompatActivity {
     private NetUtil netutil;
     private final String TAG = "FarmerRelease";
     //所有监听的控件
-    private TextView tv1;
+    private TextView tv1, top_title;
     private EditText croptype, area, price, blocktype, starttime, endtime, remark;
     private EditText address, addresspic;
     private RadioButton rbH, rbC, rbS;
@@ -111,8 +113,12 @@ public class FarmerRelease extends AppCompatActivity {
         }
         setContentView(R.layout.activity_farmer_release);
 
+        farmlandInfo = (FarmlandInfo)getIntent().getBundleExtra("data").getSerializable("farmlandInfo");
         if (farmlandInfo == null) {
             farmlandInfo = new FarmlandInfo();
+            isEdit = false;
+        }else {
+            isEdit = true;
         }
 
         token = getIntent().getStringExtra("token");
@@ -150,9 +156,39 @@ public class FarmerRelease extends AppCompatActivity {
         }
         getback=(ImageButton) this.findViewById(R.id.getback);
         tv1=(TextView)this.findViewById(R.id.tv1);
+        top_title=(TextView)this.findViewById(R.id.tv_top_title);
         rbH=(RadioButton)this.findViewById(R.id.rbH);   //收割Harvest
         rbC=(RadioButton)this.findViewById(R.id.rbC);   //耕作Cultivation
         rbS=(RadioButton)this.findViewById(R.id.rbS);   //播种Seeding
+
+        //如果是编辑的话，初始化数据
+        if(isEdit){
+            top_title.setText("修改需求信息");
+            rbH.setClickable(false);
+            rbC.setClickable(false);
+            rbS.setClickable(false);
+            croptype.setClickable(false);
+            if(farmlandInfo.getCrops_kind().substring(0,1).equals("H")){
+                rbH.setChecked(true);
+                croptype.setText(crops[indexArry(crops1, farmlandInfo.getCrops_kind().substring(1,3))]);
+            }else if(farmlandInfo.getCrops_kind().substring(0,1).equals("C")){
+                rbC.setChecked(true);
+                croptype.setText(cultivation[indexArry(cultivation1, farmlandInfo.getCrops_kind().substring(1,3))]);
+            } else {
+                rbS.setChecked(true);
+                croptype.setText(crops[indexArry(crops1, farmlandInfo.getCrops_kind().substring(1,3))]);
+            }
+            area.setText(String.valueOf(farmlandInfo.getArea()));
+            price.setText(String.valueOf(farmlandInfo.getUnit_price()));
+            blocktype.setText(farmlandInfo.getBlock_type());
+            address.setText(farmlandInfo.getProvince() + "-" + farmlandInfo.getCity() + "-" + farmlandInfo.getCounty() + "-" +
+                            farmlandInfo.getTown() + "-" + farmlandInfo.getVillage());
+            starttime.setText(farmlandInfo.getStart_time_String());
+            endtime.setText(farmlandInfo.getEnd_time_String());
+            addresspic.setText(farmlandInfo.getStreet_view());
+            remark.setText(farmlandInfo.getRemark());
+            releaseEditFinish.setText("确认修改");
+        }
 
         initOnClick();
     }
@@ -184,7 +220,7 @@ public class FarmerRelease extends AppCompatActivity {
             //imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             switch (v.getId()) {
-                // TODO: 2015/11/18 头像
+                // TODO: 根据点击进行不同的处理
                 case R.id.btn_editFinish:
                     Log.e("------------->", "点击发布农田信息");
                     checkRelease();

@@ -14,6 +14,7 @@
         android:background="@drawable/top_title">
         <TextView
             style="@style/Pages_Title"
+            android:id="@+id/tv_top_title"
             android:text="请输入你的需求信息"
             />
         <ImageButton

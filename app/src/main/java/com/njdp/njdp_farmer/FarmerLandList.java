@@ -29,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.adpter.FarmAdapter;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.conent_frament.FarmlandManager;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FarmerLandList extends AppCompatActivity {
+    private static final int FARMLAND_EDIT = 1;
     private final String TAG = "FarmLandList";
     private final String[][] cropsType = new String[][]{{"H","收割"}, {"C", "耕作"}, {"S", "播种"},
             {"WH", "小麦"}, {"CO", "玉米"}, {"RC", "水稻"}, {"GR", "谷物"}, {"OT", "其他"}, {"SS", "深松"}, {"HA", "平地"}};
@@ -65,6 +67,7 @@ public class FarmerLandList extends AppCompatActivity {
     private ProgressDialog pDialog;
     private NetUtil netutil = new NetUtil();
     private String token;
+    private int isEditNow=-1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,8 @@ public class FarmerLandList extends AppCompatActivity {
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_farmer_land_list);
+        AgentApplication.addActivity(this);
+
         //初始化参数及控件
         farmlandInfoList = new ArrayList<>();
         farmlandInfos = new ArrayList<>();
@@ -239,6 +244,14 @@ public class FarmerLandList extends AppCompatActivity {
         switch(item.getItemId()) {
             case 1:
                 // 修改
+                Log.e("------------->", "修改我的发布信息");
+                isEditNow = groupposion;
+                Intent intent = new Intent(FarmerLandList.this, FarmerRelease.class);
+                intent.putExtra("token", token);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("farmlandInfo", child.get(groupposion).get(0));
+                intent.putExtra("data", bundle);
+                startActivityForResult(intent, FARMLAND_EDIT);
                 break;
             case 2:
                 // 删除
@@ -298,7 +311,34 @@ public class FarmerLandList extends AppCompatActivity {
         return true;
     }
 
-    //获取发布的农田信息
+    //这是跳转到另一个布局页面返回来的操作
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != -1) {
+            return;
+        }
+        switch (requestCode) {
+            case FARMLAND_EDIT:
+                if(isEditNow >= 0){
+                    //更新原始数据
+                    int index = farmlandInfoList.indexOf(child.get(isEditNow).get(0));
+                    if(index != -1)
+                        farmlandInfoList.set(index, (FarmlandInfo)data.getSerializableExtra("farmlandInfo"));
+                    //更新筛选的数据
+                    index = farmlandInfos.indexOf(child.get(isEditNow).get(0));
+                    if(index != -1)
+                        farmlandInfos.set(index, (FarmlandInfo) data.getSerializableExtra("farmlandInfo"));
+                    //刷新显示
+                    initData();
+                    isEditNow = -1;
+                }
+                break;
+        }
+    }
+
+    //删除发布的农田信息
     public void DeleteFarmlandInfos(final int id) {
 
         String tag_string_req = "req_farmland_Delete";
@@ -404,11 +444,6 @@ public class FarmerLandList extends AppCompatActivity {
             Log.e(TAG, "DeleteFarmLandInfo Error: " + error.getMessage());
             error_hint("服务器连接超时");
             hideDialog();
-            SessionManager session=new SessionManager(getApplicationContext());
-            session.setLogin(false, false, "");
-            Intent intent = new Intent(FarmerLandList.this, login.class);
-            startActivity(intent);
-            finish();
         }
     };
 
