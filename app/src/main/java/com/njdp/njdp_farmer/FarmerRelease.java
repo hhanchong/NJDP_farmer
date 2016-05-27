@@ -113,7 +113,7 @@ public class FarmerRelease extends AppCompatActivity {
         }
         setContentView(R.layout.activity_farmer_release);
 
-        farmlandInfo = (FarmlandInfo)getIntent().getBundleExtra("data").getSerializable("farmlandInfo");
+        farmlandInfo = (FarmlandInfo)getIntent().getSerializableExtra("farmlandInfo");
         if (farmlandInfo == null) {
             farmlandInfo = new FarmlandInfo();
             isEdit = false;
@@ -127,9 +127,6 @@ public class FarmerRelease extends AppCompatActivity {
             finish();
         }
         initView();
-        rbH.setChecked(true);
-        typeTitle = "选择作物类型";
-        typeArray = crops;
 
         // 初始化搜索模块，注册事件监听
         mSearch = GeoCoder.newInstance();
@@ -160,6 +157,9 @@ public class FarmerRelease extends AppCompatActivity {
         rbH=(RadioButton)this.findViewById(R.id.rbH);   //收割Harvest
         rbC=(RadioButton)this.findViewById(R.id.rbC);   //耕作Cultivation
         rbS=(RadioButton)this.findViewById(R.id.rbS);   //播种Seeding
+        rbH.setChecked(true);
+        typeTitle = "选择作物类型";
+        typeArray = crops;
 
         //如果是编辑的话，初始化数据
         if(isEdit){
@@ -172,6 +172,7 @@ public class FarmerRelease extends AppCompatActivity {
                 rbH.setChecked(true);
                 croptype.setText(crops[indexArry(crops1, farmlandInfo.getCrops_kind().substring(1,3))]);
             }else if(farmlandInfo.getCrops_kind().substring(0,1).equals("C")){
+                tv1.setText("耕作类型");
                 rbC.setChecked(true);
                 croptype.setText(cultivation[indexArry(cultivation1, farmlandInfo.getCrops_kind().substring(1,3))]);
             } else {
@@ -185,7 +186,11 @@ public class FarmerRelease extends AppCompatActivity {
                             farmlandInfo.getTown() + "-" + farmlandInfo.getVillage());
             starttime.setText(farmlandInfo.getStart_time_String());
             endtime.setText(farmlandInfo.getEnd_time_String());
-            addresspic.setText(farmlandInfo.getStreet_view());
+            if(farmlandInfo.getStreet_view().equals("null")){
+                addresspic.setText("");
+            }else {
+                addresspic.setText(farmlandInfo.getStreet_view());
+            }
             remark.setText(farmlandInfo.getRemark());
             releaseEditFinish.setText("确认修改");
         }
@@ -200,11 +205,13 @@ public class FarmerRelease extends AppCompatActivity {
         endtime.setOnClickListener(handler);
         releaseEditFinish.setOnClickListener(handler);
         getback.setOnClickListener(handler);
-        croptype.setOnClickListener(new RadioClickListener());
         blocktype.setOnClickListener(new RadioClickListener());
-        rbH.setOnClickListener(new RadioClickListener());
-        rbC.setOnClickListener(new RadioClickListener());
-        rbS.setOnClickListener(new RadioClickListener());
+        if(!isEdit) {
+            croptype.setOnClickListener(new RadioClickListener());
+            rbH.setOnClickListener(new RadioClickListener());
+            rbC.setOnClickListener(new RadioClickListener());
+            rbS.setOnClickListener(new RadioClickListener());
+        }
 
         releaseEditFinish.setEnabled(false);
         releaseEditFinish.setClickable(false);
@@ -333,9 +340,15 @@ public class FarmerRelease extends AppCompatActivity {
                 error_hint("发布失败，没有获取到有效的GPS位置信息！");
                 return;
             }
+            String ReqUrl; //需要连接的URL
+            if(isEdit){
+                ReqUrl = AppConfig.URL_FARMLAND_EDIT;
+            }else {
+                ReqUrl = AppConfig.URL_FARMLAND_RELEASE;
+            }
             //服务器请求
             StringRequest strReq = new StringRequest(Request.Method.POST,
-                    AppConfig.URL_FARMLAND_RELEASE, mSuccessListener, mErrorListener) {
+                    ReqUrl, mSuccessListener, mErrorListener) {
 
                 @Override
                 protected Map<String, String> getParams() {
@@ -492,6 +505,10 @@ public class FarmerRelease extends AppCompatActivity {
         //remark.setText(""); //街景暂未考虑
         remark.setText("");
         Intent intent = new Intent(FarmerRelease.this, FarmlandManager.class);
+        if(isEdit){
+            intent = new Intent(FarmerRelease.this, FarmerLandList.class);
+            intent.putExtra("farmlandInfo", farmlandInfo);
+        }
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -627,14 +644,14 @@ public class FarmerRelease extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(croptype.getText())
-                //        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
-                //    releaseEditFinish.setClickable(true);
-                //    releaseEditFinish.setEnabled(true);
-                //} else {
-                //    releaseEditFinish.setEnabled(false);
-                //    releaseEditFinish.setClickable(false);
-                //}
+                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(croptype.getText())
+                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                    releaseEditFinish.setClickable(true);
+                    releaseEditFinish.setEnabled(true);
+                } else {
+                    releaseEditFinish.setEnabled(false);
+                    releaseEditFinish.setClickable(false);
+                }
                 farmlandInfo.setBlock_type(s.toString());
             }
         });

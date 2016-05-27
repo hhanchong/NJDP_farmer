@@ -248,9 +248,7 @@ public class FarmerLandList extends AppCompatActivity {
                 isEditNow = groupposion;
                 Intent intent = new Intent(FarmerLandList.this, FarmerRelease.class);
                 intent.putExtra("token", token);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("farmlandInfo", child.get(groupposion).get(0));
-                intent.putExtra("data", bundle);
+                intent.putExtra("farmlandInfo", child.get(groupposion).get(0));
                 startActivityForResult(intent, FARMLAND_EDIT);
                 break;
             case 2:
