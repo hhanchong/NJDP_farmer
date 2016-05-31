@@ -74,7 +74,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private ProgressDialog pDialog;
     private NetUtil netutil = new NetUtil();
     private RelativeLayout test_pop_layout;
-    private RadioButton rb5, rb10, rb20, rb30, rb50;      //距离现则按钮
+    private RadioButton rb5, rb10, rb30, rb50, rb100;     //距离现则按钮
+    private static int Search_range = 5;                    //查询农机的距离
     private static FarmlandInfo farmlandInfo;               //农户最后发布的农田
     private static FarmlandInfo farmlandLocal;              //本地GPS位置农田
     private static ArrayList<MachineInfo> machineInfos;     //查询回来的农机
@@ -261,10 +262,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private void initView(View view) {
         test_pop_layout = (RelativeLayout)view.findViewById(R.id.test_top_layout);
         rb5 = (RadioButton)view.findViewById(R.id.rb5);
+        rb5.setChecked(true);
         rb10 = (RadioButton)view.findViewById(R.id.rb10);
-        rb20 = (RadioButton)view.findViewById(R.id.rb20);
         rb30 = (RadioButton)view.findViewById(R.id.rb30);
         rb50 = (RadioButton)view.findViewById(R.id.rb50);
+        rb100 = (RadioButton)view.findViewById(R.id.rb100);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
         machineListView = (TextView)view.findViewById(R.id.machineListView);
@@ -275,9 +277,9 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private void initOnClick() {
         rb5.setOnClickListener(this);
         rb10.setOnClickListener(this);
-        rb20.setOnClickListener(this);
         rb30.setOnClickListener(this);
         rb50.setOnClickListener(this);
+        rb100.setOnClickListener(this);
         machineListView.setOnClickListener(this);
         //myMessage.setOnClickListener(this);
     }
@@ -295,72 +297,82 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             case R.id.rb5:
                 mBaiduMap.clear();
                 machinesToShow.clear();
-                index = IndexOfRange(5);
-                if(index != -1){
-                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
-                    //更新农机数据
-                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
-                    ShowInMap(machinesToShow);
-                }else {
-                    machineListView.setText("共有0条农机信息，点击查看列表");
-                }
+                Search_range = 5;
+                getMachineInfos();
+//                index = IndexOfRange(5);
+//                if(index != -1){
+//                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
+//                    //更新农机数据
+//                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
+//                    ShowInMap(machinesToShow);
+//                }else {
+//                    machineListView.setText("共有0条农机信息，点击查看列表");
+//                }
                 break;
 
             case R.id.rb10:
                 mBaiduMap.clear();
                 machinesToShow.clear();
-                index = IndexOfRange(10);
-                if(index != -1){
-                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
-                    //更新农机数据
-                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
-                    ShowInMap(machinesToShow);
-                }else {
-                    machineListView.setText("共有0条农机信息，点击查看列表");
-                }
-                break;
-
-            case R.id.rb20:
-                mBaiduMap.clear();
-                machinesToShow.clear();
-                index = IndexOfRange(20);
-                if(index != -1){
-                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
-                    //更新农机数据
-                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
-                    ShowInMap(machinesToShow);
-                }else {
-                    machineListView.setText("共有0条农机信息，点击查看列表");
-                }
+                Search_range = 10;
+                getMachineInfos();
+//                index = IndexOfRange(10);
+//                if(index != -1){
+//                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
+//                    //更新农机数据
+//                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
+//                    ShowInMap(machinesToShow);
+//                }else {
+//                    machineListView.setText("共有0条农机信息，点击查看列表");
+//                }
                 break;
 
             case R.id.rb30:
                 mBaiduMap.clear();
                 machinesToShow.clear();
-                index = IndexOfRange(30);
-                if(index != -1){
-                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
-                    //更新农机数据
-                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
-                    ShowInMap(machinesToShow);
-                }else {
-                    machineListView.setText("共有0条农机信息，点击查看列表");
-                }
+                Search_range = 30;
+                getMachineInfos();
+//                index = IndexOfRange(30);
+//                if(index != -1){
+//                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
+//                    //更新农机数据
+//                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
+//                    ShowInMap(machinesToShow);
+//                }else {
+//                    machineListView.setText("共有0条农机信息，点击查看列表");
+//                }
                 break;
 
             case R.id.rb50:
                 mBaiduMap.clear();
                 machinesToShow.clear();
-                //index = IndexOfRange(50);
-                index = IndexOfRange(1000); //演示用为1000公里
-                if(index != -1){
-                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
-                    //更新农机数据
-                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
-                    ShowInMap(machinesToShow);
-                }else {
-                    machineListView.setText("共有0条农机信息，点击查看列表");
-                }
+                Search_range = 50;
+                getMachineInfos();
+//                index = IndexOfRange(50);
+//                if(index != -1){
+//                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
+//                    //更新农机数据
+//                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
+//                    ShowInMap(machinesToShow);
+//                }else {
+//                    machineListView.setText("共有0条农机信息，点击查看列表");
+//                }
+                break;
+
+            case R.id.rb100:
+                mBaiduMap.clear();
+                machinesToShow.clear();
+                Search_range = 100;
+                getMachineInfos();
+                //index = IndexOfRange(100);
+//                index = IndexOfRange(1000); //演示用为1000公里
+//                if(index != -1){
+//                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
+//                    //更新农机数据
+//                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
+//                    ShowInMap(machinesToShow);
+//                }else {
+//                    machineListView.setText("共有0条农机信息，点击查看列表");
+//                }
                 break;
             case R.id.machineListView:
                 Log.e("------------->", "点击查看农机列表");
@@ -669,8 +681,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         if(isFirst) {
             pDialog.setMessage("正在获取农机数据 ...");
             showDialog();
-            rb5.setChecked(true);
-            isFirst = false;
+            //isFirst = false;
         }
         //农田信息为空则返回
         if(null != farmlandInfo){
@@ -699,8 +710,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     params.put("Farmlands_Latitude", searchFarmland.getLatitude());
                     params.put("Farmlands_crops_kind", searchFarmland.getCrops_kind());
                     //params.put("Machine_type", farmlandInfo.getOperation_kind());
-                    //params.put("Search_range", "50");
-                    params.put("Search_range", "1000"); //演示用为1000公里
+                    params.put("Search_range", String.valueOf(Search_range));
+                    //params.put("Search_range", "1000"); //演示用为1000公里
                     return params;
                 }
             };
@@ -726,7 +737,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 // Check for error node in json
                 if (status == 0) {
                     //清空旧数据
-                    machineInfos.clear();
+                    //machineInfos.clear();
                     //此处引入JSON jar包
                     JSONArray jObjs = jObj.getJSONArray("result");
                     for(int i = 0; i < jObjs.length(); i++){
@@ -744,35 +755,37 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         //temp.setMachine_type(object.getString("Machine_type"));
                         temp.setWork_time(object.getString("Machine_worktime"));
                         temp.setRemark(object.getString("Machine_remark"));
-                        machineInfos.add(temp);
+                        //machineInfos.add(temp); //旧版先缓存到list，然后根据选择的范围筛选
+                        machinesToShow.add(temp);
                     }
                     //在地图上显示农机位置
-                    int index;
-                    if(rb5.isChecked()) {
-                        index = IndexOfRange(5);
-                    }else if(rb10.isChecked()){
-                        index = IndexOfRange(10);
-                    }else if(rb20.isChecked()){
-                        index = IndexOfRange(20);
-                    }else if(rb30.isChecked()){
-                        index = IndexOfRange(30);
-                    }else{
-                        //index = IndexOfRange(50);
-                        index = IndexOfRange(1000); //演示用为1000公里
-                    }
-
-                    if(index != -1) {
-                        machinesToShow.addAll(machineInfos.subList(0, index + 1));
-                        //更新农机数据
-                        machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
-                        ShowInMap(machinesToShow);
-                    }
-                    else{
-                        machineListView.setText("共有0条农机信息，点击查看列表");
-                    }
+//                    int index;
+//                    if(rb5.isChecked()) {
+//                        index = IndexOfRange(5);
+//                    }else if(rb10.isChecked()){
+//                        index = IndexOfRange(10);
+//                    }else if(rb30.isChecked()){
+//                        index = IndexOfRange(30);
+//                    }else if(rb50.isChecked()){
+//                        index = IndexOfRange(50);
+//                    }else{
+//                        //index = IndexOfRange(100);
+//                        index = IndexOfRange(1000); //演示用为1000公里
+//                    }
+//
+//                    if(index != -1) {
+//                        machinesToShow.addAll(machineInfos.subList(0, index + 1));
+//                        //更新农机数据
+//                        machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
+//                        ShowInMap(machinesToShow);
+//                    }
+//                    else{
+//                        machineListView.setText("共有0条农机信息，点击查看列表");
+//                    }
 
                     //更新农机数据
-                    //machineListView.setText("共有" + machineInfos.size()  + "条农机信息，点击查看列表");
+                    ShowInMap(machinesToShow);
+                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
                 } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");

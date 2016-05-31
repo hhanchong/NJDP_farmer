@@ -210,6 +210,9 @@ public class FarmlandInfo implements Serializable {
     }
 
     public Date getEnd_time() {
+        end_time.setHours(23);
+        end_time.setMinutes(59);
+        end_time.setSeconds(59);
         return end_time;
     }
 

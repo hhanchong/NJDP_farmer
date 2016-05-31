@@ -276,7 +276,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     private void returnLastReleaseUndo(){
         for(int i = farmlandInfos.size()-1; i >= 0; i--){
             if(farmlandInfos.get(i).getStatus().equals("0")){
-                if(farmlandInfos.get(i).getEnd_time().getTime() > System.currentTimeMillis()){
+                if(farmlandInfos.get(i).getEnd_time().getTime() >= System.currentTimeMillis()){
                     ((mainpages)getActivity()).setLastUndoFarmland(farmlandInfos.get(i));
                     return;
                 }
