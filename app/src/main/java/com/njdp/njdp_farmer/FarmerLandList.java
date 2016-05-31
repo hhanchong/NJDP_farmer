@@ -229,7 +229,11 @@ public class FarmerLandList extends AppCompatActivity {
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP )
         {
             menu.add(0, 1, 0, "修改");
+            if(!child.get(ExpandableListView.getPackedPositionGroup(info.packedPosition)).get(0).getStatus().equals("0"))
+                menu.getItem(0).setEnabled(false);
             menu.add(1, 2, 0, "删除" );
+            if(child.get(ExpandableListView.getPackedPositionGroup(info.packedPosition)).get(0).getStatus().equals("2"))
+                menu.getItem(1).setEnabled(false);
             menu.add(1, 3, 0, "全部删除" );
         }
     }
@@ -240,12 +244,12 @@ public class FarmerLandList extends AppCompatActivity {
         //AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         ExpandableListView.ExpandableListContextMenuInfo menuInfo = (ExpandableListView.ExpandableListContextMenuInfo)item.getMenuInfo();
         final int groupposion = ExpandableListView.getPackedPositionGroup(menuInfo.packedPosition);
+        isEditNow = groupposion;
 
         switch(item.getItemId()) {
             case 1:
                 // 修改
                 Log.e("------------->", "修改我的发布信息");
-                isEditNow = groupposion;
                 Intent intent = new Intent(FarmerLandList.this, FarmerRelease.class);
                 intent.putExtra("token", token);
                 intent.putExtra("farmlandInfo", child.get(groupposion).get(0));
@@ -263,9 +267,6 @@ public class FarmerLandList extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 // 点击“确认”后的操作，需要配合后台返回的结果执行下面的3行代码
                                 DeleteFarmlandInfos(child.get(groupposion).get(0).getId());
-                                farmlandInfoList.remove(child.get(groupposion).get(0));
-                                farmlandInfos.remove(child.get(groupposion).get(0));
-                                initData();
 
                             }
                         })
@@ -287,11 +288,9 @@ public class FarmerLandList extends AppCompatActivity {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                isEditNow = -1;
                                 // 点击“确认”后的操作
                                 DeleteFarmlandInfos(-1);
-                                farmlandInfoList.clear();
-                                farmlandInfos.clear();
-                                initData();
                             }
                         })
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -399,10 +398,17 @@ public class FarmerLandList extends AppCompatActivity {
                 // Check for error node in json
                 if (status == 0) {
                     //清空旧数据
-                    farmlandInfos.clear();
+                    //farmlandInfos.clear();
                     //此处引入JSON jar包
-                    JSONArray jObjs = jObj.getJSONArray("result");
-
+                    String result = jObj.getString("result");
+                    if(isEditNow == -1){
+                        farmlandInfoList.clear();
+                        farmlandInfos.clear();
+                    }else {
+                        farmlandInfoList.remove(child.get(isEditNow).get(0));
+                        farmlandInfos.remove(child.get(isEditNow).get(0));
+                    }
+                    initData();
 
                 } else if(status == 3){
                     //密匙失效
@@ -421,8 +427,9 @@ public class FarmerLandList extends AppCompatActivity {
                     Intent intent = new Intent(FarmerLandList.this, login.class);
                     startActivity(intent);
                     finish();
-                }
-                else{
+                } else if(status == 15){
+                    error_hint("农田正在收割，不能删除！");
+                } else{
                     error_hint("其他未知错误！");
                 }
             } catch (JSONException e) {

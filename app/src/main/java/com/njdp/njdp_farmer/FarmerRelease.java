@@ -366,7 +366,8 @@ public class FarmerRelease extends AppCompatActivity {
                         crops_kind = "C";
                         crops_kind += cultivation1[indexArry(typeArray, croptype.getText().toString())];
                     }
-                    params.put("Farmlands_crops_kind", crops_kind);
+                    farmlandInfo.setCrops_kind(crops_kind);
+                    params.put("Farmlands_crops_kind", farmlandInfo.getCrops_kind());
                     params.put("Farmlands_area", String.valueOf(farmlandInfo.getArea()));
                     params.put("Farmlands_unit_price", String.valueOf(farmlandInfo.getUnit_price()));
                     if(farmlandInfo.getBlock_type().length() == 0){
@@ -384,7 +385,7 @@ public class FarmerRelease extends AppCompatActivity {
                     params.put("Farmlands_start_time", farmlandInfo.getStart_time_String());
                     params.put("Farmlands_end_time", farmlandInfo.getEnd_time_String());
                     //params.put("status", farmlandInfo.getStatus());
-                    params.put("Farmlands_remark", remark.getText().toString());
+                    params.put("Farmlands_remark", farmlandInfo.getRemark());
                     return params;
                 }
             };
@@ -410,7 +411,10 @@ public class FarmerRelease extends AppCompatActivity {
                 // Check for error node in json
                 if (status == 0) {
                     // user successfully logged in
-                    error_hint("发布成功！");
+                    if(isEdit)
+                        error_hint("修改成功！");
+                    else
+                        error_hint("发布成功！");
                     //clean frament
                     setContentNUll();
 
@@ -431,7 +435,9 @@ public class FarmerRelease extends AppCompatActivity {
                     Intent intent = new Intent(FarmerRelease.this, login.class);
                     startActivity(intent);
                     finish();
-                }else{
+                }else if(status == 15){
+                    error_hint("农田正在收割或已收割，不能进行修改！");
+                } else{
                     error_hint("其他未知错误！");
                 }
             } catch (JSONException e) {
@@ -776,6 +782,31 @@ public class FarmerRelease extends AppCompatActivity {
                 if(s.toString().length() > 0){
                     farmlandInfo.setEnd_time(farmlandInfo.StringFormatDate(s.toString()));
                 }
+            }
+        });
+
+        remark.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if ((s.length() > 0) && !TextUtils.isEmpty(area.getText()) && !TextUtils.isEmpty(price.getText()) && !TextUtils.isEmpty(croptype.getText())
+                        && !TextUtils.isEmpty(address.getText()) && !TextUtils.isEmpty(starttime.getText()) && !TextUtils.isEmpty(endtime.getText())) {
+                    releaseEditFinish.setClickable(true);
+                    releaseEditFinish.setEnabled(true);
+                } else {
+                    releaseEditFinish.setEnabled(false);
+                    releaseEditFinish.setClickable(false);
+                }
+                farmlandInfo.setRemark(s.toString());
             }
         });
     }

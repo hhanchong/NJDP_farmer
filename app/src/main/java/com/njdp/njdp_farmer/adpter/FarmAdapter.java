@@ -77,21 +77,30 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 			convertView = LayoutInflater.from(context).inflate(
 					R.layout.list_farmgroup, null);
 			holder = new ViewHolder();
-			holder.textView = (TextView) convertView
-					.findViewById(R.id.textView);
-			holder.textView1 = (TextView) convertView
-					.findViewById(R.id.textView1);
+			holder.textView = (TextView) convertView.findViewById(R.id.textView);
+			holder.releaseTime = (TextView) convertView.findViewById(R.id.release_time);
+			holder.textView1 = (TextView) convertView.findViewById(R.id.textView1);
 			convertView.setTag(holder);
 			convertView.setTag(R.id.flag, groupPosition);
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		String[] temp = group.get(groupPosition).split("-");
+		if(temp.length != 4) //传进来的参数不正确
+			return null;
 		holder.textView.setText(temp[0]);
 		holder.textView.setTextSize(18);
 		holder.textView.setPadding(36, 10, 0, 6);
+
 		holder.textView1.setText(temp[1] + "-" + temp[2] + "-" + temp[3]);
-		holder.textView1.setPadding(36, 0, 0, 10);
+		holder.textView1.setPadding(36, 0, 0, 6);
+
+		if(child.get(groupPosition).get(0).getCreatetime().indexOf(".") > 0)
+			child.get(groupPosition).get(0).setCreatetime(child.get(groupPosition).get(0).getCreatetime()
+					.substring(0,child.get(groupPosition).get(0).getCreatetime().indexOf(".")));
+		holder.releaseTime.setText("发布时间：" + child.get(groupPosition).get(0).getCreatetime());
+		holder.releaseTime.setPadding(36, 0, 0, 10);
+
 		holder.textView.getPaint().setFakeBoldText(true); //加粗
 		return convertView;
 	}
@@ -139,7 +148,7 @@ public class FarmAdapter extends BaseExpandableListAdapter {
 		LinearLayout layout;
 		TextView cropkind, status, area, price, blocktype, address, starttime, endtime, remark;
 		//父节点使用
-		TextView textView, textView1;
+		TextView textView, textView1, releaseTime;
 	}
 
 	@Override
