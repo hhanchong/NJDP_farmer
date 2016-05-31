@@ -16,7 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -84,7 +87,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private boolean isUseLocalGPS=false;
     private Handler handler;
     private Runnable runnable;
-    private TextView machineListView;
+    private TextView machineListView, select_center;
+    private ImageButton refresh;
 
     ////////////////////////地图变量//////////////////////////
     private MapView mMapView = null;
@@ -269,6 +273,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         rb100 = (RadioButton)view.findViewById(R.id.rb100);
         pDialog = new ProgressDialog(getActivity());
         pDialog.setCancelable(false);
+        refresh = (ImageButton)view.findViewById(R.id.refresh);
+        select_center = (TextView)view.findViewById(R.id.select_center);
         machineListView = (TextView)view.findViewById(R.id.machineListView);
         initOnClick();
     }
@@ -281,6 +287,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         rb50.setOnClickListener(this);
         rb100.setOnClickListener(this);
         machineListView.setOnClickListener(this);
+        refresh.setOnClickListener(this);
+        select_center.setOnClickListener(this);
         //myMessage.setOnClickListener(this);
     }
 
@@ -291,7 +299,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         //2.调用toggleSoftInput方法，实现切换显示软键盘的功能。
         //imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Log.e("农机查询------------->", "点击选择查询范围");
+        Log.e("农机查询------------->", "点击选择查询范围或其他查询条件");
         int index;
         switch (v.getId()) {
             case R.id.rb5:
@@ -378,6 +386,16 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 Log.e("------------->", "点击查看农机列表");
                 Intent intent = new Intent(getActivity(), MachinesList.class);
                 startActivity(intent);
+                break;
+            case R.id.refresh:
+                mBaiduMap.clear();
+                machinesToShow.clear();
+                Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.refresh);
+                getActivity().findViewById(R.id.refresh).startAnimation(anim);
+                getMachineInfos();
+                break;
+            case R.id.select_center:
+
                 break;
         }
     }
