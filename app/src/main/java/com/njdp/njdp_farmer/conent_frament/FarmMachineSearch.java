@@ -2,13 +2,16 @@ package com.njdp.njdp_farmer.conent_frament;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
@@ -77,12 +80,13 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private ProgressDialog pDialog;
     private NetUtil netutil = new NetUtil();
     private RelativeLayout test_pop_layout;
-    private RadioButton rb5, rb10, rb30, rb50, rb100;     //距离现则按钮
-    private static int Search_range = 5;                    //查询农机的距离
-    private static FarmlandInfo farmlandInfo;               //农户最后发布的农田
-    private static FarmlandInfo farmlandLocal;              //本地GPS位置农田
-    private static ArrayList<MachineInfo> machineInfos;     //查询回来的农机
-    private  static List<MachineInfo> machinesToShow;       //需要显示的农机
+    private RadioButton rb5, rb10, rb30, rb50, rb100;       //距离现则按钮
+    private static int Search_range = 5;                      //查询农机的距离
+    private static FarmlandInfo farmlandInfo;                 //农户最后发布的农田
+    private static FarmlandInfo farmlandLocal;                //本地GPS位置农田
+    private static ArrayList<FarmlandInfo> farmlandInfosUndo; //未收割的所有农田
+    private static ArrayList<MachineInfo> machineInfos;       //查询回来的农机
+    private  static List<MachineInfo> machinesToShow;         //需要显示的农机
     private boolean isFirst = false;
     private boolean isUseLocalGPS=false;
     private Handler handler;
@@ -93,7 +97,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     ////////////////////////地图变量//////////////////////////
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
-    private boolean isFristLocation = true;
+    private boolean isFirstLocation = true;
     /**
      * 当前定位的模式
      */
@@ -139,6 +143,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             if (view == null) {
                 machineInfos = new ArrayList<>();
                 machinesToShow = new ArrayList<>();
+                farmlandInfosUndo = new ArrayList<>();
                 isFirst = true;
                 view = inFlater(inflater);
             }
@@ -176,10 +181,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             //定义Maker坐标点，测试用标记点
             //西廉良村，河北大学，东站,保定站,植物园
-            String[] names = new String[]{"保定站", "河北大学", "西廉良村", "植物园", "东站"};
-            Double[][] numthree = new Double[][]{{38.86317366367406, 115.47990000000006}, {38.86858730724386, 115.51474000000007},{38.885335516312644, 115.44805233879083},
-                    {38.914613417728475, 115.4850954388619}, {38.86430366154974, 115.60169999999994}};
-            //this.markMachine(numthree, names);
+//            String[] names = new String[]{"保定站", "河北大学", "西廉良村", "植物园", "东站"};
+//            Double[][] numthree = new Double[][]{{38.86317366367406, 115.47990000000006}, {38.86858730724386, 115.51474000000007},{38.885335516312644, 115.44805233879083},
+//                    {38.914613417728475, 115.4850954388619}, {38.86430366154974, 115.60169999999994}};
+//            this.markMachine(numthree, names);
 
             // 开启图层定位
             // -----------location config ------------
@@ -229,7 +234,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                             MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
                             mBaiduMap.animateMapStatus(u);
                             //地图不再定位本地位置
-                            isFristLocation = false;
+                            isFirstLocation = false;
                             Log.e("农机查询------------->", "使用农田位置查询农机");
                         }
                         else {
@@ -395,7 +400,41 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 getMachineInfos();
                 break;
             case R.id.select_center:
-
+                final String[] farmlandArray = SelectUndo(FarmlandManager.getFarmlands());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("请选择查询农机的中心点");
+                builder.setSingleChoiceItems(farmlandArray, -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int position) {
+                        mBaiduMap.clear();
+                        if(farmlandArray[position].equals("使用当前GPS位置")){
+                            farmlandInfo = null;
+                            isUseLocalGPS = true;
+                            isFirstLocation = true;
+                        }else {
+                            farmlandInfo = farmlandInfosUndo.get(position);
+                            // 构造定位数据
+                            MyLocationData locData = new MyLocationData.Builder()
+                                    .accuracy(0.0f)
+                                            // 此处设置开发者获取到的方向信息，顺时针0-360
+                                    .direction(100).latitude(Double.parseDouble(farmlandInfo.getLatitude()))
+                                    .longitude(Double.parseDouble(farmlandInfo.getLongitude()))
+                                    .build();
+                            // 设置定位数据
+                            mBaiduMap.setMyLocationData(locData);
+                            LatLng ll = new LatLng(Double.parseDouble(farmlandInfo.getLatitude()),
+                                    Double.parseDouble(farmlandInfo.getLongitude()));
+                            MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+                            mBaiduMap.animateMapStatus(u);
+                            //不再使用定位的本地位置查询农机
+                            isUseLocalGPS = false;
+                            isFirstLocation = false;
+                            getMachineInfos();
+                        }
+                        //croptype.setText(typeArray[position]);
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
                 break;
         }
     }
@@ -434,8 +473,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 // 当不需要定位图层时关闭定位图层
 
                 // 第一次定位时，将地图位置移动到当前位置，这里有问题，先定位到河北农业大学
-                if (isFristLocation) {
-                    isFristLocation = false;
+                if (isFirstLocation) {
+                    isFirstLocation = false;
 
                     //保存当前location
                     curlocation = location;
@@ -756,6 +795,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 if (status == 0) {
                     //清空旧数据
                     //machineInfos.clear();
+                    machinesToShow.clear();
                     //此处引入JSON jar包
                     JSONArray jObjs = jObj.getJSONArray("result");
                     for(int i = 0; i < jObjs.length(); i++){
@@ -858,6 +898,25 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    /*
+    查询未收割的农田，生成选择列表
+     */
+    private String[] SelectUndo(ArrayList<FarmlandInfo> farmlandInfos){
+        farmlandInfosUndo.clear();
+        ArrayList<String> result = new ArrayList<>();
+        for(FarmlandInfo f : farmlandInfos){
+            if(f.getStatus().equals("0")) {
+                farmlandInfosUndo.add(f);
+                if(f.getCreatetime().indexOf(".") > 0)
+                    f.setCreatetime(f.getCreatetime().substring(0, f.getCreatetime().indexOf(".")));
+                //result.add(f.getVillage()+"："+f.getArea()+"亩\n时间："+f.getCreatetime());
+                result.add(f.getVillage()+"："+f.getArea()+"亩");
+            }
+        }
+        result.add("使用当前GPS位置");
+        return result.toArray(new String[0]);
     }
 
     @Override
