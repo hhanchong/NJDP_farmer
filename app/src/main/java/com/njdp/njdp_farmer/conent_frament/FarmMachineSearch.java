@@ -750,7 +750,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             return;
         }
 
-        if (!netutil.checkNet(getActivity())) {
+        if (!NetUtil.checkNet(getActivity())) {
             hideDialog();
             error_hint("网络不通，请检查！");
         } else {
