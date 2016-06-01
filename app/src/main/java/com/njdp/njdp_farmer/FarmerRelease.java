@@ -80,15 +80,15 @@ public class FarmerRelease extends AppCompatActivity {
     private FarmlandInfo farmlandInfo;
     private String token;
     private ProgressDialog pDialog;
-    private NetUtil netutil;
     private final String TAG = "FarmerRelease";
     //所有监听的控件
-    private TextView tv1, top_title;
+    private TextView tv1;
     private EditText croptype, area, price, blocktype, starttime, endtime, remark;
     private EditText address, addresspic;
     private RadioButton rbH, rbC, rbS;
     private Button releaseEditFinish;
     private ImageButton getback=null;
+    private boolean firstSearchBaiduGPS;
 
 
     ////////////////根据地址的经纬度变量///////////////
@@ -137,7 +137,6 @@ public class FarmerRelease extends AppCompatActivity {
     private void initView() {
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
-        netutil = new NetUtil();
         croptype = (EditText) this.findViewById(R.id.crops_kind);
         area = (EditText) this.findViewById(R.id.area);
         price = (EditText) this.findViewById(R.id.price);
@@ -153,7 +152,7 @@ public class FarmerRelease extends AppCompatActivity {
         }
         getback=(ImageButton) this.findViewById(R.id.getback);
         tv1=(TextView)this.findViewById(R.id.tv1);
-        top_title=(TextView)this.findViewById(R.id.tv_top_title);
+        TextView top_title = (TextView) this.findViewById(R.id.tv_top_title);
         rbH=(RadioButton)this.findViewById(R.id.rbH);   //收割Harvest
         rbC=(RadioButton)this.findViewById(R.id.rbC);   //耕作Cultivation
         rbS=(RadioButton)this.findViewById(R.id.rbS);   //播种Seeding
@@ -163,6 +162,7 @@ public class FarmerRelease extends AppCompatActivity {
 
         //如果是编辑的话，初始化数据
         if(isEdit){
+            assert top_title != null;
             top_title.setText("修改需求信息");
             rbH.setClickable(false);
             rbC.setClickable(false);
@@ -692,6 +692,7 @@ public class FarmerRelease extends AppCompatActivity {
                     farmlandInfo.setVillage(temp[4]);
 
                     //通过村名查找坐标位置
+                    firstSearchBaiduGPS = true;
                     mSearch.geocode(new GeoCodeOption().city(farmlandInfo.getCity()).address(farmlandInfo.getVillage()));
                 }
             }
@@ -817,6 +818,12 @@ public class FarmerRelease extends AppCompatActivity {
         @Override
         public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
             if (geoCodeResult == null || geoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                //有时因为村名包含“村”字而搜索不到位置，进行二次搜索
+                if(firstSearchBaiduGPS){
+                    firstSearchBaiduGPS = false;
+                    mSearch.geocode(new GeoCodeOption().city(farmlandInfo.getCity()).address(farmlandInfo.getVillage().substring(0,farmlandInfo.getVillage().length()-1)));
+                    return;
+                }
                 //未找到村庄位置，显示提示信息
                 new AlertDialog.Builder(FarmerRelease.this)
                         .setTitle("系统提示")
