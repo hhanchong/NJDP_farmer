@@ -49,15 +49,11 @@ public class getpassword2 extends AppCompatActivity {
     private ImageButton password_show2=null;
     private ImageButton getback=null;
     private String telephone;
-    private File tempFile;
     private AwesomeValidation password_Validation=new AwesomeValidation(ValidationStyle.BASIC);
     private AwesomeValidation password2_Validation=new AwesomeValidation(ValidationStyle.BASIC);
     private static final String TAG = getpassword2.class.getSimpleName();
     private ProgressDialog pDialog;
-    private SessionManager session;
-    private SQLiteHandler db;
     private NormalUtil nutil=new NormalUtil();
-    private NetUtil netutil=new NetUtil();
     private String URL_GETPASSWORD2;//设置连接数据用户的URL，Driver Or Farmer
 
     @Override
@@ -79,12 +75,13 @@ public class getpassword2 extends AppCompatActivity {
         setContentView(R.layout.activity_getpassword2);
 
         //设置头像本地存储路径
+        File tempFile;
         if(nutil.ExistSDCard())
         {
-            tempFile= Environment.getExternalStorageDirectory();
+            tempFile = Environment.getExternalStorageDirectory();
         }else
         {
-            tempFile=getCacheDir();
+            tempFile =getCacheDir();
         }
 
         // Progress dialog
@@ -92,16 +89,16 @@ public class getpassword2 extends AppCompatActivity {
         pDialog.setCancelable(false);
 
         // Session manager
-        session = new SessionManager(getApplicationContext());
+        //SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
 
         //获取forgetpassword输入的用户名、手机号.姓名
         telephone = getIntent().getExtras().getBundle("farmer_access").getString("telephone");
         if(telephone == null)
         {
-            nutil.error_hint(getpassword2.this, "程序错误！请联系管理员！");
+            NormalUtil.error_hint(getpassword2.this, "程序错误！请联系管理员！");
             finish();
         }
 
@@ -118,18 +115,18 @@ public class getpassword2 extends AppCompatActivity {
         findViewById(R.id.finish).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nutil.isempty(text_password)){
-                    nutil.error_hint(getpassword2.this,"请输入新的密码");
-                }else if(password_Validation.validate()==true){
-                    if(nutil.isempty(text_password2)){
-                        nutil.error_hint(getpassword2.this,"请再次输入密码");
-                    }else if(password2_Validation.validate()==true){
+                if(NormalUtil.isempty(text_password)){
+                    NormalUtil.error_hint(getpassword2.this,"请输入新的密码");
+                }else if(password_Validation.validate()){
+                    if(NormalUtil.isempty(text_password2)){
+                        NormalUtil.error_hint(getpassword2.this,"请再次输入密码");
+                    }else if(password2_Validation.validate()){
                         if(text_password.getText().equals(text_password2.getText())){
                             String nPassword=text_password2.getText().toString().trim();
                             setNewPassword(nPassword);
                         }
                         else{
-                            nutil.error_hint(getpassword2.this,"两次输入的密码不一致！");
+                            NormalUtil.error_hint(getpassword2.this, "两次输入的密码不一致！");
                         }
                     }
                 }
@@ -176,17 +173,16 @@ public class getpassword2 extends AppCompatActivity {
         pDialog.setMessage("正在重置密码 ...");
         showDialog();
 
-        if (netutil.checkNet(getpassword2.this) == false) {
-            nutil.error_hint(getpassword2.this, "网络连接错误");
+        if (!NetUtil.checkNet(getpassword2.this)) {
+            NormalUtil.error_hint(getpassword2.this, "网络连接错误");
             hideDialog();
-            return;
         } else {
             StringRequest strReq = new StringRequest(Request.Method.POST,
                     URL_GETPASSWORD2, new Response.Listener<String>() {
 
                 @Override
                 public void onResponse(String response) {
-                    Log.d(TAG, "Register Response: " + response.toString());
+                    Log.d(TAG, "Register Response: " + response);
                     hideDialog();
 
                     try {
@@ -194,12 +190,12 @@ public class getpassword2 extends AppCompatActivity {
                         boolean error = jObj.getBoolean("error");
                         if (!error) {
 
-                            JSONObject user = jObj.getJSONObject("Farmers");
-                            boolean islogined = user.getBoolean("isLogined");
+                            //JSONObject user = jObj.getJSONObject("Farmers");
+                            //boolean islogined = user.getBoolean("isLogined");
                             // Inserting row in users table
                             //farmer.setPassword(password);
                             //db.editUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone(), farmer.getImageUrl());
-                            nutil.error_hint(getpassword2.this, "重置密码成功");
+                            NormalUtil.error_hint(getpassword2.this, "重置密码成功");
 
                             // 重新登录
                             Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
@@ -211,7 +207,7 @@ public class getpassword2 extends AppCompatActivity {
                             // Error occurred in registration. Get the error
                             // message
                             String errorMsg = jObj.getString("error_msg");
-                            nutil.error_hint(getpassword2.this, errorMsg);
+                            NormalUtil.error_hint(getpassword2.this, errorMsg);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -223,7 +219,7 @@ public class getpassword2 extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e(TAG, "Registration Error: " + error.getMessage());
-                    nutil.error_hint(getpassword2.this, error.getMessage());
+                    NormalUtil.error_hint(getpassword2.this, error.getMessage());
                     hideDialog();
                 }
             }) {
@@ -231,7 +227,7 @@ public class getpassword2 extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
 
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("telephone", telephone);
                     params.put("password", password);
                     params.put("tag", "F");

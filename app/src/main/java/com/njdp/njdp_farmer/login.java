@@ -56,7 +56,6 @@ public class login extends AppCompatActivity {
     private SessionManager session;
     private SQLiteHandler db;
     private Farmer farmer;
-    private NetUtil netutil;
     private boolean historyLogin;
 
     @Override
@@ -98,6 +97,7 @@ public class login extends AppCompatActivity {
         this.login_check=(Button) super.findViewById(R.id.loginin_button);
 
         //根据输入框是否为空判断是否禁用按钮
+        assert login_check != null;
         login_check.setEnabled(false);
         login_check.setClickable(false);
         editTextIsNull();
@@ -176,7 +176,7 @@ public class login extends AppCompatActivity {
         pDialog.setMessage("正在登录 ...");
         showDialog();
 
-        if (!netutil.checkNet(login.this)) {
+        if (!NetUtil.checkNet(login.this)) {
             hideDialog();
             error_hint("网络连接错误");
         } else {

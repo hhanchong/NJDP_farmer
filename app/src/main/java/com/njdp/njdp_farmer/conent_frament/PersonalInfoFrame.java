@@ -74,7 +74,6 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     Button personalEdit;
     View view;
     private ProgressDialog pDialog;
-    private NetUtil netutil = new NetUtil();
     private String token;
     private Farmer farmer;
     private String path;//用户头像路径
@@ -232,7 +231,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
         String tag_string_req = "req_farmerInfo_get";
 
-        if (!netutil.checkNet(getActivity())) {
+        if (!NetUtil.checkNet(getActivity())) {
             hideDialog();
             error_hint("网络连接错误");
         } else {

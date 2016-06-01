@@ -330,7 +330,7 @@ public class FarmerRelease extends AppCompatActivity {
         pDialog.setMessage("正在发布 ...");
         showDialog();
         Log.i("GGGG", farmlandInfo.getLongitude());
-        if (!netutil.checkNet(this)) {
+        if (!NetUtil.checkNet(this)) {
             hideDialog();
             error_hint("网络连接错误");
         } else {

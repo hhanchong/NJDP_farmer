@@ -10,7 +10,6 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -41,6 +40,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.text.TextUtils.isEmpty;
+
 public class SetPhoneNum extends AppCompatActivity {
 
     private EditText text_user_telephone=null;
@@ -52,9 +53,6 @@ public class SetPhoneNum extends AppCompatActivity {
     private AwesomeValidation mValidation=new AwesomeValidation(ValidationStyle.BASIC);
     private static final String TAG = register.class.getSimpleName();
     private ProgressDialog pDialog;
-    private SessionManager session;
-    private SQLiteHandler db;
-    private NetUtil netutil;
     private String verify_code = "";
     private String token;
     private String phonenum;
@@ -85,10 +83,10 @@ public class SetPhoneNum extends AppCompatActivity {
         pDialog.setCancelable(false);
 
         // Session manager
-        session = new SessionManager(getApplicationContext());
+        //SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
 
         btn_verification_code = (Button) super.findViewById(R.id.register_get_verification_code);
         text_user_telephone = (EditText) super.findViewById(R.id.user_telephone);
@@ -114,11 +112,10 @@ public class SetPhoneNum extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (mValidation.validate() == true) {
+                if (mValidation.validate()) {
                     String t_verify_code = text_verification_code.getText().toString().trim();
                     if (verify_code.equals(t_verify_code)) {
                         checkEdit(token);
-                        ;
                     } else {
                         error_hint("验证码错误！");
                     }
@@ -132,7 +129,7 @@ public class SetPhoneNum extends AppCompatActivity {
             public void onClick(View v) {
                 if (isempty(R.id.user_telephone)) {
                     empty_hint(R.string.err_phone2);
-                } else if (verification_code_Validation.validate() == true) {
+                } else if (verification_code_Validation.validate()) {
                     get_verification_code();
                     //按钮60s倒计时，禁用60s
                     TimeCount time_CountDown = new TimeCount(SetPhoneNum.this, 60000, 1000, btn_verification_code);
@@ -146,8 +143,8 @@ public class SetPhoneNum extends AppCompatActivity {
     //EditText输入是否为空
     private boolean isempty( int id) {
         EditText editText = (EditText) super.findViewById(id);
-        boolean bl = TextUtils.isEmpty(editText.getText());
-        return bl;
+        assert editText != null;
+        return isEmpty(editText.getText());
     }
 
     //信息未输入提示
@@ -169,16 +166,15 @@ public class SetPhoneNum extends AppCompatActivity {
 
         String tag_string_req = "req_edit_phone_VerifyCode";
 
-        if(netutil.checkNet(SetPhoneNum.this)==false){
+        if(!NetUtil.checkNet(SetPhoneNum.this)){
             error_hint("网络连接错误");
-            return;
         } else {
             StringRequest strReq = new StringRequest(Request.Method.GET,
                     AppConfig.URL_REGISTER, vertifySuccessListener, mErrorListener) {
                 @Override
                 protected Map<String, String> getParams() {
 
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("telephone", text_user_telephone.getText().toString());
                     return params;
                 }
@@ -196,7 +192,7 @@ public class SetPhoneNum extends AppCompatActivity {
 
         @Override
         public void onResponse(String response) {
-            Log.d(TAG, "Register Response: " + response.toString());
+            Log.d(TAG, "Register Response: " + response);
             hideDialog();
 
             try {
@@ -229,10 +225,9 @@ public class SetPhoneNum extends AppCompatActivity {
         pDialog.setMessage("正在上传数据 ...");
         showDialog();
 
-        if (netutil.checkNet(SetPhoneNum.this) == false) {
+        if (!NetUtil.checkNet(SetPhoneNum.this)) {
             hideDialog();
             error_hint("网络连接错误");
-            return;
         } else {
 
             //服务器请求
@@ -242,7 +237,7 @@ public class SetPhoneNum extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("token", String.valueOf(token));
                     params.put("telephone", text_user_telephone.getText().toString());
                     params.put("isDriver", "false");
@@ -260,7 +255,7 @@ public class SetPhoneNum extends AppCompatActivity {
         @Override
         public void onResponse(String response) {
             Log.i("tagconvertstr", "[" + response + "]");
-            Log.d(TAG, "Register Response: " + response.toString());
+            Log.d(TAG, "Register Response: " + response);
             hideDialog();
 
             try {
@@ -350,7 +345,7 @@ public class SetPhoneNum extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && !TextUtils.isEmpty(text_verification_code.getText())) {
+                if ((s.length() > 0) && !isEmpty(text_verification_code.getText())) {
                     btn_edit_ok.setClickable(true);
                     btn_edit_ok.setEnabled(true);
                 } else {
@@ -373,7 +368,7 @@ public class SetPhoneNum extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && !TextUtils.isEmpty(text_user_telephone.getText())) {
+                if ((s.length() > 0) && !isEmpty(text_user_telephone.getText())) {
                     btn_edit_ok.setClickable(true);
                     btn_edit_ok.setEnabled(true);
                 } else {

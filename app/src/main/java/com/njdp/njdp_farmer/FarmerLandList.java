@@ -38,7 +38,6 @@ import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.util.NetUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -59,13 +58,9 @@ public class FarmerLandList extends AppCompatActivity {
     private List<List<FarmlandInfo>> child;
     private ArrayList<FarmlandInfo> farmlandInfoList;
     private ArrayList<FarmlandInfo> farmlandInfos; //根据年筛选后的数据
-    private FarmAdapter adapter;
     private ImageButton getback=null;
-    private Spinner spinner;
-    private View farmlandlist;
     List<String> Years = new ArrayList<>();
     private ProgressDialog pDialog;
-    private NetUtil netutil = new NetUtil();
     private String token;
     private int isEditNow=-1;
 
@@ -96,9 +91,10 @@ public class FarmerLandList extends AppCompatActivity {
         listView.setOnItemLongClickListener(new OnItemLongClickListenerImpl()); // 长按事件
         this.registerForContextMenu(listView); // 为所有列表项注册上下文菜单
         //获取时间选择下拉窗
-        spinner = (Spinner)findViewById(R.id.sp_year);
+        Spinner spinner = (Spinner) findViewById(R.id.sp_year);
         //获取背景
-        farmlandlist = findViewById(R.id.root_div);
+        View farmlandlist = findViewById(R.id.root_div);
+        assert farmlandlist != null;
         farmlandlist.getBackground().setAlpha(180);
 
         //获取农田数据
@@ -127,6 +123,7 @@ public class FarmerLandList extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,Years);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //为spinner添加适配器
+        assert spinner != null;
         spinner.setAdapter(adapter);
         //设置Spinner下拉列表的标题
         spinner.setPrompt("选择要查询的年份");
@@ -157,7 +154,7 @@ public class FarmerLandList extends AppCompatActivity {
         }
         //刷新界面
         if(group.size() >= 0) {
-            adapter = new FarmAdapter(FarmerLandList.this, group, child);
+            FarmAdapter adapter = new FarmAdapter(FarmerLandList.this, group, child);
             listView.setAdapter(adapter);
             listView.setGroupIndicator(null);  //不显示向下的箭头
         }
@@ -343,7 +340,7 @@ public class FarmerLandList extends AppCompatActivity {
         pDialog.setMessage("正在更新农田数据 ...");
         showDialog();
 
-        if (!netutil.checkNet(this)) {
+        if (!NetUtil.checkNet(this)) {
             hideDialog();
             error_hint("网络连接错误");
         } else {
@@ -400,7 +397,7 @@ public class FarmerLandList extends AppCompatActivity {
                     //清空旧数据
                     //farmlandInfos.clear();
                     //此处引入JSON jar包
-                    String result = jObj.getString("result");
+                    //String result = jObj.getString("result");
                     if(isEditNow == -1){
                         farmlandInfoList.clear();
                         farmlandInfos.clear();

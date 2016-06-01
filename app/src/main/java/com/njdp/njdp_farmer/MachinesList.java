@@ -29,13 +29,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MachinesList extends AppCompatActivity implements AdapterView.OnItemClickListener, Window.Callback {
-    private ExpandableListView listView;
     private List<String[]> group;
     private List<List<MachineInfo>> child;
     private List<MachineInfo> machineInfos;
-    private MachineAdapter adapter;
     private ImageButton getback = null;
-    private View machinelist;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +54,9 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
 
         //初始化参数及控件
         machineInfos = new ArrayList<>();
-        listView = (ExpandableListView) findViewById(R.id.expandableListView);
-        machinelist = findViewById(R.id.root_div);
+        ExpandableListView listView = (ExpandableListView) findViewById(R.id.expandableListView);
+        View machinelist = findViewById(R.id.root_div);
+        assert machinelist != null;
         machinelist.getBackground().setAlpha(180);
 
         //获取农机数据
@@ -69,7 +67,8 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
          */
         initData();
         if (group.size() >= 0) {
-            adapter = new MachineAdapter(MachinesList.this, group, child, mListener);
+            MachineAdapter adapter = new MachineAdapter(MachinesList.this, group, child, mListener);
+            assert listView != null;
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(this);
             listView.setGroupIndicator(null);  //不显示向下的箭头

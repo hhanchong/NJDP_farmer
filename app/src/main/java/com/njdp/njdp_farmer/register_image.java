@@ -50,26 +50,18 @@ public class register_image extends AppCompatActivity {
 
     private Button finish;
     private ImageButton getback;
-    private TextView notice=null;
-    private TextView setImage=null;
     private com.njdp.njdp_farmer.changeDefault.CircleImageView userImage=null;
-    private String s1="服务条款";
-    private String s2="隐私协议";
     private ProgressDialog pDialog;
-    private SQLiteHandler db;
     private String path;//用户头像路径
-    private File tempFile;
     private String imageName;
     private Uri imageUri;
     private String Url_Image;
-    private int crop = 300;// 裁剪大小
-    private final int REQUEST_IMAGE=001;
-    private final int CROP_PHOTO_CODE = 002;
+    private final int REQUEST_IMAGE=1;
+    private final int CROP_PHOTO_CODE = 2;
     private ArrayList<String> defaultDataArray;
     public boolean IsSetImage=false;
     private NormalUtil nutil=new NormalUtil();
     private static final String TAG = register_image.class.getSimpleName();
-    private NetUtil netutil=new NetUtil();
     private String token;
     private String telephone;
 
@@ -98,12 +90,13 @@ public class register_image extends AppCompatActivity {
         pDialog.setCancelable(false);
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
 
-        this.notice = (TextView) super.findViewById(R.id.regiser_termsOfService);
-        this.setImage = (TextView) super.findViewById(R.id.set_user_image);
+        TextView notice = (TextView) super.findViewById(R.id.regiser_termsOfService);
+        TextView setImage = (TextView) super.findViewById(R.id.set_user_image);
         this.getback=(ImageButton) super.findViewById(R.id.getback);
         this.finish=(Button) super.findViewById(R.id.btn_registerFinish);
+        assert finish != null;
         finish.setEnabled(false);
         this.userImage = (com.njdp.njdp_farmer.changeDefault.CircleImageView) super.findViewById(R.id.user_image);
 
@@ -116,28 +109,32 @@ public class register_image extends AppCompatActivity {
 
         //服务条款
         Intent intent = new Intent(this, register_TermsofService.class);
+        String s1 = "服务条款";
         SpannableString span1 = new SpannableString(s1);
+        String s2 = "隐私协议";
         SpannableString span2 = new SpannableString(s2);
         ClickableSpan clickableSpan1 = new NewClickableSpan(ContextCompat.getColor(this, R.color.colorDefault), this, intent);
         ClickableSpan clickableSpan2 = new NewClickableSpan(ContextCompat.getColor(this, R.color.colorDefault), this, intent);
         span1.setSpan(clickableSpan1, 0, s1.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         span2.setSpan(clickableSpan2, 0, s2.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        assert notice != null;
         notice.setText("注册即意味着您同意");
         notice.append(span1);
         notice.append("和");
         notice.append(span2);
         notice.setMovementMethod(LinkMovementMethod.getInstance());
         //设置Textview超链接高亮背景色为透明色
-        notice.setHighlightColor(00000000);
+        notice.setHighlightColor(0);
 
         imageName ="userimage.png";
         //设置头像本地存储路径
+        File tempFile;
         if(nutil.ExistSDCard()) {
-            tempFile=Environment.getExternalStorageDirectory();
+            tempFile =Environment.getExternalStorageDirectory();
         }else {
-            tempFile=getCacheDir();
+            tempFile =getCacheDir();
         }
-        path=tempFile.getAbsolutePath()+"/NJDP/" + telephone + "/photo/"+imageName;
+        path= tempFile.getAbsolutePath()+"/NJDP/" + telephone + "/photo/"+imageName;
         if(new File(path).exists()){
             userImage.setImageURI(Uri.parse(path));
         }
@@ -165,6 +162,7 @@ public class register_image extends AppCompatActivity {
         });
 
         //弹出图片选择菜单
+        assert setImage != null;
         setImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,6 +221,7 @@ public class register_image extends AppCompatActivity {
         intent.setDataAndType(imageUri, "image/*");
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
+        int crop = 300;
         intent.putExtra("outputX", crop);
         intent.putExtra("outputY", crop);
         intent.putExtra("scale", true);
@@ -255,7 +254,7 @@ public class register_image extends AppCompatActivity {
         if (!file.exists()) {
             hideDialog();
             Toast.makeText(register_image.this, "头像图片不存在!请重新选择！", Toast.LENGTH_SHORT).show();
-        } else if (!netutil.checkNet(register_image.this)) {
+        } else if (!NetUtil.checkNet(register_image.this)) {
             hideDialog();
             error_hint("网络连接错误");
         } else {

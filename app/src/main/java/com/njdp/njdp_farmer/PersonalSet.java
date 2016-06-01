@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +58,6 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     EditText et_name;
     EditText et_QQ;
     EditText et_weixin;
-    private NetUtil netutil;
     private SQLiteHandler db;
 
     @Override
@@ -198,7 +196,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         pDialog.setMessage("正在提交 ...");
         showDialog();
 
-        if (!netutil.checkNet(PersonalSet.this)) {
+        if (!NetUtil.checkNet(PersonalSet.this)) {
             hideDialog();
             error_hint("网络连接错误");
         } else {

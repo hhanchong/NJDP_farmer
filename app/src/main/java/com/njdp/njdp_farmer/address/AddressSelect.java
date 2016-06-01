@@ -47,7 +47,6 @@ public class AddressSelect extends Activity {
 
 	private static final String TAG = "AddressSelect";
     private AwesomeValidation mValidation=new AwesomeValidation(ValidationStyle.BASIC);
-	private Button button_ok, button_edit_ok;
     private ImageButton getback=null;
     private EditText select_et;
     private EditText xiang , cun;
@@ -75,9 +74,13 @@ public class AddressSelect extends Activity {
         }
 		setContentView(R.layout.activity_address);
 
-        address = ((String)getIntent().getExtras().get("address")).split("-");
+        try {
+            address = ((String)getIntent().getExtras().get("address")).split("-");
+        }catch (Exception e){
+            address = new String[0];
+        }
 
-		// 获取屏幕的高度和宽度
+        // 获取屏幕的高度和宽度
 		Display display = this.getWindowManager().getDefaultDisplay();
 		width = display.getWidth();
 	    height = display.getHeight();
@@ -120,13 +123,13 @@ public class AddressSelect extends Activity {
                 finish();
             }
         });
-        button_edit_ok = (Button)findViewById(R.id.btn_editFinish);
+        Button button_edit_ok = (Button) findViewById(R.id.btn_editFinish);
         button_edit_ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 mValidation.addValidation(AddressSelect.this, R.id.xiang, "^[\\u4e00-\\u9fa5]+$", R.string.err_xiangcun);
                 mValidation.addValidation(AddressSelect.this, R.id.cun, "^[\\u4e00-\\u9fa5]+$", R.string.err_xiangcun);
-                if(mValidation.validate()) {
+                if (mValidation.validate()) {
                     //返回选择的地市
                     Intent intent = new Intent(AddressSelect.this, PersonalSet.class);
                     String temp = select_et.getText() + "-" + xiang.getText() + "乡-" + cun.getText() + "村";
@@ -222,7 +225,7 @@ public class AddressSelect extends Activity {
                             AddressData.COUNTIES[country.getCurrentItem()][city.getCurrentItem()][ccity.getCurrentItem()]);
                 }
                 catch (Exception exceptin)
-                {}
+                { }
             }
         });
 
@@ -238,7 +241,7 @@ public class AddressSelect extends Activity {
         }
 
         // 点击事件处理
-        button_ok = (Button) contentView.findViewById(R.id.button_ok);
+        Button button_ok = (Button) contentView.findViewById(R.id.button_ok);
         button_ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,8 +252,8 @@ public class AddressSelect extends Activity {
                 str_city = AddressData.CITIES[country.getCurrentItem()][city.getCurrentItem()];
                 str_county = AddressData.COUNTIES[country.getCurrentItem()][city.getCurrentItem()][ccity.getCurrentItem()];
                 window.dismiss(); // 隐藏
-			}
-		});
+            }
+        });
 
 
         window.setWidth(width);
@@ -317,8 +320,7 @@ public class AddressSelect extends Activity {
 
         @Override
         public View getItem(int index, View cachedView, ViewGroup parent) {
-            View view = super.getItem(index, cachedView, parent);
-            return view;
+            return super.getItem(index, cachedView, parent);
         }
         
         @Override

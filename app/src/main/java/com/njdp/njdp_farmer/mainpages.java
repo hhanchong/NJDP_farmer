@@ -31,9 +31,6 @@ public class mainpages extends AppCompatActivity {
     private FarmlandInfo lastUndoFarmland;
     private CustomProgressDialog progressDialog;
     private ContentViewPager contentViewPager;
-    private FragmentManager manager;
-    private FragmentTransaction transaction;
-    private RadioGroup contentradiogroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +73,8 @@ public class mainpages extends AppCompatActivity {
     private List<Fragment> content_list = null;
 
     private void initdata() {
-        manager = getFragmentManager();
-        transaction = manager.beginTransaction();
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         //要传递的参数
         Bundle bundle1 = new Bundle();
         bundle1.putString("token", token);
@@ -104,7 +101,7 @@ public class mainpages extends AppCompatActivity {
             return;
         }
         contentViewPager = (ContentViewPager) findViewById(R.id.content_viewpager);
-        contentradiogroup = (RadioGroup) findViewById(R.id.content_radiogroup);
+        RadioGroup contentradiogroup = (RadioGroup) findViewById(R.id.content_radiogroup);
         //预加载一页
         contentViewPager.setOffscreenPageLimit(5);
         contentViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -119,6 +116,7 @@ public class mainpages extends AppCompatActivity {
             }
 
         });
+        assert contentradiogroup != null;
         contentradiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {

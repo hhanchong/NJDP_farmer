@@ -52,8 +52,6 @@ public class getpassword extends AppCompatActivity {
     private EditText text_VerificationCcode = null;
     private static final String TAG = getpassword.class.getSimpleName();
     private ProgressDialog pDialog;
-    private NormalUtil nutil;
-    private NetUtil netutil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +92,8 @@ public class getpassword extends AppCompatActivity {
         btn_VerificationCcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (nutil.isempty(text_telephone)) {
-                    nutil.error_hint(getpassword.this, "手机号不能为空");
+                if (NormalUtil.isempty(text_telephone)) {
+                    NormalUtil.error_hint(getpassword.this, "手机号不能为空");
                 } else if (verification_code_Validation.validate()) {
 
                     //String name = text_user_name.getText().toString().trim();
@@ -129,7 +127,7 @@ public class getpassword extends AppCompatActivity {
             intent.putExtra("farmer_access", get_farmer_bundle);
             startActivity(intent);
         } else {
-            nutil.error_hint(getpassword.this, "验证码错误！");
+            NormalUtil.error_hint(getpassword.this, "验证码错误！");
         }
     }
 
@@ -138,8 +136,8 @@ public class getpassword extends AppCompatActivity {
 
         String tag_string_req = "req_farmer_VerifyCode";
 
-        if(!netutil.checkNet(getpassword.this)){
-            nutil.error_hint(getpassword.this, "网络连接错误");
+        if(!NetUtil.checkNet(getpassword.this)){
+            NormalUtil.error_hint(getpassword.this, "网络连接错误");
         } else {
             StringRequest strReq = new StringRequest(Request.Method.GET,
                     AppConfig.URL_REGISTER, vertifySuccessListener, mErrorListener) {
@@ -164,7 +162,7 @@ public class getpassword extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG, "Register Error: " + error.getMessage());
-            nutil.error_hint(getpassword.this, "服务器连接失败");
+            NormalUtil.error_hint(getpassword.this, "服务器连接失败");
             hideDialog();
         }
     };

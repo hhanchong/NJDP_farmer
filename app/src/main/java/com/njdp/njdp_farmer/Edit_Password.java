@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -55,10 +54,6 @@ public class Edit_Password extends AppCompatActivity {
     private AwesomeValidation password2_Validation=new AwesomeValidation(ValidationStyle.BASIC);
     private static final String TAG = getpassword2.class.getSimpleName();
     private ProgressDialog pDialog;
-    private SessionManager session;
-    private SQLiteHandler db;
-    private NormalUtil nutil=new NormalUtil();
-    private NetUtil netutil=new NetUtil();
     private String URL_EDITPASSWORD;//设置连接数据用户的URL，Driver Or Farmer
 
     @Override
@@ -84,16 +79,16 @@ public class Edit_Password extends AppCompatActivity {
         pDialog.setCancelable(false);
 
         // Session manager
-        session = new SessionManager(getApplicationContext());
+        //SessionManager session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
 
         //获取forgetpassword输入的用户名、手机号.姓名
         farmer = (Farmer)getIntent().getSerializableExtra("farmer");
         if(farmer == null)
         {
-            nutil.error_hint(Edit_Password.this, "程序错误！请联系管理员！");
+            NormalUtil.error_hint(Edit_Password.this, "程序错误！请联系管理员！");
             finish();
         }
         password_Validation0.addValidation(Edit_Password.this, R.id.user_oldpassword, "^[A-Za-z0-9_]{5,15}+$", R.string.err_password);
@@ -113,24 +108,24 @@ public class Edit_Password extends AppCompatActivity {
         findViewById(R.id.finish).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(nutil.isempty(text_oldpassword)){
-                    nutil.error_hint(Edit_Password.this,"请输入原密码");
-                } else if(nutil.isempty(text_password)){
-                    nutil.error_hint(Edit_Password.this,"请输入新的密码");
-                }else if(password_Validation.validate()==true){
-                    if(nutil.isempty(text_password2)){
-                        nutil.error_hint(Edit_Password.this,"请再次输入新密码");
-                    }else if(password2_Validation.validate()==true){
+                if(NormalUtil.isempty(text_oldpassword)){
+                    NormalUtil.error_hint(Edit_Password.this,"请输入原密码");
+                } else if(NormalUtil.isempty(text_password)){
+                    NormalUtil.error_hint(Edit_Password.this,"请输入新的密码");
+                }else if(password_Validation.validate()){
+                    if(NormalUtil.isempty(text_password2)){
+                        NormalUtil.error_hint(Edit_Password.this,"请再次输入新密码");
+                    }else if(password2_Validation.validate()){
                         if(text_password.getText().equals(text_password2.getText())){
                             if(text_oldpassword.getText().toString().equals(farmer.getPassword())) {
                                 String nPassword = text_password2.getText().toString().trim();
                                 setNewPassword(nPassword);
                             }else {
-                                nutil.error_hint(Edit_Password.this,"输入的原密码错误！");
+                                NormalUtil.error_hint(Edit_Password.this,"输入的原密码错误！");
                             }
                         }
                         else{
-                            nutil.error_hint(Edit_Password.this,"两次输入的密码不一致！");
+                            NormalUtil.error_hint(Edit_Password.this, "两次输入的密码不一致！");
                         }
                     }
                 }
@@ -194,17 +189,16 @@ public class Edit_Password extends AppCompatActivity {
         pDialog.setMessage("正在重置密码 ...");
         showDialog();
 
-        if (netutil.checkNet(Edit_Password.this) == false) {
-            nutil.error_hint(Edit_Password.this, "网络连接错误");
+        if (!NetUtil.checkNet(Edit_Password.this)) {
+            NormalUtil.error_hint(Edit_Password.this, "网络连接错误");
             hideDialog();
-            return;
         } else {
             StringRequest strReq = new StringRequest(Request.Method.POST,
                     URL_EDITPASSWORD, new Response.Listener<String>() {
 
                 @Override
                 public void onResponse(String response) {
-                    Log.d(TAG, "Register Response: " + response.toString());
+                    Log.d(TAG, "Register Response: " + response);
                     hideDialog();
 
                     try {
@@ -215,7 +209,7 @@ public class Edit_Password extends AppCompatActivity {
                             JSONObject user = jObj.getJSONObject("Farmers");
                             boolean islogined = user.getBoolean("isLogined");
                             //db.editUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone(), farmer.getImageUrl());
-                            nutil.error_hint(Edit_Password.this, "重置密码成功");
+                            NormalUtil.error_hint(Edit_Password.this, "重置密码成功");
 
                             // 重新登录
                             Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
@@ -227,7 +221,7 @@ public class Edit_Password extends AppCompatActivity {
                             // Error occurred in registration. Get the error
                             // message
                             String errorMsg = jObj.getString("error_msg");
-                            nutil.error_hint(Edit_Password.this, errorMsg);
+                            NormalUtil.error_hint(Edit_Password.this, errorMsg);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -239,7 +233,7 @@ public class Edit_Password extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e(TAG, "Registration Error: " + error.getMessage());
-                    nutil.error_hint(Edit_Password.this, error.getMessage());
+                    NormalUtil.error_hint(Edit_Password.this, error.getMessage());
                     hideDialog();
                 }
             }) {
@@ -247,7 +241,7 @@ public class Edit_Password extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
 
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
                     params.put("telephone", farmer.getTelephone());
                     params.put("password", password);
                     params.put("tag", "F");

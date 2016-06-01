@@ -12,14 +12,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.db.SessionManager;
 
 public class MainLink extends AppCompatActivity {
-    private String token;
     Intent intent;
     private SessionManager session;
 
@@ -42,7 +40,7 @@ public class MainLink extends AppCompatActivity {
         setContentView(R.layout.activity_main_link);
         AgentApplication.addActivity(this);
 
-        token = getIntent().getStringExtra("TOKEN");
+        String token = getIntent().getStringExtra("TOKEN");
         if(token == null){
             error_hint("参数传输错误！");
             finish();

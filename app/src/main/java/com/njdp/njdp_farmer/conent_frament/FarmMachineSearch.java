@@ -78,7 +78,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private View view;
     private int width,height;
     private ProgressDialog pDialog;
-    private NetUtil netutil = new NetUtil();
     private RelativeLayout test_pop_layout;
     private RadioButton rb5, rb10, rb30, rb50, rb100;       //距离现则按钮
     private static int Search_range = 5;                      //查询农机的距离

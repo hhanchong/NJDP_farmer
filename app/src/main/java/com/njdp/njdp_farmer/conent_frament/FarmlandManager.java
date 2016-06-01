@@ -54,7 +54,6 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     private View view;
     private String token;
     private ProgressDialog pDialog;
-    private NetUtil netutil = new NetUtil();
     private static ArrayList<FarmlandInfo> farmlandInfos;
     private boolean isFirst = true;
     private boolean isRefreshData = false;
@@ -161,7 +160,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
             isFirst = false;
         }
 
-        if (!netutil.checkNet(getActivity())) {
+        if (!NetUtil.checkNet(getActivity())) {
             hideDialog();
             error_hint("网络连接错误");
         } else {

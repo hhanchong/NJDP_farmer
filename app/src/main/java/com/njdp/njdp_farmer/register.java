@@ -57,8 +57,6 @@ public class register extends AppCompatActivity {
     private static final String TAG = register.class.getSimpleName();
     private ProgressDialog pDialog;
     private SessionManager session;
-    private SQLiteHandler db;
-    private NetUtil netutil;
     private String verify_code = "";
 
     @Override
@@ -82,12 +80,11 @@ public class register extends AppCompatActivity {
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
-        netutil = new NetUtil();
         // Session manager
         session = new SessionManager(getApplicationContext());
 
         // SQLite database handler
-        db = new SQLiteHandler(getApplicationContext());
+        //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
 
         btn_verification_code = (Button) super.findViewById(R.id.register_get_verification_code);
         text_user_name = (EditText) super.findViewById(R.id.user_name);
@@ -152,6 +149,7 @@ public class register extends AppCompatActivity {
     //EditText输入是否为空
     private boolean isempty( int id) {
         EditText editText = (EditText) super.findViewById(id);
+        assert editText != null;
         return TextUtils.isEmpty(editText.getText());
     }
 
@@ -174,7 +172,7 @@ public class register extends AppCompatActivity {
 
         String tag_string_req = "req_register_driver_VerifyCode";
 
-        if(!netutil.checkNet(register.this)){
+        if(!NetUtil.checkNet(register.this)){
             error_hint("网络连接错误");
         } else {
             StringRequest strReq = new StringRequest(Request.Method.GET,
@@ -245,7 +243,7 @@ public class register extends AppCompatActivity {
         pDialog.setMessage("正在注册 ...");
         showDialog();
 
-        if (!netutil.checkNet(register.this)) {
+        if (!NetUtil.checkNet(register.this)) {
             hideDialog();
             error_hint("网络连接错误");
         } else {
