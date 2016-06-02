@@ -78,7 +78,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private ProgressDialog pDialog;
     private RelativeLayout test_pop_layout;
     private RadioButton rb5, rb10, rb30, rb50, rb100;       //距离现则按钮
-    private static int Search_range = 5;                      //查询农机的距离
+    private static int Search_range;                          //查询农机的距离
     private static FarmlandInfo farmlandInfo;                 //农户最后发布的农田
     private static FarmlandInfo farmlandLocal;                //本地GPS位置农田
     private static ArrayList<FarmlandInfo> farmlandInfosUndo; //未收割的所有农田
@@ -261,6 +261,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         width = display.getWidth();
         height = display.getHeight();
+        Search_range = 5;
         return view;
     }
 
