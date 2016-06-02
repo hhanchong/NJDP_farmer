@@ -355,6 +355,9 @@ public class FarmerRelease extends AppCompatActivity {
                     // Posting parameters to url
                     Map<String, String> params = new HashMap<>();
                     params.put("token", token);
+                    if(isEdit){
+                        params.put("id", String.valueOf(farmlandInfo.getId()));
+                    }
                     String crops_kind;
                     if(rbH.isChecked()){
                         crops_kind = "H";

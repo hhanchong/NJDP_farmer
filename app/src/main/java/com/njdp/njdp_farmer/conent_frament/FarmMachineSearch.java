@@ -4,9 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -304,7 +302,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         //imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getApplicationWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Log.e("农机查询------------->", "点击选择查询范围或其他查询条件");
-        int index;
+//        int index;
         switch (v.getId()) {
             case R.id.rb5:
                 mBaiduMap.clear();
