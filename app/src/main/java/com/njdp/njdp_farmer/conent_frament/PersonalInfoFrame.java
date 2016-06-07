@@ -69,7 +69,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     private SessionManager session;
     private NormalUtil nutil=new NormalUtil();
     //所有监听的控件
-    static com.njdp.njdp_farmer.changeDefault.CircleImageView userImage;
+    private com.njdp.njdp_farmer.changeDefault.CircleImageView userImage;
     TextView userName, telephone, qq, weixin, address;
     Button personalEdit;
     View view;
@@ -78,9 +78,8 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     private Farmer farmer;
     private String path;//用户头像路径
     private boolean imageexists = true;
-    private ProgressBar mProgressbar;
 
-    public static Handler mHandler = new Handler() {
+    public Handler mHandler = new Handler() {
         public void handleMessage (Message msg) {//此方法在ui线程运行
             switch(msg.what) {
                 case MSG_Image:
@@ -111,7 +110,6 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             if (view == null) {
                 view = inFlater(inflater);
             }
-            mProgressbar = new ProgressBar(getContext());
             pDialog = new ProgressDialog(getActivity());
             pDialog.setCancelable(false);
             pDialog.setMessage("正在获取用户信息 ...");
@@ -394,16 +392,21 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
 
     //错误信息提示1
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(getActivity(), str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getContext().getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示2
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(getActivity(), getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getContext().getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        userImage.destroyDrawingCache();
+    }
 }

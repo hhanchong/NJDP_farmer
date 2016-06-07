@@ -3,9 +3,7 @@ package com.njdp.njdp_farmer.conent_frament;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,7 +21,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.FarmerLandList;
 import com.njdp.njdp_farmer.FarmerRelease;
-import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.db.AppConfig;
@@ -37,16 +34,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * Created by Administrator on 2016/5/6.
- */
 public class FarmlandManager extends Fragment implements View.OnClickListener {
     private final String TAG = "FarmLandManager";
     private final int FARM_RELEASE = 1;
@@ -57,8 +49,8 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     private static ArrayList<FarmlandInfo> farmlandInfos;
     private boolean isFirst = true;
     private boolean isRefreshData = false;
-    private Handler handler;
-    private Runnable runnable;
+    //private Handler handler;
+    //private Runnable runnable;
 
     @Nullable
     @Override
@@ -301,14 +293,14 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
 
     //错误信息提示1
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(getActivity(), str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getContext().getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示2
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(getActivity(), getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getContext().getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
@@ -327,6 +319,9 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     public void onDestroy(){
         //handler.removeCallbacks(runnable);// 关闭定时器处理
         super.onDestroy();
+        if(farmlandInfos!=null)
+            farmlandInfos.clear();
+        farmlandInfos = null;
     }
 
 }

@@ -49,7 +49,8 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".login"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,38 +59,50 @@
         </activity>
         <activity
             android:name=".register"
-            android:label="@string/title_activity_register" />
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".register_TermsofService"
-            android:label="@string/title_activity_register__termsof_service" />
+            android:label="@string/title_activity_register__termsof_service"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".getpassword"
-            android:label="@string/title_activity_getpassword" />
+            android:label="@string/title_activity_getpassword"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".getpassword2"
-            android:label="getpassword2" />
+            android:label="getpassword2"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".mainpages"
-            android:label="@string/title_activity_mainpages" />
+            android:label="@string/title_activity_mainpages"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".register_image"
-            android:label="@string/title_activity_register_image" />
+            android:label="@string/title_activity_register_image"
+            android:screenOrientation="portrait"/>
 
         <!-- 照片选择 -->
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
 
         <!-- 设置相关的界面 -->
         <activity android:name=".PersonalSet"
-            android:label="@string/title_activity_personal_set" />
-        <activity android:name=".SetPhoneNum" />
-        <activity android:name=".address.AddressSelect" />
-        <activity android:name=".Edit_Password" />
-        <activity android:name=".MainLink"/>
+            android:label="@string/title_activity_personal_set"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SetPhoneNum"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".address.AddressSelect"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Edit_Password"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainLink"
+            android:screenOrientation="portrait"/>
 
-        <!-- 三个主界面 -->
-        <activity
+        <!-- 三个主界面Frame -->
+        <!--activity
             android:name=".conent_frament.FarmlandManager"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -97,11 +110,15 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".conent_frament.FarmMachineSearch"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" /-->
 
-        <activity android:name=".FarmerRelease" />
-        <activity android:name=".FarmerLandList" />
-        <activity android:name=".MachinesList" />
+        <!--农田发布、农田列表查询、农机列表查询-->
+        <activity android:name=".FarmerRelease"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".FarmerLandList"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MachinesList"
+            android:screenOrientation="portrait"/>
 
         <!-- 地图配置 -->
         <service

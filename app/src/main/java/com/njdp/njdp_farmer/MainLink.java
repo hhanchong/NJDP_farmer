@@ -63,25 +63,25 @@ public class MainLink extends AppCompatActivity {
 
     //发布信息
     public void releaseDemandClick(View v){
-        intent.putExtra("openModule", 1);
+        intent.putExtra("openModule", 1).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
     //查询农机
     public void machineSearchClick(View v){
-        intent.putExtra("openModule", 2);
+        intent.putExtra("openModule", 2).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
     //个人信息
     public void peopleInfoClick(View v){
-        intent.putExtra("openModule", 3);
+        intent.putExtra("openModule", 3).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
     //错误信息提示
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(MainLink.this, str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }

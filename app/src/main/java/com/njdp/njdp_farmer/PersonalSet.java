@@ -8,7 +8,9 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -110,6 +112,10 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         et_weixin.setText(farmer.getWeixin());
 
         listenerEvent();
+
+        editFinish.setEnabled(false);
+        editFinish.setClickable(false);
+        editTextIsChange();
     }
 
     //监听按钮点击事件
@@ -125,9 +131,11 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.phonenum:
-                Intent intent = new Intent(this, SetPhoneNum.class);
-                intent.putExtra("token", farmer.getFm_token());
-                startActivityForResult(intent, PHONEEDIT);
+                Toast toast = Toast.makeText(getApplicationContext(), "此项信息不允许修改！", Toast.LENGTH_SHORT);
+                toast.show();
+                //Intent intent = new Intent(this, SetPhoneNum.class);
+                //intent.putExtra("token", farmer.getFm_token());
+                //startActivityForResult(intent, PHONEEDIT);
                 break;
             case R.id.set_user_image:
                 Intent intent2 = new Intent(this, register_image.class);
@@ -290,7 +298,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
     //错误信息提示
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(PersonalSet.this, str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
@@ -303,6 +311,105 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    //输入是否改变，判断是否禁用按钮
+    private void editTextIsChange(){
+        et_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if ((s.length() > 0) && (!s.equals(farmer.getName()) || !et_QQ.getText().toString().equals(farmer.getQQ())
+                        || !et_weixin.getText().toString().equals(farmer.getWeixin()) || !tv_address.getText().toString().equals(farmer.getAddress()))) {
+                    editFinish.setClickable(true);
+                    editFinish.setEnabled(true);
+                } else {
+                    editFinish.setEnabled(false);
+                    editFinish.setClickable(false);
+                }
+            }
+        });
+
+        et_QQ.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.equals(farmer.getQQ()) || !et_name.getText().toString().equals(farmer.getName())
+                        || !et_weixin.getText().toString().equals(farmer.getWeixin()) || !tv_address.getText().toString().equals(farmer.getAddress())) {
+                    editFinish.setClickable(true);
+                    editFinish.setEnabled(true);
+                } else {
+                    editFinish.setEnabled(false);
+                    editFinish.setClickable(false);
+                }
+            }
+        });
+
+        et_weixin.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.equals(farmer.getWeixin()) || !et_QQ.getText().toString().equals(farmer.getQQ())
+                        || !et_name.getText().toString().equals(farmer.getName()) || !tv_address.getText().toString().equals(farmer.getAddress())) {
+                    editFinish.setClickable(true);
+                    editFinish.setEnabled(true);
+                } else {
+                    editFinish.setEnabled(false);
+                    editFinish.setClickable(false);
+                }
+            }
+        });
+
+        tv_address.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.equals(farmer.getAddress()) || !et_QQ.getText().toString().equals(farmer.getQQ())
+                        || !et_name.getText().toString().equals(farmer.getName()) || !et_weixin.getText().toString().equals(farmer.getWeixin())) {
+                    editFinish.setClickable(true);
+                    editFinish.setEnabled(true);
+                } else {
+                    editFinish.setEnabled(false);
+                    editFinish.setClickable(false);
+                }
+            }
+        });
     }
 
     //不跟随系统变化字体大小

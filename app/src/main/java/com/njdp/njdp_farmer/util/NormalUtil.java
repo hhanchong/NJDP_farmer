@@ -126,7 +126,7 @@ public class NormalUtil {
                     Toast.makeText(context, "文件目录创建失败！", Toast.LENGTH_SHORT).show();
                 }
             }
-            File file1=new File(tempFile,"userimage.png");
+            File file1=new File(tempFile,"userimage000.png");
             if(!file1.exists()){
                 file1.createNewFile();
             }

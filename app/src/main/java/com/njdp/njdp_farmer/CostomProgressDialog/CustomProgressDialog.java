@@ -16,8 +16,6 @@ public class CustomProgressDialog extends ProgressDialog {
 	private ImageView mImageView;
 	private String mLoadingTip;
 	private TextView mLoadingTv;
-	private int count = 0;
-	private String oldLoadingTip;
 	private int mResid;
 
 	public CustomProgressDialog(Context context, String content, int id) {

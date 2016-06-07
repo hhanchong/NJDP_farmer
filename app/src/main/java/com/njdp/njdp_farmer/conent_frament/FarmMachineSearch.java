@@ -78,12 +78,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private ProgressDialog pDialog;
     private RelativeLayout test_pop_layout;
     private RadioButton rb5, rb10, rb30, rb50, rb100;       //距离现则按钮
-    private static int Search_range;                          //查询农机的距离
-    private static FarmlandInfo farmlandInfo;                 //农户最后发布的农田
-    private static FarmlandInfo farmlandLocal;                //本地GPS位置农田
-    private static ArrayList<FarmlandInfo> farmlandInfosUndo; //未收割的所有农田
-    private static ArrayList<MachineInfo> machineInfos;       //查询回来的农机
-    private  static List<MachineInfo> machinesToShow;         //需要显示的农机
+    private int Search_range;                               //查询农机的距离
+    private FarmlandInfo farmlandInfo;                 //农户最后发布的农田
+    private FarmlandInfo farmlandLocal;                //本地GPS位置农田
+    private ArrayList<FarmlandInfo> farmlandInfosUndo; //未收割的所有农田
+    private ArrayList<MachineInfo> machineInfos;       //查询回来的农机
+    private static List<MachineInfo> machinesToShow;         //需要显示的农机
     private boolean isFirst = false;
     private boolean isUseLocalGPS=false;
     private Handler handler;
@@ -372,10 +372,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             case R.id.rb100:
                 mBaiduMap.clear();
                 machinesToShow.clear();
-                Search_range = 100;
+                Search_range = 1000;
                 getMachineInfos();
                 //index = IndexOfRange(100);
-//                index = IndexOfRange(1000); //演示用为1000公里
+//                index = IndexOfRange(1000); //查询全部为10000公里
 //                if(index != -1){
 //                    machinesToShow.addAll(machineInfos.subList(0, index + 1));
 //                    //更新农机数据
@@ -439,14 +439,14 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
     //错误信息提示1
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(getActivity(), str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getContext().getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示2
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(getActivity(), getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getContext().getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
@@ -919,7 +919,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
     @Override
     public void onDestroy(){
-        handler.removeCallbacks(runnable);// 关闭定时器处理
         super.onDestroy();
+
+        handler.removeCallbacks(runnable);// 关闭定时器处理
+        mMapView.onDestroy();   //销毁地图
+        if(machinesToShow != null)
+            machinesToShow.clear();
+        machinesToShow = null;
     }
 }

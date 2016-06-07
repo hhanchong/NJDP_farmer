@@ -52,8 +52,7 @@ public class register_image extends AppCompatActivity {
     private ImageButton getback;
     private com.njdp.njdp_farmer.changeDefault.CircleImageView userImage=null;
     private ProgressDialog pDialog;
-    private String path;//用户头像路径
-    private String imageName;
+    private String path,temppath;//用户头像路径
     private Uri imageUri;
     private String Url_Image;
     private final int REQUEST_IMAGE=1;
@@ -126,7 +125,6 @@ public class register_image extends AppCompatActivity {
         //设置Textview超链接高亮背景色为透明色
         notice.setHighlightColor(0);
 
-        imageName ="userimage.png";
         //设置头像本地存储路径
         File tempFile;
         if(nutil.ExistSDCard()) {
@@ -134,7 +132,8 @@ public class register_image extends AppCompatActivity {
         }else {
             tempFile =getCacheDir();
         }
-        path= tempFile.getAbsolutePath()+"/NJDP/" + telephone + "/photo/"+imageName;
+        path= tempFile.getAbsolutePath()+"/NJDP/" + telephone + "/photo/userimage.png";
+        temppath = tempFile.getAbsolutePath()+"/NJDP/" + telephone + "/photo/userimage000.png";
         if(new File(path).exists()){
             userImage.setImageURI(Uri.parse(path));
         }
@@ -146,7 +145,7 @@ public class register_image extends AppCompatActivity {
                 if (IsSetImage)
                 {
                     //上传头像注册
-                    register_uploadImage(Url_Image, path);
+                    register_uploadImage(Url_Image, temppath);
                 }
                 //默认头像注册
                 //register_finish(Url);
@@ -243,15 +242,15 @@ public class register_image extends AppCompatActivity {
     }
 
     //上传头像
-    private void register_uploadImage(String url,String path) {
+    private void register_uploadImage(String url, final String path) {
 
-        File file=new File(path);
+        final File fileNew=new File(temppath);
         String tag_string_req = "req_edit_image";
 
         pDialog.setMessage("正在上传图片 ...");
         showDialog();
 
-        if (!file.exists()) {
+        if (!fileNew.exists()) {
             hideDialog();
             Toast.makeText(register_image.this, "头像图片不存在!请重新选择！", Toast.LENGTH_SHORT).show();
         } else if (!NetUtil.checkNet(register_image.this)) {
@@ -262,7 +261,7 @@ public class register_image extends AppCompatActivity {
                 OkHttpUtils.post()
                         .url(url)
                         .addParams("token", token)
-                        .addFile("person_photo", imageName, file)
+                        .addFile("person_photo", "userimage.png", fileNew)
                         .addHeader("content-disposition", "form-data")
                         .build()
                         .execute(new StringCallback() {
@@ -282,6 +281,12 @@ public class register_image extends AppCompatActivity {
                                     if (status == 0) {
                                         String msg = jObj.getString("result");
                                         error_hint("保存成功！");
+                                        //更新头像文件
+                                        File fileOld = new File(path);
+                                        if(fileOld.exists()){
+                                            fileOld.delete();
+                                        }
+                                        fileNew.renameTo(fileOld);
                                         Log.e(TAG, "UploadImage response：" + msg);
                                         finish();
                                     }else if(status == 3){
@@ -331,14 +336,14 @@ public class register_image extends AppCompatActivity {
 
     //信息未输入提示
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(register_image.this, getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(register_image.this, str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }

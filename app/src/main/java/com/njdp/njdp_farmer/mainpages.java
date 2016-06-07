@@ -51,6 +51,9 @@ public class mainpages extends AppCompatActivity {
         setContentView(R.layout.activity_mainpage);
         AgentApplication.addActivity(this);
 
+        if(progressDialog != null) {
+            progressDialog.cancel();
+        }
         progressDialog = new CustomProgressDialog(this,"数据正在请求中...", R.anim.donghua_frame);
         progressDialog.show();
 
@@ -78,7 +81,10 @@ public class mainpages extends AppCompatActivity {
         //要传递的参数
         Bundle bundle1 = new Bundle();
         bundle1.putString("token", token);
-        content_list = new ArrayList<>();
+        if(content_list == null)
+            content_list = new ArrayList<>();
+        else
+            content_list.clear();
         //农户发布界面
         FarmlandManager farmlandManager = new FarmlandManager();
         farmlandManager.setArguments(bundle1);
@@ -146,6 +152,8 @@ public class mainpages extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        content_list.clear();
+        AgentApplication.removeActivity(this);
     }
 
     //获取和设置最后没有完成的发布任务，与个人信息Frame交互
@@ -158,7 +166,7 @@ public class mainpages extends AppCompatActivity {
 
     //错误信息提示
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(mainpages.this, str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }

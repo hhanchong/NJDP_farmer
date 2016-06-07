@@ -148,8 +148,9 @@ public class FarmerLandList extends AppCompatActivity {
         group = new ArrayList<>();
         child = new ArrayList<>();
         int i = 1;
-        for(FarmlandInfo f :farmlandInfos){
-            addInfo(i+"."+f.getVillage() + "-" + ConvertToCHS(f.getCrops_kind()) + "-" + f.getArea() + "亩-" + (f.getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{f});
+        for(int j = farmlandInfos.size()-1; j > -1; j-- ){
+            addInfo(i+"."+farmlandInfos.get(j).getVillage() + "-" + ConvertToCHS(farmlandInfos.get(j).getCrops_kind()) + "-" + farmlandInfos.get(j).getArea()
+                    + "亩-" + (farmlandInfos.get(j).getStatus().equals("0") ? "未完成":"已完成"), new FarmlandInfo[]{farmlandInfos.get(j)});
             i++;
         }
         //刷新界面
@@ -225,13 +226,13 @@ public class FarmerLandList extends AppCompatActivity {
                 .getPackedPositionType(info.packedPosition);
         if (type == ExpandableListView.PACKED_POSITION_TYPE_GROUP )
         {
+            if(!child.get(ExpandableListView.getPackedPositionGroup(info.packedPosition)).get(0).getStatus().equals("0")){
+                error_hint("此项发布正在进行或已完成，不允许修改或删除！");
+                return;
+            }
             menu.add(0, 1, 0, "修改");
-            if(!child.get(ExpandableListView.getPackedPositionGroup(info.packedPosition)).get(0).getStatus().equals("0"))
-                menu.getItem(0).setEnabled(false);
             menu.add(1, 2, 0, "删除" );
-            if(child.get(ExpandableListView.getPackedPositionGroup(info.packedPosition)).get(0).getStatus().equals("2"))
-                menu.getItem(1).setEnabled(false);
-            menu.add(1, 3, 0, "全部删除" );
+//            menu.add(1, 3, 0, "全部删除" );
         }
     }
 
@@ -508,7 +509,8 @@ public class FarmerLandList extends AppCompatActivity {
 
     @Override
     public void onDestroy(){
-        this.unregisterForContextMenu(listView);
         super.onDestroy();
+        this.unregisterForContextMenu(listView);
+        AgentApplication.removeActivity(this);
     }
 }
