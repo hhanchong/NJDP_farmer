@@ -40,12 +40,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.njdp.njdp_farmer.address.AddressSelect;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.conent_frament.FarmlandManager;
@@ -157,6 +159,7 @@ public class FarmerRelease extends AppCompatActivity {
         rbC=(RadioButton)this.findViewById(R.id.rbC);   //耕作Cultivation
         rbS=(RadioButton)this.findViewById(R.id.rbS);   //播种Seeding
         rbH.setChecked(true);
+        croptype.setText("小麦");
         typeTitle = "选择作物类型";
         typeArray = crops;
 
@@ -309,14 +312,14 @@ public class FarmerRelease extends AppCompatActivity {
                     tv1.setText("作物类型");
                     typeTitle = "选择作物类型";
                     typeArray = crops;
-                    croptype.setText("");
+                    croptype.setText("小麦");
                     croptype.setHint("请选择农作物种类");
                     break;
                 case R.id.rbC:
                     tv1.setText("耕作类型");
                     typeTitle = "选择耕作类型";
                     typeArray = cultivation;
-                    croptype.setText("");
+                    croptype.setText("深松");
                     croptype.setHint("请选择耕作类型");
                     break;
             }
@@ -839,9 +842,15 @@ public class FarmerRelease extends AppCompatActivity {
                                 // 点击“确认”后的操作
                                 //获取地址经纬度失败，获取本地GPS经纬度
                                 Location location = getLocalGPS();
+                                // 将GPS设备采集的原始GPS坐标转换成百度坐标
+                                CoordinateConverter converter  = new CoordinateConverter();
+                                converter.from(CoordinateConverter.CoordType.GPS);
+                                // sourceLatLng待转换坐标
+                                converter.coord(new LatLng(location.getLatitude(), location.getLongitude()));
+                                LatLng point = converter.convert();
                                 if (location != null) {
-                                    farmlandInfo.setLatitude(String.valueOf(location.getLatitude()));
-                                    farmlandInfo.setLongitude(String.valueOf(location.getLongitude()));
+                                    farmlandInfo.setLatitude(String.valueOf(point.latitude));
+                                    farmlandInfo.setLongitude(String.valueOf(point.longitude));
                                 }
                                 else {
                                     error_hint("获取本地GPS位置失败！");

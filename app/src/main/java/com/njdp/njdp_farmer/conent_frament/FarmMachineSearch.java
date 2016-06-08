@@ -50,6 +50,7 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.CoordinateConverter;
 import com.njdp.njdp_farmer.MachinesList;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
@@ -561,7 +562,20 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 R.drawable.s20, R.drawable.s21, R.drawable.s22, R.drawable.s23, R.drawable.s24, R.drawable.s25, R.drawable.s26,
                 R.drawable.s27, R.drawable.s28, R.drawable.s29, R.drawable.s30};
         for (int i = 0; i < machineInfos.size(); i++) {
-            LatLng point = new LatLng(machineInfos.get(i).getLatitude(), machineInfos.get(i).getLongitude());
+//            // 将google地图、soso地图、aliyun地图、mapabc地图和amap地图// 所用坐标转换成百度坐标
+//            CoordinateConverter converter  = new CoordinateConverter();
+//            converter.from(CoordType.COMMON);
+//            // sourceLatLng待转换坐标
+//            converter.coord(sourceLatLng);
+//            LatLng desLatLng = converter.convert();
+
+            // 将GPS设备采集的原始GPS坐标转换成百度坐标
+            CoordinateConverter converter  = new CoordinateConverter();
+            converter.from(CoordinateConverter.CoordType.GPS);
+            // sourceLatLng待转换坐标
+            converter.coord(new LatLng(machineInfos.get(i).getLatitude(), machineInfos.get(i).getLongitude()));
+            LatLng point = converter.convert();
+            //LatLng point = new LatLng(machineInfos.get(i).getLatitude(), machineInfos.get(i).getLongitude());
 
             int icon ;
             if(i<30){

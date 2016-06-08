@@ -1,5 +1,7 @@
 package com.njdp.njdp_farmer;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -18,8 +20,7 @@ import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.db.SessionManager;
 
 public class MainLink extends AppCompatActivity {
-    Intent intent;
-    private SessionManager session;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,42 +41,46 @@ public class MainLink extends AppCompatActivity {
         setContentView(R.layout.activity_main_link);
         AgentApplication.addActivity(this);
 
-        String token = getIntent().getStringExtra("TOKEN");
+        token = getIntent().getStringExtra("TOKEN");
         if(token == null){
             error_hint("参数传输错误！");
             finish();
         }
 
-        // Session manager
-        session = new SessionManager(getApplicationContext());
-
-        intent = new Intent(MainLink.this, mainpages.class);
-        intent.putExtra("TOKEN", token);
+        ActivityManager activityManager = (ActivityManager) this.getSystemService(Context.ACTIVITY_SERVICE);
+        int memClass = activityManager.getMemoryClass();//64，以m为单位
     }
 
     //注销登录
     public void logoutClick(View v){
-        intent = new Intent(MainLink.this, login.class);
+        Intent intent = new Intent(MainLink.this, login.class);
         startActivity(intent);
+        SessionManager session = new SessionManager(getApplicationContext());
         session.setLogin(false,false,"");
         finish();
     }
 
     //发布信息
     public void releaseDemandClick(View v){
+        Intent intent = new Intent(MainLink.this, mainpages.class);
         intent.putExtra("openModule", 1).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("TOKEN", token);
         startActivity(intent);
     }
 
     //查询农机
     public void machineSearchClick(View v){
+        Intent intent = new Intent(MainLink.this, mainpages.class);
         intent.putExtra("openModule", 2).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("TOKEN", token);
         startActivity(intent);
     }
 
     //个人信息
     public void peopleInfoClick(View v){
+        Intent intent = new Intent(MainLink.this, mainpages.class);
         intent.putExtra("openModule", 3).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("TOKEN", token);
         startActivity(intent);
     }
 

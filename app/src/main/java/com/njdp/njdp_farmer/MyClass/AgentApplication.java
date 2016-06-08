@@ -20,6 +20,8 @@ public class AgentApplication extends Application {
     public static void removeActivity(Activity activity){
         activities.remove(activity);
         activity.finish();
+        System.gc();
+        System.runFinalization();
     }
 
     public static void ExitApp() {
