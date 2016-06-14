@@ -8,9 +8,12 @@ import java.util.List;
 
 /**
  * Created by Administrator on 2016/5/26.
+ * 公用数据缓存类
  */
 public class AgentApplication extends Application {
-    private static List<Activity> activities = new ArrayList<Activity>();
+    private static List<Activity> activities = new ArrayList<>();      //页面缓存
+    public static ArrayList<FarmlandInfo> farmlandInfos = new ArrayList<>();   //农田数据缓存
+    public static List<MachineInfo> machinesToShow = new ArrayList<>();        //需要显示的农机
 
     public static void addActivity(Activity activity) {
         if(activities.indexOf(activity) < 0)

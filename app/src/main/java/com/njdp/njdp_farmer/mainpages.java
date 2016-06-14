@@ -28,7 +28,6 @@ import java.util.List;
 
 public class mainpages extends AppCompatActivity {
     private String token;
-    private FarmlandInfo lastUndoFarmland;
     private CustomProgressDialog progressDialog;
     private ContentViewPager contentViewPager;
 
@@ -109,7 +108,7 @@ public class mainpages extends AppCompatActivity {
         contentViewPager = (ContentViewPager) findViewById(R.id.content_viewpager);
         RadioGroup contentradiogroup = (RadioGroup) findViewById(R.id.content_radiogroup);
         //预加载一页
-        contentViewPager.setOffscreenPageLimit(5);
+        contentViewPager.setOffscreenPageLimit(3);
         contentViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int i) {
@@ -152,16 +151,11 @@ public class mainpages extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        content_list.clear();
-        AgentApplication.removeActivity(this);
-    }
 
-    //获取和设置最后没有完成的发布任务，与个人信息Frame交互
-    public FarmlandInfo getLastUndoFarmland() {
-        return lastUndoFarmland;
-    }
-    public void setLastUndoFarmland(FarmlandInfo farmland) {
-        this.lastUndoFarmland = farmland;
+        //释放资源
+        content_list.clear();
+        content_list = null;
+        AgentApplication.removeActivity(this);
     }
 
     //错误信息提示

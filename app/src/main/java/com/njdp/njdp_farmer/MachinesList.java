@@ -20,6 +20,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.MyClass.MachineInfo;
 import com.njdp.njdp_farmer.adpter.MachineAdapter;
 import com.njdp.njdp_farmer.conent_frament.FarmMachineSearch;
@@ -60,7 +61,7 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
         machinelist.getBackground().setAlpha(180);
 
         //获取农机数据
-        machineInfos = FarmMachineSearch.getMachines();
+        machineInfos = AgentApplication.machinesToShow;
 
         /**
          * 初始化列表数据

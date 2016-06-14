@@ -408,5 +408,8 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     public void onDestroy(){
         super.onDestroy();
         userImage.destroyDrawingCache();
+        userImage = null;
+        nutil = null;
+        mHandler = null;
     }
 }

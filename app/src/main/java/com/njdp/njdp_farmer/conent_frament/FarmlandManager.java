@@ -21,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.FarmerLandList;
 import com.njdp.njdp_farmer.FarmerRelease;
+import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.db.AppConfig;
@@ -46,7 +47,6 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     private View view;
     private String token;
     private ProgressDialog pDialog;
-    private static ArrayList<FarmlandInfo> farmlandInfos;
     private boolean isFirst = true;
     private boolean isRefreshData = false;
     //private Handler handler;
@@ -88,7 +88,6 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     public View inFlater(LayoutInflater inflater) {
         view = inflater.inflate(R.layout.activity_farmerland_manager, null, false);
         initView(view);
-        farmlandInfos = new ArrayList<>();
         getFarmlandInfos();
         return view;
     }
@@ -190,7 +189,7 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
                 // Check for error node in json
                 if (status == 0) {
                     //清空旧数据
-                    farmlandInfos.clear();
+                    AgentApplication.farmlandInfos.clear();
                     //此处引入JSON jar包
                     JSONArray jObjs = jObj.getJSONArray("result");
                     for(int i = 0; i < jObjs.length(); i++){
@@ -215,13 +214,9 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
                         temp.setRemark(object.getString("Farmlands_remark"));
                         temp.setCreatetime(object.getString("created_at"));
                         temp.setUpdatetime(object.getString("updated_at"));
-                        farmlandInfos.add(temp);
+                        AgentApplication.farmlandInfos.add(temp);
                     }
                     //myrelease.setText("共发布了" + jObjs.length() + "条信息，点击查看");
-                    if(farmlandInfos.size() > 0){
-                        returnLastReleaseUndo();
-                    }
-
                 } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
@@ -263,24 +258,6 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
         }
     };
 
-    //返回最后的未完成的发布信息
-    private void returnLastReleaseUndo(){
-        for(int i = farmlandInfos.size()-1; i >= 0; i--){
-            if(farmlandInfos.get(i).getStatus().equals("0")){
-                if(farmlandInfos.get(i).getEnd_time().getTime() >= System.currentTimeMillis()){
-                    ((mainpages)getActivity()).setLastUndoFarmland(farmlandInfos.get(i));
-                    return;
-                }
-            }
-        }
-        ((mainpages)getActivity()).setLastUndoFarmland(null);
-    }
-
-    //获取农田信息，与农田列表界面交互farmerLandList
-    public static ArrayList<FarmlandInfo> getFarmlands() {
-        return farmlandInfos;
-    }
-
     private void showDialog() {
         if (!pDialog.isShowing())
             pDialog.show();
@@ -319,9 +296,6 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     public void onDestroy(){
         //handler.removeCallbacks(runnable);// 关闭定时器处理
         super.onDestroy();
-        if(farmlandInfos!=null)
-            farmlandInfos.clear();
-        farmlandInfos = null;
     }
 
 }

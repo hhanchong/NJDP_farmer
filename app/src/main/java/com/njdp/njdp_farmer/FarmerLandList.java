@@ -98,7 +98,7 @@ public class FarmerLandList extends AppCompatActivity {
         farmlandlist.getBackground().setAlpha(180);
 
         //获取农田数据
-        farmlandInfoList = FarmlandManager.getFarmlands();
+        farmlandInfoList = AgentApplication.farmlandInfos;
         token = getIntent().getStringExtra("token");
         //判断参数传递是否正确
         if (token == null) {

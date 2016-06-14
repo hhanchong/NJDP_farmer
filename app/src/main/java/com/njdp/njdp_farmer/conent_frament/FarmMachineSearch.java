@@ -52,6 +52,7 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.njdp.njdp_farmer.MachinesList;
+import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.MyClass.MachineInfo;
@@ -78,13 +79,12 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private int width,height;
     private ProgressDialog pDialog;
     private RelativeLayout test_pop_layout;
-    private RadioButton rb5, rb10, rb30, rb50, rb100;       //距离现则按钮
+    private RadioButton rb5, rb10, rb30, rb50, rb100;      //距离现则按钮
     private int Search_range;                               //查询农机的距离
-    private FarmlandInfo farmlandInfo;                 //农户最后发布的农田
-    private FarmlandInfo farmlandLocal;                //本地GPS位置农田
-    private ArrayList<FarmlandInfo> farmlandInfosUndo; //未收割的所有农田
-    private ArrayList<MachineInfo> machineInfos;       //查询回来的农机
-    private static List<MachineInfo> machinesToShow;         //需要显示的农机
+    private FarmlandInfo farmlandInfo;                      //农户最后发布的农田
+    private FarmlandInfo farmlandLocal;                     //本地GPS位置农田
+    private ArrayList<FarmlandInfo> farmlandInfosUndo;     //未收割的所有农田
+    private ArrayList<MachineInfo> machineInfos;            //查询回来的农机
     private boolean isFirst = false;
     private boolean isUseLocalGPS=false;
     private Handler handler;
@@ -140,7 +140,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         try {
             if (view == null) {
                 machineInfos = new ArrayList<>();
-                machinesToShow = new ArrayList<>();
                 farmlandInfosUndo = new ArrayList<>();
                 isFirst = true;
                 view = inFlater(inflater);
@@ -214,7 +213,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     // TODO Auto-generated method stub
                     // 在此处添加执行的代码
                     try {
-                        farmlandInfo = ((mainpages)getActivity()).getLastUndoFarmland();
+                        farmlandInfo = GetLastReleaseUndo();
                         //获取农机数据
                         if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
                         {
@@ -308,7 +307,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         switch (v.getId()) {
             case R.id.rb5:
                 mBaiduMap.clear();
-                machinesToShow.clear();
+                AgentApplication.machinesToShow.clear();
                 Search_range = 5;
                 getMachineInfos();
 //                index = IndexOfRange(5);
@@ -324,7 +323,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb10:
                 mBaiduMap.clear();
-                machinesToShow.clear();
+                AgentApplication.machinesToShow.clear();
                 Search_range = 10;
                 getMachineInfos();
 //                index = IndexOfRange(10);
@@ -340,7 +339,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb30:
                 mBaiduMap.clear();
-                machinesToShow.clear();
+                AgentApplication.machinesToShow.clear();
                 Search_range = 30;
                 getMachineInfos();
 //                index = IndexOfRange(30);
@@ -356,7 +355,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb50:
                 mBaiduMap.clear();
-                machinesToShow.clear();
+                AgentApplication.machinesToShow.clear();
                 Search_range = 50;
                 getMachineInfos();
 //                index = IndexOfRange(50);
@@ -372,7 +371,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             case R.id.rb100:
                 mBaiduMap.clear();
-                machinesToShow.clear();
+                AgentApplication.machinesToShow.clear();
                 Search_range = 1000;
                 getMachineInfos();
                 //index = IndexOfRange(100);
@@ -393,13 +392,13 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 break;
             case R.id.refresh:
                 mBaiduMap.clear();
-                machinesToShow.clear();
+                AgentApplication.machinesToShow.clear();
                 Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.refresh);
                 getActivity().findViewById(R.id.refresh).startAnimation(anim);
                 getMachineInfos();
                 break;
             case R.id.select_center:
-                final String[] farmlandArray = SelectUndo(FarmlandManager.getFarmlands());
+                final String[] farmlandArray = SelectUndo(AgentApplication.farmlandInfos);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("请选择查询农机的中心点");
                 builder.setSingleChoiceItems(farmlandArray, -1, new DialogInterface.OnClickListener() {
@@ -545,10 +544,10 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         rb5.setChecked(true);
         int index = IndexOfRange(5);
         if(index != -1){
-            machinesToShow.addAll(machineInfos.subList(0, index + 1));
+            AgentApplication.machinesToShow.addAll(machineInfos.subList(0, index + 1));
             //更新农机数据
-            machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
-            ShowInMap(machinesToShow);
+            machineListView.setText("共有" + AgentApplication.machinesToShow.size()  + "条农机信息，点击查看列表");
+            ShowInMap(AgentApplication.machinesToShow);
         }
         //mMapView.refreshDrawableState();
     }
@@ -807,7 +806,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                 if (status == 0) {
                     //清空旧数据
                     //machineInfos.clear();
-                    machinesToShow.clear();
+                    AgentApplication.machinesToShow.clear();
                     //此处引入JSON jar包
                     JSONArray jObjs = jObj.getJSONArray("result");
                     for(int i = 0; i < jObjs.length(); i++){
@@ -826,7 +825,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                         temp.setWork_time(object.getString("Machine_worktime"));
                         temp.setRemark(object.getString("Machine_remark"));
                         //machineInfos.add(temp); //旧版先缓存到list，然后根据选择的范围筛选
-                        machinesToShow.add(temp);
+                        AgentApplication.machinesToShow.add(temp);
                     }
                     //在地图上显示农机位置
 //                    int index;
@@ -854,8 +853,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 //                    }
 
                     //更新农机数据
-                    ShowInMap(machinesToShow);
-                    machineListView.setText("共有" + machinesToShow.size()  + "条农机信息，点击查看列表");
+                    ShowInMap(AgentApplication.machinesToShow);
+                    machineListView.setText("共有" + AgentApplication.machinesToShow.size()  + "条农机信息，点击查看列表");
                 } else if(status == 3){
                     //密匙失效
                     error_hint("用户登录过期，请重新登录！");
@@ -897,11 +896,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         }
     };
 
-    //获取农机信息，与农机列表界面交互machinesList
-    public static List<MachineInfo> getMachines() {
-        return machinesToShow;
-    }
-
     private void showDialog() {
         if (!pDialog.isShowing())
             pDialog.show();
@@ -931,14 +925,35 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         return result.toArray(new String[0]);
     }
 
+    //返回最后的未完成的发布信息
+    private FarmlandInfo GetLastReleaseUndo(){
+        for(int i = AgentApplication.farmlandInfos.size()-1; i >= 0; i--){
+            if(AgentApplication.farmlandInfos.get(i).getStatus().equals("0")){
+                if(AgentApplication.farmlandInfos.get(i).getEnd_time().getTime() >= System.currentTimeMillis()){
+                    return AgentApplication.farmlandInfos.get(i);
+                    //((mainpages)getActivity()).setLastUndoFarmland(AgentApplication.farmlandInfos.get(i));
+                }
+            }
+        }
+        return null;
+        //((mainpages)getActivity()).setLastUndoFarmland(null);
+    }
+
     @Override
     public void onDestroy(){
         super.onDestroy();
 
+        //释放资源
         handler.removeCallbacks(runnable);// 关闭定时器处理
+        handler = null;
         mMapView.onDestroy();   //销毁地图
-        if(machinesToShow != null)
-            machinesToShow.clear();
-        machinesToShow = null;
+        mMapView = null;
+        farmlandInfosUndo.clear();
+        farmlandInfosUndo = null;
+        machineInfos.clear();
+        machineInfos = null;
+        locationService.stop();
+        locationService.unregisterListener(new mListener());
+        locationService = null;
     }
 }
