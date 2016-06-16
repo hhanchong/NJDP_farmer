@@ -96,6 +96,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private MapView mMapView = null;
     private BaiduMap mBaiduMap = null;
     private boolean isFirstLocation = true;
+    private mListener myListener = new mListener();
     /**
      * 当前定位的模式
      */
@@ -190,7 +191,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
 
             //注册监听
-            locationService.registerListener(new mListener());
+            locationService.registerListener(myListener);
             locationService.setLocationOption(locationService.getOption());
 
 
@@ -913,7 +914,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         farmlandInfosUndo.clear();
         ArrayList<String> result = new ArrayList<>();
         for(FarmlandInfo f : farmlandInfos){
-            if(f.getStatus().equals("0")) {
+            if(f.getStatus().equals("0") && f.getEnd_time().getTime() >= System.currentTimeMillis()) {
                 farmlandInfosUndo.add(f);
                 if(f.getCreatetime().indexOf(".") > 0)
                     f.setCreatetime(f.getCreatetime().substring(0, f.getCreatetime().indexOf(".")));
@@ -961,7 +962,8 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         handler.removeCallbacks(runnable);// 关闭定时器处理
         handler = null;
         locationService.stop();
-        locationService.unregisterListener(new mListener());
+        locationService.unregisterListener(myListener);
+        myListener = null;
         locationService = null;
         mBaiduMap.clear();
         mBaiduMap.removeMarkerClickListener(new markerClicklistener());
