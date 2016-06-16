@@ -511,6 +511,8 @@ public class FarmerLandList extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         this.unregisterForContextMenu(listView);
+        View view = findViewById(R.id.root_div);
+        view.setBackgroundResource(0); //释放背景图片
         AgentApplication.removeActivity(this);
     }
 }

@@ -63,7 +63,7 @@ public class MainLink extends AppCompatActivity {
     //发布信息
     public void releaseDemandClick(View v){
         Intent intent = new Intent(MainLink.this, mainpages.class);
-        intent.putExtra("openModule", 1).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("openModule", 1);
         intent.putExtra("TOKEN", token);
         startActivity(intent);
     }
@@ -71,7 +71,7 @@ public class MainLink extends AppCompatActivity {
     //查询农机
     public void machineSearchClick(View v){
         Intent intent = new Intent(MainLink.this, mainpages.class);
-        intent.putExtra("openModule", 2).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("openModule", 2);
         intent.putExtra("TOKEN", token);
         startActivity(intent);
     }
@@ -79,7 +79,7 @@ public class MainLink extends AppCompatActivity {
     //个人信息
     public void peopleInfoClick(View v){
         Intent intent = new Intent(MainLink.this, mainpages.class);
-        intent.putExtra("openModule", 3).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("openModule", 3);
         intent.putExtra("TOKEN", token);
         startActivity(intent);
     }
@@ -104,6 +104,13 @@ public class MainLink extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        View view = findViewById(R.id.top_layout);
+        view.setBackgroundResource(0); //释放背景图片
     }
 
     //不跟随系统变化字体大小

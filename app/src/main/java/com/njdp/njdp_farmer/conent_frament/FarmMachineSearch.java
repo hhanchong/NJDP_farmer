@@ -147,7 +147,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
 
             //////////////////////////地图代码////////////////////////////
             //获取地图控件引用
-            mMapView = (MapView) getActivity().findViewById(R.id.bmapView);
+            //mMapView = (MapView) getActivity().findViewById(R.id.bmapView);
             mMapView = (MapView) view.findViewById(R.id.bmapView);
             mMapView.showScaleControl(true);
 
@@ -940,20 +940,39 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     }
 
     @Override
-    public void onDestroy(){
+    public void onResume() {
+        super.onResume();
+        // activity 恢复时同时恢复地图控件
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // activity 暂停时同时暂停地图控件
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
         super.onDestroy();
 
         //释放资源
         handler.removeCallbacks(runnable);// 关闭定时器处理
         handler = null;
+        locationService.stop();
+        locationService.unregisterListener(new mListener());
+        locationService = null;
+        mBaiduMap.clear();
+        mBaiduMap.removeMarkerClickListener(new markerClicklistener());
+        mBaiduMap.setMyLocationEnabled(false);
+        mMapView.destroyDrawingCache();
         mMapView.onDestroy();   //销毁地图
+        mBaiduMap = null;
         mMapView = null;
         farmlandInfosUndo.clear();
         farmlandInfosUndo = null;
         machineInfos.clear();
         machineInfos = null;
-        locationService.stop();
-        locationService.unregisterListener(new mListener());
-        locationService = null;
     }
 }

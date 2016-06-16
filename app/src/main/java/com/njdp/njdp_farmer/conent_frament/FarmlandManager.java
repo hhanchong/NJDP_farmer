@@ -296,6 +296,9 @@ public class FarmlandManager extends Fragment implements View.OnClickListener {
     public void onDestroy(){
         //handler.removeCallbacks(runnable);// 关闭定时器处理
         super.onDestroy();
+        myrelease.setBackgroundResource(0); //释放背景图片
+        newrelease.setBackgroundResource(0); //释放背景图片
+
     }
 
 }

@@ -12,7 +12,6 @@ import com.njdp.njdp_farmer.R;
 public class CustomProgressDialog extends ProgressDialog {
 
 	private AnimationDrawable mAnimation;
-	private Context mContext;
 	private ImageView mImageView;
 	private String mLoadingTip;
 	private TextView mLoadingTv;
@@ -20,7 +19,6 @@ public class CustomProgressDialog extends ProgressDialog {
 
 	public CustomProgressDialog(Context context, String content, int id) {
 		super(context);
-		this.mContext = context;
 		this.mLoadingTip = content;
 		this.mResid = id;
 		setCanceledOnTouchOutside(true);
@@ -55,5 +53,11 @@ public class CustomProgressDialog extends ProgressDialog {
 		setContentView(R.layout.progress_dialog);
 		mLoadingTv = (TextView) findViewById(R.id.loadingTv);
 		mImageView = (ImageView) findViewById(R.id.loadingIv);
+	}
+
+	@Override
+	public void dismiss(){
+		super.dismiss();
+		mImageView.setBackgroundResource(0);
 	}
 }

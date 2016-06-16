@@ -264,6 +264,13 @@ public class getpassword extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        View view = findViewById(R.id.top_layout);
+        view.setBackgroundResource(0); //释放背景图片
+    }
+
     //不跟随系统变化字体大小
     @Override
     public Resources getResources() {

@@ -155,7 +155,13 @@ public class mainpages extends AppCompatActivity {
         //释放资源
         content_list.clear();
         content_list = null;
+        View view = findViewById(R.id.top_layout);
+        view.setBackgroundResource(0); //释放背景图片
         AgentApplication.removeActivity(this);
+
+        //setBackgroundResource和 android:background → setBackgroundResource(0);
+        //setBackgroundDrawable( background) → setBackgroundDrawable (null)
+        //setBackground ( background ) → setBackground ( null )
     }
 
     //错误信息提示

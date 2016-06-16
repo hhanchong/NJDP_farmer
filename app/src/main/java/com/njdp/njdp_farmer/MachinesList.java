@@ -143,6 +143,13 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
         toast.show();
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        View view = findViewById(R.id.root_div);
+        view.setBackgroundResource(0); //释放背景图片
+    }
+
     //不跟随系统变化字体大小
     @Override
     public Resources getResources() {
