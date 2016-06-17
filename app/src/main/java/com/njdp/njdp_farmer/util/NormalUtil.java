@@ -30,17 +30,13 @@ public class NormalUtil {
     //EditText输入是否为空
     public static boolean isempty(EditText editText)
     {
-        boolean bl= TextUtils.isEmpty(editText.getText());
-        return bl;
+        return TextUtils.isEmpty(editText.getText());
     }
 
     //是否存在Sd卡
     public boolean ExistSDCard() {
-        if (android.os.Environment.getExternalStorageState().equals(
-                android.os.Environment.MEDIA_MOUNTED)) {
-            return true;
-        } else
-            return false;
+        return Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED);
     }
 
     //返回存储路径
@@ -72,6 +68,7 @@ public class NormalUtil {
         }
         finally{
             try {
+                assert output != null;
                 output.close();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -98,14 +95,13 @@ public class NormalUtil {
         float scaleWidth = ((float) width / w);
         float scaleHeight = ((float) height / h);
         matrix.postScale(scaleWidth, scaleHeight);
-        Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
-        return newbmp;
+        return Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
     }
 
     //保存照片到本地
     public boolean saveBitmap(Context context,String telephone,Bitmap mBitmap) {
         File file;
-        File tempFile=null;
+        File tempFile;
         if(ExistSDCard())
         {
             file= Environment.getExternalStorageDirectory();
@@ -113,7 +109,7 @@ public class NormalUtil {
         {
             file=context.getCacheDir();
         }
-        Bitmap bitmap = zoomBitmap(mBitmap, 400, 400);
+        Bitmap bitmap = zoomBitmap(mBitmap, mBitmap.getWidth(), mBitmap.getHeight());
         FileOutputStream fOut;
         if (!file.exists()) {
             //未获取到根目录，返回错误
@@ -135,6 +131,9 @@ public class NormalUtil {
             fOut.flush();
             Log.d(TAG, "path:" + file1.getAbsolutePath().toString());
             fOut.close();
+            if(!bitmap.isRecycled()){
+                bitmap.recycle();  //记得释放资源，否则会内存溢出
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(context, "头像保存失败！请重试", Toast.LENGTH_SHORT).show();

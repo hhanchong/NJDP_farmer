@@ -217,12 +217,14 @@ public class register_image extends AppCompatActivity {
 
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(imageUri, "image/*");
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        int crop = 300;
-        intent.putExtra("outputX", crop);
-        intent.putExtra("outputY", crop);
-        intent.putExtra("scale", true);
+        intent.putExtra("crop", "true");    //黑边
+        intent.putExtra("scaleUpIfNeeded", "true"); //黑边
+        intent.putExtra("aspectX", 1);  //X 方向上的比例
+        intent.putExtra("aspectY", 1);  //Y 方向上的比例
+        int crop = 200;
+        intent.putExtra("outputX", crop);   //裁剪区的宽
+        intent.putExtra("outputY", crop);   //裁剪区的高
+        intent.putExtra("scale", true);     //是否保留比例
         intent.putExtra("return-data", true);
         startActivityForResult(intent, CROP_PHOTO_CODE);
     }
@@ -236,6 +238,10 @@ public class register_image extends AppCompatActivity {
             {
                 userImage.setImageBitmap(mBitmap);
                 IsSetImage=true;
+            }
+            assert mBitmap != null;
+            if(!mBitmap.isRecycled()){
+                mBitmap.recycle();  //记得释放资源，否则会内存溢出
             }
         }
     }
@@ -355,8 +361,8 @@ public class register_image extends AppCompatActivity {
         View view = findViewById(R.id.top_layout);
         assert view != null;
         view.setBackgroundResource(0); //释放背景图片
-        userImage.setImageURI(null);
         userImage.destroyDrawingCache();
+        userImage.setImageURI(null);
         userImage = null;
     }
 
