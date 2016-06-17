@@ -214,6 +214,11 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     // TODO Auto-generated method stub
                     // 在此处添加执行的代码
                     try {
+                        long timeMillis = System.currentTimeMillis();
+                        while ((System.currentTimeMillis() - timeMillis) < 2000){   //延时2秒，等待查询到农田的结果
+                            Thread.sleep(100);
+                            if(AgentApplication.farmlandInfos.size() > 0) break;
+                        }
                         farmlandInfo = GetLastReleaseUndo();
                         //获取农机数据
                         if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
@@ -246,7 +251,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     //handler.postDelayed(this, 60000);// 以后每60s后执行this，即runable
                 }
             };
-            handler.postDelayed(runnable, 2000);// 打开定时器，2s后执行runnable操作
+            handler.postDelayed(runnable, 1000);// 打开定时器，1s后执行runnable操作
             return view;
         } catch (Exception e) {
             e.printStackTrace();
@@ -592,6 +597,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
                     .position(point)
                     .icon(bitmap);
             //在地图上添加Marker，并显示
+            if(mBaiduMap == null) return;
             Marker marker = (Marker) mBaiduMap.addOverlay(option);
             Bundle bundle = new Bundle();
             bundle.putSerializable("machineInfo", machineInfos.get(i));
