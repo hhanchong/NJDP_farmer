@@ -182,8 +182,7 @@ public class register_image extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     // 获取返回的图片列表
                     List<String> paths = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
-                    path=paths.get(0);
-                    File file=new File(path);
+                    File file=new File(paths.get(0));
                     imageUri=Uri.fromFile(file);
                     cropPhoto();
                 }
@@ -242,7 +241,7 @@ public class register_image extends AppCompatActivity {
     }
 
     //上传头像
-    private void register_uploadImage(String url, final String path) {
+    private void register_uploadImage(String url, final String temppath) {
 
         final File fileNew=new File(temppath);
         String tag_string_req = "req_edit_image";
@@ -288,6 +287,8 @@ public class register_image extends AppCompatActivity {
                                         }
                                         fileNew.renameTo(fileOld);
                                         Log.e(TAG, "UploadImage response：" + msg);
+                                        Intent intent = new Intent(register_image.this, PersonalSet.class);
+                                        setResult(RESULT_OK, intent);
                                         finish();
                                     }else if(status == 3){
                                         //密匙失效
@@ -352,6 +353,7 @@ public class register_image extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.top_layout);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
         userImage.setImageURI(null);
         userImage.destroyDrawingCache();

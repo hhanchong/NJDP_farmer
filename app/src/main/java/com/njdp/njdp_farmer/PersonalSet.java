@@ -46,6 +46,7 @@ import java.util.Map;
 public class PersonalSet extends AppCompatActivity implements View.OnClickListener{
     private static final int PHONEEDIT = 1;
     private static final int ADDRESSEDIT = 2;
+    private static final int IMAGEEDIT = 3;
     private static final String TAG = PersonalSet.class.getSimpleName();
     private AwesomeValidation mValidation=new AwesomeValidation(ValidationStyle.BASIC);
     private ProgressDialog pDialog;
@@ -142,7 +143,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                 intent2.putExtra("token", farmer.getFm_token());
                 intent2.putExtra("IsSetImage", true);
                 intent2.putExtra("telephone", farmer.getTelephone());
-                startActivity(intent2);
+                startActivityForResult(intent2, IMAGEEDIT);
 
                 break;
             case R.id.address:
@@ -192,6 +193,11 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
             case ADDRESSEDIT:
                 farmer.setAddress(data.getStringExtra("address"));
                 tv_address.setText(farmer.getAddress());
+                break;
+            case IMAGEEDIT:
+                setUserPic.setText("头像修改成功");
+                editFinish.setClickable(true);
+                editFinish.setEnabled(true);
                 break;
         }
     }
@@ -328,7 +334,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if ((s.length() > 0) && (!s.equals(farmer.getName()) || !et_QQ.getText().toString().equals(farmer.getQQ())
+                if ((s.length() > 0) && (!s.toString().equals(farmer.getName()) || !et_QQ.getText().toString().equals(farmer.getQQ())
                         || !et_weixin.getText().toString().equals(farmer.getWeixin()) || !tv_address.getText().toString().equals(farmer.getAddress()))) {
                     editFinish.setClickable(true);
                     editFinish.setEnabled(true);
@@ -352,7 +358,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.equals(farmer.getQQ()) || !et_name.getText().toString().equals(farmer.getName())
+                if (!s.toString().equals(farmer.getQQ()) || !et_name.getText().toString().equals(farmer.getName())
                         || !et_weixin.getText().toString().equals(farmer.getWeixin()) || !tv_address.getText().toString().equals(farmer.getAddress())) {
                     editFinish.setClickable(true);
                     editFinish.setEnabled(true);
@@ -376,7 +382,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.equals(farmer.getWeixin()) || !et_QQ.getText().toString().equals(farmer.getQQ())
+                if (!s.toString().equals(farmer.getWeixin()) || !et_QQ.getText().toString().equals(farmer.getQQ())
                         || !et_name.getText().toString().equals(farmer.getName()) || !tv_address.getText().toString().equals(farmer.getAddress())) {
                     editFinish.setClickable(true);
                     editFinish.setEnabled(true);
@@ -400,7 +406,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.equals(farmer.getAddress()) || !et_QQ.getText().toString().equals(farmer.getQQ())
+                if (!s.toString().equals(farmer.getAddress()) || !et_QQ.getText().toString().equals(farmer.getQQ())
                         || !et_name.getText().toString().equals(farmer.getName()) || !et_weixin.getText().toString().equals(farmer.getWeixin())) {
                     editFinish.setClickable(true);
                     editFinish.setEnabled(true);
