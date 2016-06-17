@@ -32,7 +32,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.njdp.njdp_farmer.MyClass.AgentApplication;
 import com.njdp.njdp_farmer.adpter.FarmAdapter;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
-import com.njdp.njdp_farmer.conent_frament.FarmlandManager;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.SessionManager;
@@ -58,7 +57,6 @@ public class FarmerLandList extends AppCompatActivity {
     private List<List<FarmlandInfo>> child;
     private ArrayList<FarmlandInfo> farmlandInfoList;
     private ArrayList<FarmlandInfo> farmlandInfos; //根据年筛选后的数据
-    private ImageButton getback=null;
     List<String> Years = new ArrayList<>();
     private ProgressDialog pDialog;
     private String token;
@@ -81,7 +79,6 @@ public class FarmerLandList extends AppCompatActivity {
             window.setNavigationBarColor(Color.TRANSPARENT);
         }
         setContentView(R.layout.activity_farmer_land_list);
-        AgentApplication.addActivity(this);
 
         //初始化参数及控件
         farmlandInfoList = new ArrayList<>();
@@ -134,7 +131,8 @@ public class FarmerLandList extends AppCompatActivity {
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
         //返回上一界面
-        getback=(ImageButton) super.findViewById(R.id.getback);
+        ImageButton getback = (ImageButton) super.findViewById(R.id.getback);
+        assert getback != null;
         getback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -455,12 +453,12 @@ public class FarmerLandList extends AppCompatActivity {
         String operation = "", crop = "";
 
         if(s.length() == 3){
-            for(int i = 0; i < cropsType.length; i++){
-                if(cropsType[i][0].equals(s.substring(0,1))){
-                    operation = cropsType[i][1];
+            for (String[] aCropsType : cropsType) {
+                if (aCropsType[0].equals(s.substring(0, 1))) {
+                    operation = aCropsType[1];
                 }
-                if(cropsType[i][0].equals(s.substring(1,3))){
-                    crop = cropsType[i][1];
+                if (aCropsType[0].equals(s.substring(1, 3))) {
+                    crop = aCropsType[1];
                 }
             }
             if(operation.isEmpty() || crop.isEmpty()){
@@ -512,7 +510,7 @@ public class FarmerLandList extends AppCompatActivity {
         super.onDestroy();
         this.unregisterForContextMenu(listView);
         View view = findViewById(R.id.root_div);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
-        AgentApplication.removeActivity(this);
     }
 }

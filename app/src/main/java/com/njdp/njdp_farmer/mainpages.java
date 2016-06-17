@@ -1,10 +1,13 @@
 package com.njdp.njdp_farmer;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -19,7 +22,6 @@ import android.widget.Toast;
 
 import com.njdp.njdp_farmer.CostomProgressDialog.CustomProgressDialog;
 import com.njdp.njdp_farmer.MyClass.AgentApplication;
-import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.conent_frament.*;
 import com.njdp.njdp_farmer.viewpage.ContentViewPager;
 
@@ -156,12 +158,37 @@ public class mainpages extends AppCompatActivity {
         content_list.clear();
         content_list = null;
         View view = findViewById(R.id.top_layout);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
         AgentApplication.removeActivity(this);
 
+        getRunningAppProcessInfo();
         //setBackgroundResource和 android:background → setBackgroundResource(0);
         //setBackgroundDrawable( background) → setBackgroundDrawable (null)
         //setBackground ( background ) → setBackground ( null )
+    }
+
+    //查看系统内存占用情况
+    private void getRunningAppProcessInfo() {
+        ActivityManager mActivityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+
+        //获得系统里正在运行的所有进程
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcessesList = mActivityManager.getRunningAppProcesses();
+
+        for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessesList) {
+            // 进程ID号
+            int pid = runningAppProcessInfo.pid;
+            // 用户ID
+            int uid = runningAppProcessInfo.uid;
+            // 进程名
+            String processName = runningAppProcessInfo.processName;
+            // 占用的内存
+            int[] pids = new int[] {pid};
+            Debug.MemoryInfo[] memoryInfo = mActivityManager.getProcessMemoryInfo(pids);
+            int memorySize = memoryInfo[0].dalvikPrivateDirty;
+
+            System.out.println("processName=" + processName + ",pid=" + pid + ",uid=" + uid + ",memorySize=" + memorySize + "kb");
+        }
     }
 
     //错误信息提示
