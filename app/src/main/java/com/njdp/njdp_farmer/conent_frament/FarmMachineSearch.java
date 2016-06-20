@@ -10,8 +10,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +39,6 @@ import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -60,7 +59,6 @@ import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.login;
-import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
 
 import org.json.JSONArray;
@@ -76,7 +74,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     private final String TAG = "MachineInfoFrame";
     private String token;
     private View view;
-    private int width,height;
+    public int width,height;
     private ProgressDialog pDialog;
     private RelativeLayout test_pop_layout;
     private RadioButton rb5, rb10, rb30, rb50, rb100;      //距离现则按钮
@@ -108,14 +106,13 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     /**
      * 定位的客户端
      */
-    private String permissionInfo;
-    private final int SDK_PERMISSION_REQUEST = 127;
+    //private String permissionInfo;
+    //private final int SDK_PERMISSION_REQUEST = 127;
     private BDLocation curlocation ; //当前位置
     ////////////////////////地图变量//////////////////////////
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -211,14 +208,18 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             runnable = new Runnable(){
                 @Override
                 public void run() {
-                    // TODO Auto-generated method stub
                     // 在此处添加执行的代码
                     try {
                         long timeMillis = System.currentTimeMillis();
                         while ((System.currentTimeMillis() - timeMillis) < 2000){   //延时2秒，等待查询到农田的结果
                             Thread.sleep(100);
-                            if(AgentApplication.farmlandInfos.size() > 0) break;
+                            if(AgentApplication.farmlandInfos.size() > 0){
+                                //等待农田数据处理完毕，然后获取最后一块没有完成的农田
+                                Thread.sleep(500);
+                                break;
+                            }
                         }
+                        //获取最后一块没有完成的农田
                         farmlandInfo = GetLastReleaseUndo();
                         //获取农机数据
                         if(farmlandInfo != null) //如果传递过来的参数为空，则在mListener地图定位后，使用当前位置搜索农机
@@ -264,9 +265,13 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         view = inflater.inflate(R.layout.activity_machine_search, null, false);
         initView(view);
         // 获取屏幕的高度和宽度
-        Display display = getActivity().getWindowManager().getDefaultDisplay();
-        width = display.getWidth();
-        height = display.getHeight();
+        //Display display = getActivity().getWindowManager().getDefaultDisplay();
+        //width = display.getWidth();
+        //height = display.getHeight();
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        width = dm.widthPixels;
+        height = dm.heightPixels;
         Search_range = 5;
         return view;
     }
@@ -498,66 +503,6 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         }
     }
 
-    //标记农田,参数经纬度
-    private void markMachine(Double[][] numthree, String[] names) {
-        //清楚覆盖物Marker,重新加载
-
-        //Integer[] marks = new Integer[]{R.drawable.s1, R.drawable.s2, R.drawable.s3, R.drawable.s4, R.drawable.s5,
-        //        R.drawable.s6, R.drawable.s7, R.drawable.s8, R.drawable.s9, R.drawable.s10,R.drawable.s11, R.drawable.s12,
-        //        R.drawable.s13, R.drawable.s14, R.drawable.s15, R.drawable.s16, R.drawable.s17, R.drawable.s18, R.drawable.s19,
-        //        R.drawable.s20, R.drawable.s21, R.drawable.s22, R.drawable.s23, R.drawable.s24, R.drawable.s25, R.drawable.s26,
-        //        R.drawable.s27, R.drawable.s28, R.drawable.s29, R.drawable.s30};
-        for (int i = 0; i < numthree.length; i++) {
-        //    LatLng point = new LatLng(numthree[i][0], numthree[i][1]);
-
-        //    int icon ;
-        //    if(i<30){
-        //        icon=marks[i];
-        //    }else{
-        //        icon=R.drawable.icon_gcoding;
-        //    }
-
-            //构建Marker图标
-            //BitmapDescriptor bitmap = BitmapDescriptorFactory
-            //        .fromResource(icon);
-            //构建MarkerOption，用于在地图上添加Marker
-            //OverlayOptions option = new MarkerOptions()
-            //        .position(point)
-            //        .icon(bitmap);
-            //在地图上添加Marker，并显示
-            //Marker marker = (Marker) mBaiduMap.addOverlay(option);
-
-            MachineInfo machineInfo = new MachineInfo();
-            machineInfo.setLatitude(numthree[i][0]);
-            machineInfo.setLongitude(numthree[i][1]);
-            machineInfo.setId(i);
-            machineInfo.setName(names[i]);
-            machineInfo.setTelephone("13483208987");
-            machineInfo.setQq("123456789");
-            machineInfo.setWeixin("zhihuinongjiweixun");
-            machineInfo.setRange("" + (i * 10 + 3));
-            machineInfo.setWork_time("" + 16);
-            machineInfo.setRemark("无");
-            machineInfos.add(machineInfo);
-
-            //Bundle bundle = new Bundle();
-            //bundle.putSerializable("machineInfo", machineInfo);
-            //marker.setExtraInfo(bundle);
-
-            //添加覆盖物鼠标点击事件
-            //mBaiduMap.setOnMarkerClickListener(new markerClicklistener());
-        }
-        rb5.setChecked(true);
-        int index = IndexOfRange(5);
-        if(index != -1){
-            AgentApplication.machinesToShow.addAll(machineInfos.subList(0, index + 1));
-            //更新农机数据
-            machineListView.setText("共有" + AgentApplication.machinesToShow.size()  + "条农机信息，点击查看列表");
-            ShowInMap(AgentApplication.machinesToShow);
-        }
-        //mMapView.refreshDrawableState();
-    }
-
     private void ShowInMap(List<MachineInfo> machineInfos){
         //清楚覆盖物Marker,重新加载
 
@@ -619,7 +564,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
         @Override
         public boolean onMarkerClick(Marker marker) {
             final MachineInfo machineInfo = (MachineInfo) marker.getExtraInfo().get("machineInfo");
-            InfoWindow infoWindow;
+            //InfoWindow infoWindow;
 
             // 显示自定义 popupWindow
             PopupWindow popupWindow = makePopupWindow(view.getContext(), machineInfo);
@@ -688,14 +633,14 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
     ////////////////////////////地图代码结束/////////////////////////////////
 
     // 显示机主信息
-    private LinearLayout machine_div;
-    private TextView driver_name, driver_phone, qq, weixin, range, work_time, remark;
     private Button phoneBtn;
     private String telephone;
     // 创建一个包含自定义view的PopupWindow
     private PopupWindow makePopupWindow(Context cx, final MachineInfo machineInfo)
     {
         final PopupWindow window;
+        LinearLayout machine_div;
+        TextView driver_name, driver_phone, qq, weixin, range, work_time, remark;
         window = new PopupWindow(cx);
 
         View contentView = LayoutInflater.from(getContext()).inflate(R.layout.list_machinechild, null);
