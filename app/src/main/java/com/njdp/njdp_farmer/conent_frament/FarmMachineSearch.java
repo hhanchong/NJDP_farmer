@@ -874,7 +874,7 @@ public class FarmMachineSearch extends Fragment implements View.OnClickListener 
             }
         }
         result.add("使用当前GPS位置");
-        return result.toArray(new String[0]);
+        return result.toArray(new String[result.size()]);
     }
 
     //返回最后的未完成的发布信息
