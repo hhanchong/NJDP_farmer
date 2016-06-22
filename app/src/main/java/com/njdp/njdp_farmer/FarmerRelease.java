@@ -2,7 +2,6 @@ package com.njdp.njdp_farmer;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -48,6 +47,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.utils.CoordinateConverter;
+import com.njdp.njdp_farmer.MyClass.MyDialog;
 import com.njdp.njdp_farmer.address.AddressSelect;
 import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.conent_frament.FarmlandManager;
@@ -66,9 +66,10 @@ import java.util.Map;
 
 /**
  * Created by Administrator on 2016/4/25.
+ * 农田信息发布
  */
 public class FarmerRelease extends AppCompatActivity {
-    private static final int FARMLAND_EDIT = 1;
+    //private static final int FARMLAND_EDIT = 1;
     private static final int ADDRESSEDIT = 2;
     private boolean isEdit = false;
     private String typeTitle;
@@ -78,11 +79,11 @@ public class FarmerRelease extends AppCompatActivity {
     private final String[] cultivation1 = new String[]{"SS", "HA"};
     private final String[] blocks = new String[]{"规则", "不规则"};
     private String[] typeArray;
-    private int mYear, mMonth, mDay, mYear1, mMonth1, mDay1;
     private FarmlandInfo farmlandInfo;
     private String token;
     private ProgressDialog pDialog;
     private final String TAG = "FarmerRelease";
+    private int dateFlag; //0为开始日期，1为结束日期
     //所有监听的控件
     private TextView tv1;
     private EditText croptype, area, price, blocktype, starttime, endtime, remark;
@@ -244,10 +245,18 @@ public class FarmerRelease extends AppCompatActivity {
 
                     break;
                 case R.id.start_time:
-                    showDialog(0);
+                    // 选择收割日期操作
+                    dateFlag = 0;
+                    MyDialog dialogFragment = MyDialog.newInstance(
+                            "选择开始日期", "农田发布");
+                    dialogFragment.show(getFragmentManager(), "选择日期");
                     break;
                 case R.id.end_time:
-                    showDialog(1);
+                    // 选择收割日期操作
+                    dateFlag = 1;
+                    MyDialog dialogFragment1 = MyDialog.newInstance(
+                            "选择结束日期", "农田发布");
+                    dialogFragment1.show(getFragmentManager(), "选择日期");
                     break;
                 case R.id.getback:
                     finish();
@@ -504,24 +513,27 @@ public class FarmerRelease extends AppCompatActivity {
 
     //清空发布界面的录入信息
     private void setContentNUll() {
-        rbH.setChecked(true);
-        typeTitle = "选择作物类型";
-        typeArray = crops;
-        croptype.setText("");
-        area.setText("");
-        price.setText("");
-        blocktype.setText("");
-        address.setText("");
-        starttime.setText("");
-        endtime.setText("");
-        //remark.setText(""); //街景暂未考虑
-        remark.setText("");
+        //返回结果
         Intent intent = new Intent(FarmerRelease.this, FarmlandManager.class);
         if(isEdit){
             intent = new Intent(FarmerRelease.this, FarmerLandList.class);
             intent.putExtra("farmlandInfo", farmlandInfo);
         }
         setResult(RESULT_OK, intent);
+        //清空数据
+        //rbH.setChecked(true);
+        //typeTitle = "选择作物类型";
+        //typeArray = crops;
+        //croptype.setText("");
+        //area.setText("");
+        //price.setText("");
+        //blocktype.setText("");
+        //address.setText("");
+        //starttime.setText("");
+        //endtime.setText("");
+        //remark.setText(""); //街景暂未考虑
+        //remark.setText("");
+
         finish();
     }
 
@@ -846,15 +858,11 @@ public class FarmerRelease extends AppCompatActivity {
                                 CoordinateConverter converter  = new CoordinateConverter();
                                 converter.from(CoordinateConverter.CoordType.GPS);
                                 // sourceLatLng待转换坐标
+                                assert location != null;
                                 converter.coord(new LatLng(location.getLatitude(), location.getLongitude()));
                                 LatLng point = converter.convert();
-                                if (location != null) {
-                                    farmlandInfo.setLatitude(String.valueOf(point.latitude));
-                                    farmlandInfo.setLongitude(String.valueOf(point.longitude));
-                                }
-                                else {
-                                    error_hint("获取本地GPS位置失败！");
-                                }
+                                farmlandInfo.setLatitude(String.valueOf(point.latitude));
+                                farmlandInfo.setLongitude(String.valueOf(point.longitude));
                             }
                         })
                         .setNegativeButton("返回", new DialogInterface.OnClickListener() {
@@ -880,28 +888,30 @@ public class FarmerRelease extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        final Calendar c = Calendar.getInstance();
-
-        switch (id) {
-            case 0:
-                mYear = c.get(Calendar.YEAR);
-                mMonth = c.get(Calendar.MONTH);
-                mDay = c.get(Calendar.DAY_OF_MONTH);
-                return new DatePickerDialog(this, mDateSetListener, mYear, mMonth,
-                        mDay);
-            case 1:
-                mYear = 0;
-                mMonth = 0;
-                mDay = 0;
-                mYear1 = c.get(Calendar.YEAR);
-                mMonth1 = c.get(Calendar.MONTH);
-                mDay1 = c.get(Calendar.DAY_OF_MONTH);
-                return new DatePickerDialog(this, mDateSetListener, mYear1, mMonth1,
-                        mDay1);
+    public void selectDate() {
+        //---选择日期---
+        Calendar c = Calendar.getInstance();
+        if(dateFlag == 0){
+            if (null == starttime) {
+                starttime = (EditText) findViewById(R.id.start_time);
+            }
+            assert starttime != null;
+            if(starttime.getText().toString().length() == 10){
+                String[] temp = starttime.getText().toString().split("-");
+                c.set(Integer.parseInt(temp[0]), Integer.parseInt(temp[1])-1, Integer.parseInt(temp[2]));
+            }
+        }else {
+            if (null == endtime) {
+                endtime = (EditText) findViewById(R.id.end_time);
+            }
+            assert endtime != null;
+            if(endtime.getText().toString().length() == 10){
+                String[] temp = endtime.getText().toString().split("-");
+                c.set(Integer.parseInt(temp[0]), Integer.parseInt(temp[1])-1, Integer.parseInt(temp[2]));
+            }
         }
-        return null;
+        new DatePickerDialog(this, mDateSetListener, c.get(Calendar.YEAR), c.get(Calendar.MONTH),
+                c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     private final DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -919,14 +929,13 @@ public class FarmerRelease extends AppCompatActivity {
             dd = String.valueOf(dayOfMonth);
             if (dd.length() < 2)
                 dd = "0" + dd;
-            if(mYear > 0) {
+            if(dateFlag == 0) {
                 if (null == starttime) {
                     starttime = (EditText) findViewById(R.id.start_time);
                 }
                 if (null != starttime){
                     starttime.setText(yyyy + "-" + mm + "-" + dd);
                 }
-                removeDialog(0);
             }else{
                 if(null == endtime) {
                     endtime = (EditText) findViewById(R.id.end_time);
@@ -934,7 +943,6 @@ public class FarmerRelease extends AppCompatActivity {
                 if(null != endtime){
                     endtime.setText(yyyy + "-" + mm + "-" + dd);
                 }
-                removeDialog(1);
             }
         }
     };
