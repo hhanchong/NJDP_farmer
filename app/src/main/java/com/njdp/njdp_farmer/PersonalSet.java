@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -62,6 +63,8 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
     EditText et_QQ;
     EditText et_weixin;
     private SQLiteHandler db;
+    private boolean isRegister;
+    private boolean uploadUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,9 +87,14 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
         farmer = (Farmer)getIntent().getSerializableExtra("user");
+        isRegister = getIntent().getBooleanExtra("register", false);
         if(farmer == null){
             error_hint("参数传输错误！");
             finish();
+        }
+        if(isRegister){
+            uploadUserName = true;
+            checkEdit(farmer);
         }
         // SQLite database handler
         db = new SQLiteHandler(getApplicationContext());
@@ -152,6 +160,13 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                 startActivityForResult(intent3, ADDRESSEDIT);
                 break;
             case R.id.getback:
+                if(isRegister){
+                    this.finish();
+                    Intent intent = new Intent(PersonalSet.this, MainLink.class);
+                    intent.putExtra("TOKEN", farmer.getFm_token());
+                    startActivity(intent);
+                    return;
+                }
                 finish();
                 break;
             case R.id.btn_editFinish:
@@ -202,7 +217,7 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    //验证帐号密码
+    //提交修改
     public void checkEdit(final Farmer farmer) {
 
         String tag_string_req = "req_user_edit";
@@ -252,15 +267,26 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
                 // Check for error node in json
                 if (status == 0) {
+                    //为了保存注册时的用户名
+                    if(uploadUserName){
+                        uploadUserName = false;
+                        return;
+                    }
                     //服务器返回修改成功
                     error_hint("修改成功！");
                     // Inserting row in users table
                     db.editUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
 
                     //Launch main activity
-                    Intent intent = new Intent(PersonalSet.this, mainpages.class);
-                    intent.putExtra("user", farmer);
-                    setResult(RESULT_OK, intent);
+                    if(isRegister){
+                        Intent intent = new Intent(PersonalSet.this, MainLink.class);
+                        intent.putExtra("TOKEN", farmer.getFm_token());
+                        startActivity(intent);
+                    }else {
+                        Intent intent = new Intent(PersonalSet.this, mainpages.class);
+                        intent.putExtra("user", farmer);
+                        setResult(RESULT_OK, intent);
+                    }
                     finish();
                 } else if(status == 3){
                     //密匙失效
@@ -417,6 +443,25 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
             }
         });
     }
+
+    /**
+	 * 监听返回按钮
+	 */
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if(isRegister){
+				this.finish();
+                Intent intent = new Intent(PersonalSet.this, MainLink.class);
+                intent.putExtra("TOKEN", farmer.getFm_token());
+                startActivity(intent);
+                return true;
+			}
+		}
+
+		return super.onKeyDown(keyCode,event);
+	}
 
     //不跟随系统变化字体大小
     @Override

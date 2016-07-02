@@ -32,7 +32,6 @@ import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.changeDefault.TimeCount;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
-import com.njdp.njdp_farmer.db.SQLiteHandler;
 import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.util.NetUtil;
 
@@ -50,7 +49,6 @@ public class register extends AppCompatActivity {
     private EditText text_user_password=null;
     private Button btn_verification_code=null;
     private Button btn_register_next=null;
-    private ImageButton getback=null;
     private Farmer farmer;
     private AwesomeValidation verification_code_Validation=new AwesomeValidation(ValidationStyle.BASIC);
     private AwesomeValidation mValidation=new AwesomeValidation(ValidationStyle.BASIC);
@@ -92,7 +90,7 @@ public class register extends AppCompatActivity {
         text_verification_code = (EditText) super.findViewById(R.id.verification_code);
         text_user_password = (EditText) super.findViewById(R.id.user_password);
         btn_register_next = (Button) this.findViewById(R.id.register_next_button);
-        getback=(ImageButton) super.findViewById(R.id.getback);
+        ImageButton getback = (ImageButton) super.findViewById(R.id.getback);
 
         btn_register_next.setEnabled(false);
         btn_register_next.setClickable(false);
@@ -101,6 +99,7 @@ public class register extends AppCompatActivity {
         verification_code_Validation.addValidation(register.this, R.id.user_telephone, "^1[3-9]\\d{9}+$", R.string.err_phone);
         form_verification(register.this);
         //返回上一界面
+        assert getback != null;
         getback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,18 +169,18 @@ public class register extends AppCompatActivity {
     //获取验证码
     public void get_verification_code() {
 
-        String tag_string_req = "req_register_driver_VerifyCode";
+        String tag_string_req = "req_register_farmer_VerifyCode";
 
         if(!NetUtil.checkNet(register.this)){
             error_hint("网络连接错误");
         } else {
-            StringRequest strReq = new StringRequest(Request.Method.GET,
-                    AppConfig.URL_REGISTER, vertifySuccessListener, mErrorListener) {
+            StringRequest strReq = new StringRequest(Request.Method.POST,
+                    AppConfig.URL_GET_REGISTERCODE, vertifySuccessListener, mErrorListener) {
                 @Override
                 protected Map<String, String> getParams() {
 
                     Map<String, String> params = new HashMap<>();
-                    params.put("telephone", text_user_telephone.getText().toString());
+                    params.put("phone", text_user_telephone.getText().toString());
                     return params;
                 }
             };
@@ -196,11 +195,11 @@ public class register extends AppCompatActivity {
         checkRegister(farmer);
         // 跳转设置头像页面
 //        Intent intent = new Intent(register.this, register_image.class);
-        Bundle farmer_bundle = new Bundle();
-        farmer_bundle.putString("name", text_user_name.getText().toString());
-        farmer_bundle.putString("password", text_user_password.getText().toString());
-        farmer_bundle.putString("telephone", text_user_telephone.getText().toString());
-        farmer_bundle.putBoolean("isDriver", false);
+//        Bundle farmer_bundle = new Bundle();
+//        farmer_bundle.putString("name", text_user_name.getText().toString());
+//        farmer_bundle.putString("password", text_user_password.getText().toString());
+//        farmer_bundle.putString("telephone", text_user_telephone.getText().toString());
+//        farmer_bundle.putBoolean("isDriver", false);
 //        intent.putExtra("farmer_register", farmer_bundle);
 //        startActivity(intent);
     }
@@ -215,16 +214,17 @@ public class register extends AppCompatActivity {
 
             try {
                 JSONObject jObj = new JSONObject(response);
-                boolean error = jObj.getBoolean("error");
-                if (!error) {
-
-                    //服务器返回的验证码
-                    verify_code=jObj.getString("verify_code");
-                } else {
-                    empty_hint(R.string.register_error1);
+                int status = jObj.getInt("status");
+                if (status == 0) {
+                    //服务器成功返回的验证码
+                    empty_hint(R.string.register_info);
+                } else if(status == 23) {
+                    //手机号已被注册过
+                    empty_hint(R.string.register_error5);
+                }else {
+                    empty_hint(R.string.register_error4);
                     // Error occurred in registration. Get the error
-                    // message
-                    String errorMsg = jObj.getString("error_msg");
+                    String errorMsg = jObj.getString("result");
                     Log.e(TAG, errorMsg);
                 }
             } catch (JSONException e) {
@@ -235,7 +235,7 @@ public class register extends AppCompatActivity {
         }
     };
 
-    //checkLogin 验证帐号密码
+    //提交注册账号
     public void checkRegister(final Farmer farmer) {
 
         String tag_string_req = "req_register";
@@ -256,10 +256,9 @@ public class register extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     // Posting parameters to url
                     Map<String, String> params = new HashMap<>();
-                    params.put("telephone", farmer.getTelephone());
+                    params.put("phone", farmer.getTelephone());
                     params.put("password", farmer.getPassword());
-                    params.put("name", farmer.getName());
-                    params.put("isDriver", "false");
+                    params.put("code", text_verification_code.getText().toString().trim());
                     return params;
                 }
             };
@@ -268,7 +267,8 @@ public class register extends AppCompatActivity {
             AppController.getInstance().addToRequestQueue(strReq, tag_string_req);
         }
     }
-    //响应服务器成功
+
+    //响应服务器成功(注册)
     private Response.Listener<String> mSuccessListener = new Response.Listener<String>() {
 
         @Override
@@ -279,25 +279,38 @@ public class register extends AppCompatActivity {
 
             try {
                 JSONObject jObj = new JSONObject(response);
-                boolean error = jObj.getBoolean("error");
+                int status = jObj.getInt("status");
 
                 // Check for error node in json
-                if (!error) {
+                if (status == 0) {
                     // Now store the user in SQLite
                     String token = jObj.getString("result");
 
-                    // Inserting row in users table
-                    //db.addUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
-
-                    // user successfully logged in
                     // Create signin session
                     session.setLogin(true,false, token);
-                    //Launch main activity
-                    Intent intent = new Intent(register.this, MainLink.class);
-                    intent.putExtra("farmer_token", token);
+                    farmer.setFm_token(token);
+                    //Launch PersonalSet activity
+                    Intent intent = new Intent(register.this, PersonalSet.class);
+                    intent.putExtra("user", farmer);
+                    intent.putExtra("register", true);
                     startActivity(intent);
                     finish();
-                } else {
+                } else if(status == 17){
+                    //手机号为空
+                    empty_hint(R.string.err_phone2);
+                }else if(status == 18){
+                    //密码为空
+                    empty_hint(R.string.err_password2);
+                }else if(status == 19){
+                    //验证码为空
+                    empty_hint(R.string.err_verification_code2);
+                }else if(status == 20){
+                    //验证码错误
+                    empty_hint(R.string.err_verification_code);
+                }else if(status == 23){
+                    //手机号已被注册过
+                    empty_hint(R.string.register_error5);
+                }else {
                     empty_hint(R.string.login_error);
                     // Error in signin Get the error message
                     String errorMsg = jObj.getString("error_msg");
@@ -446,6 +459,7 @@ public class register extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.top_layout);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
     }
 

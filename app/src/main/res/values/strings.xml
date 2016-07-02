@@ -19,9 +19,12 @@
     <string name="vertify_hint">请确保手机号正确，未欠费，能正常接收短信</string>
     <string name="vertify_error1">输入的手机号错误</string>
     <string name="vertify_error2">连接服务器错误</string>
+    <string name="register_info">已发送验证码到您的注册手机</string>
     <string name="register_error1">注册失败,连接服务器错误，请重试！</string>
     <string name="register_error2">连接服务器错误，请重试！</string>
     <string name="register_error3">头像上传失败，请重试！</string>
+    <string name="register_error4">输入的手机号码错误！</string>
+    <string name="register_error5">该手机号已被注册过！</string>
     <string name="login_error">注册失败,连接服务器错误</string>
     <string name="connect_error">连接服务器错误</string>
     <string name="release_error">发布失败</string>
@@ -31,6 +34,10 @@
     <string name="title_activity_getpassword">getpassword</string>
     <string name="title_activity_mainpages">mainpages</string>
     <string name="title_activity_personal_set">PersonalSet</string>
+
+    <!--权限相关的提示-->
+    <string name="permission_STORAGE">创建文件失败,请检查是否开放了存储读写权限。</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

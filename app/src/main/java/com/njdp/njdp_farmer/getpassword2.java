@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +24,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.LruBitmapCache;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
@@ -54,7 +54,6 @@ public class getpassword2 extends AppCompatActivity {
     private static final String TAG = getpassword2.class.getSimpleName();
     private ProgressDialog pDialog;
     private NormalUtil nutil=new NormalUtil();
-    private String URL_GETPASSWORD2;//设置连接数据用户的URL，Driver Or Farmer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,16 +73,6 @@ public class getpassword2 extends AppCompatActivity {
         }
         setContentView(R.layout.activity_getpassword2);
 
-        //设置头像本地存储路径
-        File tempFile;
-        if(nutil.ExistSDCard())
-        {
-            tempFile = Environment.getExternalStorageDirectory();
-        }else
-        {
-            tempFile =getCacheDir();
-        }
-
         // Progress dialog
         pDialog = new ProgressDialog(this);
         pDialog.setCancelable(false);
@@ -95,7 +84,10 @@ public class getpassword2 extends AppCompatActivity {
         //SQLiteHandler db = new SQLiteHandler(getApplicationContext());
 
         //获取forgetpassword输入的用户名、手机号.姓名
-        telephone = getIntent().getExtras().getBundle("farmer_access").getString("telephone");
+        Bundle bundle = getIntent().getExtras().getBundle("farmer_access");
+        if(bundle!=null) {
+            telephone = bundle.getString("telephone");
+        }
         if(telephone == null)
         {
             NormalUtil.error_hint(getpassword2.this, "程序错误！请联系管理员！");
@@ -178,7 +170,7 @@ public class getpassword2 extends AppCompatActivity {
             hideDialog();
         } else {
             StringRequest strReq = new StringRequest(Request.Method.POST,
-                    URL_GETPASSWORD2, new Response.Listener<String>() {
+                    AppConfig.URL_GETPASSWORD2, new Response.Listener<String>() {
 
                 @Override
                 public void onResponse(String response) {
@@ -255,6 +247,7 @@ public class getpassword2 extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.top_layout);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
     }
 

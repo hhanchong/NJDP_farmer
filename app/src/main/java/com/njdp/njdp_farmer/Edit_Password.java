@@ -24,6 +24,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.njdp.njdp_farmer.MyClass.Farmer;
+import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.LruBitmapCache;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
@@ -54,7 +55,6 @@ public class Edit_Password extends AppCompatActivity {
     private AwesomeValidation password2_Validation=new AwesomeValidation(ValidationStyle.BASIC);
     private static final String TAG = getpassword2.class.getSimpleName();
     private ProgressDialog pDialog;
-    private String URL_EDITPASSWORD;//设置连接数据用户的URL，Driver Or Farmer
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -194,7 +194,7 @@ public class Edit_Password extends AppCompatActivity {
             hideDialog();
         } else {
             StringRequest strReq = new StringRequest(Request.Method.POST,
-                    URL_EDITPASSWORD, new Response.Listener<String>() {
+                    AppConfig.URL_GETPASSWORD1, new Response.Listener<String>() {
 
                 @Override
                 public void onResponse(String response) {
@@ -269,7 +269,9 @@ public class Edit_Password extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.top_layout);
-        view.setBackgroundResource(0); //释放背景图片
+        if (view != null) {
+            view.setBackgroundResource(0); //释放背景图片
+        }
     }
 
     //不跟随系统变化字体大小

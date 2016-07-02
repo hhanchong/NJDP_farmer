@@ -3,12 +3,10 @@ package com.njdp.njdp_farmer.conent_frament;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -18,8 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,38 +24,27 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.njdp.njdp_farmer.FarmerLandList;
 import com.njdp.njdp_farmer.PersonalSet;
 import com.njdp.njdp_farmer.R;
 import com.njdp.njdp_farmer.MyClass.Farmer;
-import com.njdp.njdp_farmer.MyClass.FarmlandInfo;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
 import com.njdp.njdp_farmer.db.SQLiteHandler;
 import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.login;
-import com.njdp.njdp_farmer.mainpages;
 import com.njdp.njdp_farmer.util.NetUtil;
 import com.njdp.njdp_farmer.util.NormalUtil;
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.FileCallBack;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.Call;
 
 public class PersonalInfoFrame extends Fragment implements View.OnClickListener {
     private final String TAG = "PersonalInfoFrame";
@@ -337,6 +322,8 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
             Log.e(TAG, "GetPersonInfo Error: " + error.getMessage());
             error_hint("服务器连接超时");
             hideDialog();
+            personalEdit.setClickable(false);
+            personalEdit.setEnabled(false);
         }
     };
 
@@ -360,12 +347,16 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                     File file = new File(path);
                     if(!file.exists()){
                         if(!file.getParentFile().exists())
-                            file.getParentFile().mkdirs();
-                        file.createNewFile();
+                            if(file.getParentFile().mkdirs()){
+                                empty_hint(R.string.permission_STORAGE);
+                            }
+                        if(file.createNewFile()){
+                            empty_hint(R.string.permission_STORAGE);
+                        }
                     }
                     FileOutputStream fos = new FileOutputStream(path);
                     byte[] buffer = new byte[1024];
-                    int len = 0;
+                    int len;
                     while ((len = is.read(buffer)) != -1) {
                         fos.write(buffer, 0, len);
                     }
