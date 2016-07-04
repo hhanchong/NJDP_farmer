@@ -149,14 +149,14 @@ public class SetPhoneNum extends AppCompatActivity {
 
     //信息未输入提示
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(SetPhoneNum.this, getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(SetPhoneNum.this, str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
@@ -383,6 +383,7 @@ public class SetPhoneNum extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.top_layout);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
     }
 

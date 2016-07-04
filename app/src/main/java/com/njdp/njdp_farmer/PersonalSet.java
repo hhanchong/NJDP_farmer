@@ -115,7 +115,11 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
         et_name.setText(farmer.getName());
         et_QQ = (EditText)super.findViewById(R.id.qq);
         assert et_QQ != null;
-        et_QQ.setText(farmer.getQQ());
+        if(farmer.getQQ().equals("未设置")){
+            et_QQ.setText("");
+        }else {
+            et_QQ.setText(farmer.getQQ());
+        }
         et_weixin = (EditText)super.findViewById(R.id.weixin);
         assert et_weixin != null;
         et_weixin.setText(farmer.getWeixin());
@@ -267,6 +271,11 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
 
                 // Check for error node in json
                 if (status == 0) {
+                    //更新Session信息
+                    SessionManager session = new SessionManager(getApplicationContext());
+                    session.setUserInfo(farmer.getName(),farmer.getTelephone(),farmer.getQQ(),farmer.getWeixin(),farmer.getAddress());
+                    // Inserting row in users table
+                    db.editUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
                     //为了保存注册时的用户名
                     if(uploadUserName){
                         uploadUserName = false;
@@ -274,8 +283,6 @@ public class PersonalSet extends AppCompatActivity implements View.OnClickListen
                     }
                     //服务器返回修改成功
                     error_hint("修改成功！");
-                    // Inserting row in users table
-                    db.editUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
 
                     //Launch main activity
                     if(isRegister){

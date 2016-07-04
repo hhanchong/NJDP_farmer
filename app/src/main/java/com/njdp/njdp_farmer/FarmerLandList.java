@@ -473,14 +473,14 @@ public class FarmerLandList extends AppCompatActivity {
 
     //错误信息提示1
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(this, str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示2
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(this, getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }

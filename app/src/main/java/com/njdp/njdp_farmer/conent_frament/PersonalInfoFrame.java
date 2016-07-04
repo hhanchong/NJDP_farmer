@@ -135,7 +135,11 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
         telephone = (TextView) view.findViewById(R.id.tv_phonenum);
         telephone.setText(session.getTelephone());
         qq = (TextView) view.findViewById(R.id.tv_qq);
-        qq.setText(session.getQQ());
+        if(session.getQQ().equals("000000")){
+            qq.setText("未设置");
+        }else {
+            qq.setText(session.getQQ());
+        }
         weixin = (TextView) view.findViewById(R.id.tv_weixin);
         weixin.setText(session.getWeixin());
         address = (TextView) view.findViewById(R.id.tv_address);
@@ -172,7 +176,11 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
     public void updateView(){
         userName.setText(farmer.getName());
         telephone.setText(farmer.getTelephone());
-        qq.setText(farmer.getQQ());
+        if(farmer.getQQ().equals("000000")){
+            qq.setText("未设置");
+        }else {
+            qq.setText(farmer.getQQ());
+        }
         weixin.setText(farmer.getWeixin());
         address.setText(farmer.getAddress());
         //更新Session信息
@@ -197,7 +205,11 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                 //userImage.setImageURI();
                 userName.setText(farmer.getName());
                 telephone.setText(farmer.getTelephone());
-                qq.setText(farmer.getQQ());
+                if(farmer.getQQ().equals("")){
+                    qq.setText("未设置");
+                }else {
+                    qq.setText(farmer.getQQ());
+                }
                 weixin.setText(farmer.getWeixin());
                 address.setText(farmer.getAddress());
                 if(new File(path).exists()) {
@@ -265,7 +277,7 @@ public class PersonalInfoFrame extends Fragment implements View.OnClickListener 
                     }else {
                         farmer.setImageUrl(user.getString("person_photo"));
                     }
-                    if(user.getString("person_qq").equals("null")){
+                    if(user.getString("person_qq").equals("null")||user.getString("person_qq").equals("000000")){
                         farmer.setQQ("未设置");
                     }else {
                         farmer.setQQ(user.getString("person_qq"));

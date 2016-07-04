@@ -32,6 +32,7 @@ import com.njdp.njdp_farmer.MyClass.Farmer;
 import com.njdp.njdp_farmer.changeDefault.TimeCount;
 import com.njdp.njdp_farmer.db.AppConfig;
 import com.njdp.njdp_farmer.db.AppController;
+import com.njdp.njdp_farmer.db.SQLiteHandler;
 import com.njdp.njdp_farmer.db.SessionManager;
 import com.njdp.njdp_farmer.util.NetUtil;
 
@@ -55,7 +56,6 @@ public class register extends AppCompatActivity {
     private static final String TAG = register.class.getSimpleName();
     private ProgressDialog pDialog;
     private SessionManager session;
-    private String verify_code = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,11 +117,11 @@ public class register extends AppCompatActivity {
                     farmer.setPassword(text_user_password.getText().toString().trim());
                     String t_verify_code = text_verification_code.getText().toString().trim();
 
-                    if (verify_code.equals(t_verify_code)) {
-                        register_next();
+                    if (TextUtils.isEmpty(t_verify_code)) {
+                        error_hint("验证码不能为空！");
 
                     } else {
-                        error_hint("验证码错误！");
+                        register_next();
                     }
                 }
             }
@@ -154,14 +154,14 @@ public class register extends AppCompatActivity {
 
     //信息未输入提示
     private void empty_hint(int in) {
-        Toast toast = Toast.makeText(register.this, getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
 
     //错误信息提示
     private void error_hint(String str) {
-        Toast toast = Toast.makeText(register.this, str, Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
@@ -287,7 +287,11 @@ public class register extends AppCompatActivity {
                     String token = jObj.getString("result");
 
                     // Create signin session
-                    session.setLogin(true,false, token);
+                    session.setLogin(true, false, token);
+                    // Inserting row in users table
+                    SQLiteHandler db = new SQLiteHandler(getApplicationContext());
+                    db.addUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
+
                     farmer.setFm_token(token);
                     //Launch PersonalSet activity
                     Intent intent = new Intent(register.this, PersonalSet.class);
@@ -330,7 +334,12 @@ public class register extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG, "RegisterError: " + error.getMessage());
-            error_hint(error.getMessage());
+            if(error.toString().equals("com.android.volley.TimeoutError")){
+                error_hint("连接服务器超时，请检查网络状况。");
+            }
+            else {
+                error_hint(error.getMessage());
+            }
             hideDialog();
         }
     };

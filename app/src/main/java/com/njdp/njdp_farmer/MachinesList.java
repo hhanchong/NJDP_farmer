@@ -147,6 +147,7 @@ public class MachinesList extends AppCompatActivity implements AdapterView.OnIte
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.root_div);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
     }
 

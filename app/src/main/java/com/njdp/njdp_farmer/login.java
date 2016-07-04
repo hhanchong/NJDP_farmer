@@ -232,14 +232,13 @@ public class login extends AppCompatActivity {
                     // user successfully logged in
                     // Create signin session
                     session.setLogin(true,false,token);
+                    // Inserting row in users table
+                    db.addUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
                     //Launch main activity
                     Intent intent = new Intent(login.this, MainLink.class);
                     intent.putExtra("TOKEN", token);
                     startActivity(intent);
                     finish();
-
-                    // Inserting row in users table
-                    db.addUser(farmer.getId(), farmer.getName(), farmer.getTelephone(), farmer.getPassword(), farmer.getImageUrl());
 
                 } else if(status == 1) {
                     error_hint("无此用户！");
@@ -395,6 +394,7 @@ public class login extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.top_layout);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
     }
 

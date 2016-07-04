@@ -25,8 +25,8 @@ public class TimeCount extends CountDownTimer {
     }
     @Override
     public void onFinish() {
-        btn.setText("重新获取验证码");
-        btn.setTextColor(Color.GRAY);//倒计时，文字显示为黑色
+        btn.setText("重新获取\n验证码");
+        btn.setTextColor(Color.WHITE);//倒计时结束，文字显示为白色
         btn.setEnabled(true);
 
     }

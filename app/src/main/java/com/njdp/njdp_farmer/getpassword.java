@@ -46,7 +46,6 @@ public class getpassword extends AppCompatActivity {
     private Button getPassword_next = null;
     private AwesomeValidation verification_code_Validation = new AwesomeValidation(ValidationStyle.BASIC);
     private Button btn_VerificationCcode = null;
-    private ImageButton getback=null;
     private EditText text_telephone = null;
     //private EditText text_user_name = null;
     private EditText text_VerificationCcode = null;
@@ -74,7 +73,7 @@ public class getpassword extends AppCompatActivity {
         verification_code_Validation.addValidation(getpassword.this, R.id.user_telephone, "^1[3-9]\\d{9}+$", R.string.err_phone);
         this.getPassword_next = (Button) super.findViewById(R.id.btn_getPassword_next);
         this.btn_VerificationCcode = (Button) super.findViewById(R.id.btn_get_verificationCode);
-        getback=(ImageButton) super.findViewById(R.id.getback);
+        ImageButton getback = (ImageButton) super.findViewById(R.id.getback);
         getPassword_next.setEnabled(false);
         getPassword_next.setClickable(false);
 
@@ -93,7 +92,7 @@ public class getpassword extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (NormalUtil.isempty(text_telephone)) {
-                    NormalUtil.error_hint(getpassword.this, "手机号不能为空");
+                    NormalUtil.error_hint(getApplicationContext(), "手机号不能为空");
                 } else if (verification_code_Validation.validate()) {
 
                     //String name = text_user_name.getText().toString().trim();
@@ -107,6 +106,7 @@ public class getpassword extends AppCompatActivity {
             }
         });
         //返回上一界面
+        assert getback != null;
         getback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +127,7 @@ public class getpassword extends AppCompatActivity {
             intent.putExtra("farmer_access", get_farmer_bundle);
             startActivity(intent);
         } else {
-            NormalUtil.error_hint(getpassword.this, "验证码错误！");
+            NormalUtil.error_hint(getApplicationContext(), "验证码错误！");
         }
     }
 
@@ -137,7 +137,7 @@ public class getpassword extends AppCompatActivity {
         String tag_string_req = "req_farmer_VerifyCode";
 
         if(!NetUtil.checkNet(getpassword.this)){
-            NormalUtil.error_hint(getpassword.this, "网络连接错误");
+            NormalUtil.error_hint(getApplicationContext(), "网络连接错误");
         } else {
             StringRequest strReq = new StringRequest(Request.Method.GET,
                     AppConfig.URL_REGISTER, vertifySuccessListener, mErrorListener) {
@@ -162,7 +162,7 @@ public class getpassword extends AppCompatActivity {
         @Override
         public void onErrorResponse(VolleyError error) {
             Log.e(TAG, "Register Error: " + error.getMessage());
-            NormalUtil.error_hint(getpassword.this, "服务器连接失败");
+            NormalUtil.error_hint(getApplicationContext(), "服务器连接失败");
             hideDialog();
         }
     };
@@ -197,11 +197,6 @@ public class getpassword extends AppCompatActivity {
         }
     };
 
-    private void showDialog() {
-        if (!pDialog.isShowing())
-            pDialog.show();
-    }
-
     private void hideDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
@@ -209,7 +204,7 @@ public class getpassword extends AppCompatActivity {
 
     //信息未输入提示
     private void empty_hint(int in){
-        Toast toast = Toast.makeText(getpassword.this, getResources().getString(in), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(in), Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, -50);
         toast.show();
     }
@@ -268,6 +263,7 @@ public class getpassword extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         View view = findViewById(R.id.top_layout);
+        assert view != null;
         view.setBackgroundResource(0); //释放背景图片
     }
 

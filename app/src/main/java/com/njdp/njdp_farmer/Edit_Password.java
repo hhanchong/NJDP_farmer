@@ -88,7 +88,7 @@ public class Edit_Password extends AppCompatActivity {
         farmer = (Farmer)getIntent().getSerializableExtra("farmer");
         if(farmer == null)
         {
-            NormalUtil.error_hint(Edit_Password.this, "程序错误！请联系管理员！");
+            NormalUtil.error_hint(getApplicationContext(), "程序错误！请联系管理员！");
             finish();
         }
         password_Validation0.addValidation(Edit_Password.this, R.id.user_oldpassword, "^[A-Za-z0-9_]{5,15}+$", R.string.err_password);
@@ -109,23 +109,23 @@ public class Edit_Password extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(NormalUtil.isempty(text_oldpassword)){
-                    NormalUtil.error_hint(Edit_Password.this,"请输入原密码");
+                    NormalUtil.error_hint(getApplicationContext(),"请输入原密码");
                 } else if(NormalUtil.isempty(text_password)){
-                    NormalUtil.error_hint(Edit_Password.this,"请输入新的密码");
+                    NormalUtil.error_hint(getApplicationContext(),"请输入新的密码");
                 }else if(password_Validation.validate()){
                     if(NormalUtil.isempty(text_password2)){
-                        NormalUtil.error_hint(Edit_Password.this,"请再次输入新密码");
+                        NormalUtil.error_hint(getApplicationContext(),"请再次输入新密码");
                     }else if(password2_Validation.validate()){
                         if(text_password.getText().equals(text_password2.getText())){
                             if(text_oldpassword.getText().toString().equals(farmer.getPassword())) {
                                 String nPassword = text_password2.getText().toString().trim();
                                 setNewPassword(nPassword);
                             }else {
-                                NormalUtil.error_hint(Edit_Password.this,"输入的原密码错误！");
+                                NormalUtil.error_hint(getApplicationContext(),"输入的原密码错误！");
                             }
                         }
                         else{
-                            NormalUtil.error_hint(Edit_Password.this, "两次输入的密码不一致！");
+                            NormalUtil.error_hint(getApplicationContext(), "两次输入的密码不一致！");
                         }
                     }
                 }
@@ -190,7 +190,7 @@ public class Edit_Password extends AppCompatActivity {
         showDialog();
 
         if (!NetUtil.checkNet(Edit_Password.this)) {
-            NormalUtil.error_hint(Edit_Password.this, "网络连接错误");
+            NormalUtil.error_hint(getApplicationContext(), "网络连接错误");
             hideDialog();
         } else {
             StringRequest strReq = new StringRequest(Request.Method.POST,
@@ -209,7 +209,7 @@ public class Edit_Password extends AppCompatActivity {
                             JSONObject user = jObj.getJSONObject("Farmers");
                             boolean islogined = user.getBoolean("isLogined");
                             //db.editUser(farmer.getId(), farmer.getName(), farmer.getPassword(), farmer.getTelephone(), farmer.getImageUrl());
-                            NormalUtil.error_hint(Edit_Password.this, "重置密码成功");
+                            NormalUtil.error_hint(getApplicationContext(), "重置密码成功");
 
                             // 重新登录
                             Intent i = getBaseContext().getPackageManager().getLaunchIntentForPackage(getBaseContext().getPackageName());
@@ -221,7 +221,7 @@ public class Edit_Password extends AppCompatActivity {
                             // Error occurred in registration. Get the error
                             // message
                             String errorMsg = jObj.getString("error_msg");
-                            NormalUtil.error_hint(Edit_Password.this, errorMsg);
+                            NormalUtil.error_hint(getApplicationContext(), errorMsg);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
